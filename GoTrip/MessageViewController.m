@@ -83,7 +83,7 @@
         Message *newMessage = [Message object];
         newMessage.text = self.messageTextField.text;
         newMessage.userName = self.userName;
-        [newMessage setObject:[NSDate date] forKey:@"date"];t
+        [newMessage setObject:[NSDate date] forKey:@"date"];
         [newMessage saveInBackground];
 //        [newMessage setObject:self.messageTextField.text forKey:@"text"];
 //        [newMessage setObject:self.userName forKey:@"userName"];
@@ -148,7 +148,7 @@
                     newMessageLimit = totalNumberOfEntries-[self.messageData count];
                 }
                 
-                query.limit = [NSNumber numberWithInt:newMessageLimit];
+                query.limit = (int)[NSNumber numberWithInt:newMessageLimit];
                 [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                     if (!error) {
                         // The find succeeded.
