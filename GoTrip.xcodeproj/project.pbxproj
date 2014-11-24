@@ -42,6 +42,7 @@
 		4937C3B11A22C2B20087E8CF /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4937C3B01A22C2B20087E8CF /* CFNetwork.framework */; };
 		4937C3B31A22C2B80087E8CF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4937C3B21A22C2B80087E8CF /* AudioToolbox.framework */; };
 		4937C3B51A22C2BF0087E8CF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4937C3B41A22C2BF0087E8CF /* libz.dylib */; };
+		4937C3BB1A23CB0A0087E8CF /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4937C3BA1A23CB0A0087E8CF /* LoginViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +106,8 @@
 		4937C3B01A22C2B20087E8CF /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		4937C3B21A22C2B80087E8CF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		4937C3B41A22C2BF0087E8CF /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		4937C3B91A23CB0A0087E8CF /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		4937C3BA1A23CB0A0087E8CF /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +170,8 @@
 			children = (
 				4937C34E1A22B4DA0087E8CF /* AppDelegate.h */,
 				4937C34F1A22B4DA0087E8CF /* AppDelegate.m */,
+				4937C3B91A23CB0A0087E8CF /* LoginViewController.h */,
+				4937C3BA1A23CB0A0087E8CF /* LoginViewController.m */,
 				4937C3541A22B4DA0087E8CF /* HomeViewController.h */,
 				4937C3551A22B4DA0087E8CF /* HomeViewController.m */,
 				4937C3731A22B7200087E8CF /* SearchViewController.h */,
@@ -351,6 +356,7 @@
 				4937C3781A22B72E0087E8CF /* ActivityViewController.m in Sources */,
 				4937C38D1A22B7B60087E8CF /* CustomCollectionViewCell.m in Sources */,
 				4937C37E1A22B7480087E8CF /* ProfileViewController.m in Sources */,
+				4937C3BB1A23CB0A0087E8CF /* LoginViewController.m in Sources */,
 				4937C3811A22B75C0087E8CF /* GroupDetailViewController.m in Sources */,
 				4937C3871A22B7790087E8CF /* ChatViewController.m in Sources */,
 				4937C34D1A22B4DA0087E8CF /* main.m in Sources */,
