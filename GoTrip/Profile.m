@@ -18,7 +18,7 @@
 @dynamic canonicalLastName;
 @dynamic locationName;
 @dynamic gender;
-@dynamic birthday;
+@dynamic birthDate;
 @dynamic memo;
 @dynamic avatarData;
 @dynamic user;
