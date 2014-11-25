@@ -10,6 +10,10 @@
 #import <Parse/PFObject+Subclass.h>
 #import "User.h"
 
+@class Profile;
+
+typedef void(^searchCurrentProfileBlock)(Profile *profile, NSError *error);
+
 @interface Profile : PFObject <PFSubclassing>
 
 @property (nonatomic, strong) NSString *objectId;
@@ -24,5 +28,7 @@
 @property (nonatomic, strong) NSString *memo;
 @property (nonatomic, strong) NSData *avatarData;
 @property (nonatomic, strong) User *user;
+
++ (void) getCurrentProfileWithCompletion:(searchCurrentProfileBlock)complete;
 
 @end

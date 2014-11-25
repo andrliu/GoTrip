@@ -39,14 +39,11 @@
 
 - (void)checkUserProfileAccountExisted
 {
-    User *user = [User currentUser];
-    PFQuery *profileQuery = [Profile query];
-    [profileQuery whereKey:@"user" equalTo:user];
-    [profileQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error)
+    [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error)
     {
         if (!error || error.code == kPFErrorObjectNotFound)
         {
-            if (object)
+            if (profile)
             {
                 //TODO: something after login
                 NSLog(@"user has profile existed");
@@ -82,7 +79,7 @@
             profile.lastName = userData[@"last_name"];
             profile.canonicalFirstName = [userData[@"first_name"] lowercaseString];
             profile.canonicalLastName = [userData[@"last_name"] lowercaseString];
-            profile.locationName = userData[@"location"][@"name"];
+            profile.locationName = userData[@"locale"];
             profile.gender = userData[@"gender"];
             profile.memo = @"Newbie in the house!!!";
             // URL should point to https://graph.facebook.com/{facebookId}/picture?type=large&return_ssl_resources=1
