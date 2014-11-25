@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+@class Profile;
 
 @interface UserDetailViewController : UIViewController
+
+@property Profile *profile;
 
 @end

@@ -24,7 +24,7 @@ typedef void(^searchCurrentProfileBlock)(Profile *profile, NSError *error);
 @property (nonatomic, strong) NSString *canonicalLastName;
 @property (nonatomic, strong) NSString *locationName;
 @property (nonatomic, strong) NSString *gender;
-@property (nonatomic, strong) NSString *birthday;
+@property (nonatomic, strong) NSDate *birthDate;
 @property (nonatomic, strong) NSString *memo;
 @property (nonatomic, strong) NSData *avatarData;
 @property (nonatomic, strong) User *user;

@@ -13,7 +13,7 @@
 #import "Profile.h"
 #import "User.h"
 
-@interface HomeViewController () <PFLogInViewControllerDelegate>
+@interface HomeViewController () <PFLogInViewControllerDelegate, UITableViewDataSource, UITableViewDelegate>
 
 @end
 
@@ -155,6 +155,20 @@
     logInViewController.fields = PFLogInFieldsFacebook;
     [self presentViewController:logInViewController animated:YES completion:NULL];
 }
+
+//MARK: tableView delegate methods
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    //TODO: row count
+    return 0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //TODO: cell
+    return nil;
+}
+
 
 //MARK: UIAlert
 - (void)error:(NSError *)error
