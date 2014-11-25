@@ -42,8 +42,10 @@
 		4937C3B11A22C2B20087E8CF /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4937C3B01A22C2B20087E8CF /* CFNetwork.framework */; };
 		4937C3B31A22C2B80087E8CF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4937C3B21A22C2B80087E8CF /* AudioToolbox.framework */; };
 		4937C3B51A22C2BF0087E8CF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4937C3B41A22C2BF0087E8CF /* libz.dylib */; };
-		7B0A12651A23C4E8000B5BA1 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B0A12641A23C4E8000B5BA1 /* Message.m */; };
 		4937C3BB1A23CB0A0087E8CF /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4937C3BA1A23CB0A0087E8CF /* LoginViewController.m */; };
+		4937C3C11A23F7600087E8CF /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 4937C3C01A23F7600087E8CF /* User.m */; };
+		4937C3C41A23F76D0087E8CF /* Profile.m in Sources */ = {isa = PBXBuildFile; fileRef = 4937C3C31A23F76D0087E8CF /* Profile.m */; };
+		7B0A12651A23C4E8000B5BA1 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B0A12641A23C4E8000B5BA1 /* Message.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,10 +109,14 @@
 		4937C3B01A22C2B20087E8CF /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		4937C3B21A22C2B80087E8CF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		4937C3B41A22C2BF0087E8CF /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		7B0A12631A23C4E8000B5BA1 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
-		7B0A12641A23C4E8000B5BA1 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		4937C3B91A23CB0A0087E8CF /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		4937C3BA1A23CB0A0087E8CF /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		4937C3BF1A23F7600087E8CF /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		4937C3C01A23F7600087E8CF /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		4937C3C21A23F76D0087E8CF /* Profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Profile.h; sourceTree = "<group>"; };
+		4937C3C31A23F76D0087E8CF /* Profile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Profile.m; sourceTree = "<group>"; };
+		7B0A12631A23C4E8000B5BA1 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
+		7B0A12641A23C4E8000B5BA1 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,6 +201,10 @@
 				4937C38C1A22B7B60087E8CF /* CustomCollectionViewCell.m */,
 				4937C38E1A22B7EA0087E8CF /* CustomTableViewCell.h */,
 				4937C38F1A22B7EA0087E8CF /* CustomTableViewCell.m */,
+				4937C3BF1A23F7600087E8CF /* User.h */,
+				4937C3C01A23F7600087E8CF /* User.m */,
+				4937C3C21A23F76D0087E8CF /* Profile.h */,
+				4937C3C31A23F76D0087E8CF /* Profile.m */,
 				7B0A12631A23C4E8000B5BA1 /* Message.h */,
 				7B0A12641A23C4E8000B5BA1 /* Message.m */,
 				4937C3571A22B4DA0087E8CF /* Main.storyboard */,
@@ -357,7 +367,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4937C3C11A23F7600087E8CF /* User.m in Sources */,
 				4937C3501A22B4DA0087E8CF /* AppDelegate.m in Sources */,
+				4937C3C41A23F76D0087E8CF /* Profile.m in Sources */,
 				4937C3781A22B72E0087E8CF /* ActivityViewController.m in Sources */,
 				4937C38D1A22B7B60087E8CF /* CustomCollectionViewCell.m in Sources */,
 				7B0A12651A23C4E8000B5BA1 /* Message.m in Sources */,

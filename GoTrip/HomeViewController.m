@@ -10,6 +10,8 @@
 #import "LoginViewController.h"
 @import Parse;
 #import <ParseFacebookUtils/PFFacebookUtils.h>
+#import "Profile.h"
+#import "User.h"
 
 @interface HomeViewController () <PFLogInViewControllerDelegate>
 
@@ -22,14 +24,43 @@
     [super viewDidLoad];
 }
 
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     if (![PFUser currentUser])
     {
-        [self returnLoginView];
+        [self presentLoginView];
     }
+    else
+    {
+        [self checkUserProfileAccountExisted];
+    }
+}
+
+- (void)checkUserProfileAccountExisted
+{
+    User *user = [User currentUser];
+    PFQuery *profileQuery = [Profile query];
+    [profileQuery whereKey:@"user" equalTo:user];
+    [profileQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error)
+    {
+        if (!error || error.code == kPFErrorObjectNotFound)
+        {
+            if (object)
+            {
+                //TODO: something after login
+                NSLog(@"user has profile existed");
+            }
+            else
+            {
+                [self loadFacebookData];
+            }
+        }
+        else
+        {
+            [self error:error];
+        }
+    }];
 }
 
 - (void)loadFacebookData
@@ -43,17 +74,20 @@
         {
             // result is a dictionary with the user's Facebook data
             NSDictionary *userData = (NSDictionary *)result;
-            NSString *facebookID = userData[@"id"];
-            NSString *firstName = userData[@"first_name"];
-            NSString *lastName = userData[@"last_name"];
-            NSString *canonicalFirstName = [userData[@"first_name"] lowercaseString];
-            NSString *canonicalLastName = [userData[@"last_name"] lowercaseString];
-            NSString *location = userData[@"location"][@"name"];
-            NSString *gender = userData[@"gender"];
-            NSString *birthday = userData[@"birthday"];
-            NSString *relationship = userData[@"relationship_status"];
+            Profile *profile = [Profile object];
+            User *user = [User currentUser];
+            profile.user = user;
+            profile.facebookID = userData[@"id"];
+            profile.firstName = userData[@"first_name"];
+            profile.lastName = userData[@"last_name"];
+            profile.canonicalFirstName = [userData[@"first_name"] lowercaseString];
+            profile.canonicalLastName = [userData[@"last_name"] lowercaseString];
+            profile.locationName = userData[@"location"][@"name"];
+            profile.gender = userData[@"gender"];
+            profile.birthday = userData[@"birthday"];
+            profile.memo = @"Newbie in the house!!!";
             // URL should point to https://graph.facebook.com/{facebookId}/picture?type=large&return_ssl_resources=1
-            NSURL *pictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_resources=1", facebookID]];
+            NSURL *pictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_resources=1", userData[@"id"]]];
             NSURLRequest *urlRequest = [NSURLRequest requestWithURL:pictureURL];
             // Run network request asynchronously
             [NSURLConnection sendAsynchronousRequest:urlRequest
@@ -62,7 +96,19 @@
             {
                 if (connectionError == nil && data != nil)
                 {
-
+                    profile.avatarData = data;
+                    [profile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                    {
+                        if (!error)
+                        {
+                            //TODO: something after login
+                            NSLog(@"finished saving data");
+                        }
+                        else
+                        {
+                            [self error:error];
+                        }
+                    }];
                 }
                 else
                 {
@@ -102,10 +148,10 @@
 {
     // Logout user, this automatically clears the cache
     [PFUser logOut];
-    [self returnLoginView];
+    [self presentLoginView];
 }
 
-- (void)returnLoginView
+- (void)presentLoginView
 {
     LoginViewController *logInViewController = [[LoginViewController alloc]init];
     [logInViewController setDelegate:self];
