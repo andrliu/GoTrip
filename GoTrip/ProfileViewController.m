@@ -7,10 +7,11 @@
 //
 
 #import "ProfileViewController.h"
+#import "LoginViewController.h"
 #import "Profile.h"
 #import "User.h"
 
-@interface ProfileViewController () <UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface ProfileViewController () <UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, PFLogInViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
@@ -66,9 +67,7 @@
             self.locationLabel.text = self.profile.locationName;
             self.memoLabel.text = self.profile.memo;
             self.genderLabel.text = self.profile.gender;
-            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setDateFormat:@"MM/dd/yyyy"];
-            self.birthDateLabel.text = [dateFormatter stringFromDate:self.profile.birthDate];
+            self.birthDateLabel.text = [self stringFromDateFormat:@"MM/dd/yyyy"];
             self.isImagePickerCalled = NO;
         }
         else
@@ -76,6 +75,14 @@
             [self error:error];
         }
     }];
+}
+
+- (NSString *)stringFromDateFormat:(NSString *)format
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:format];
+    NSString *string = [dateFormatter stringFromDate:self.profile.birthDate];
+    return string;
 }
 
 //MARK: dismiss keyboard
@@ -119,6 +126,9 @@
         self.locationTextField.text = self.profile.locationName;
         self.memoTextField.text = self.profile.memo;
         self.genderTextField.text = self.profile.gender;
+        self.birthYearTextField.text = [self stringFromDateFormat:@"yyyy"];
+        self.birthMonthTextField.text = [self stringFromDateFormat:@"MM"];
+        self.birthDayTextField.text = [self stringFromDateFormat:@"dd"];
         [self editMode:YES];
         sender.title = @"Save";
     }
@@ -131,6 +141,10 @@
         self.profile.locationName = self.locationTextField.text;
         self.profile.memo = self.memoTextField.text;
         self.profile.gender = self.genderTextField.text;
+        NSString *stringOfDate = [NSString stringWithFormat:@"%@/%@/%@", self.birthMonthTextField.text,self.birthDayTextField.text,self.birthYearTextField.text];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+        self.profile.birthDate = [dateFormatter dateFromString:stringOfDate];
         [self.profile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
         {
             if (!error)
