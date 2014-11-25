@@ -84,7 +84,6 @@
             profile.canonicalLastName = [userData[@"last_name"] lowercaseString];
             profile.locationName = userData[@"location"][@"name"];
             profile.gender = userData[@"gender"];
-            profile.birthday = userData[@"birthday"];
             profile.memo = @"Newbie in the house!!!";
             // URL should point to https://graph.facebook.com/{facebookId}/picture?type=large&return_ssl_resources=1
             NSURL *pictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_resources=1", userData[@"id"]]];
