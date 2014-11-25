@@ -1,5 +1,5 @@
 //
-//  ChatViewController.h
+//  MessageViewController.h
 //  GoTrip
 //
 //  Created by Andrew Liu on 11/23/14.
@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Parse/Parse.h>
+#import "Profile.h"
 
 @interface ChatViewController : UIViewController
+
+@property Profile *passedProfile;
+@property Profile *passedRecipient;
 
 @end

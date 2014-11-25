@@ -231,10 +231,60 @@
             </objects>
             <point key="canvasLocation" x="1128" y="1696"/>
         </scene>
-        <!--Message View Controller-->
+        <!--Messages View Controller-->
+        <scene sceneID="STX-23-GYl">
+            <objects>
+                <viewController id="MFq-ct-axJ" customClass="MessagesViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="VRi-eA-6US"/>
+                        <viewControllerLayoutGuide type="bottom" id="Shl-KT-nHj"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="vRq-uY-y2H">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="PWb-kB-8Ms">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="cell" id="w72-9c-pXC">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="w72-9c-pXC" id="y5b-Ix-VIc">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="HUq-y4-26u" kind="push" id="piG-ex-kPu"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="MFq-ct-axJ" id="3YF-Gz-4AZ"/>
+                                    <outlet property="delegate" destination="MFq-ct-axJ" id="Ca1-d9-gLK"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="PWb-kB-8Ms" secondAttribute="trailing" constant="-16" id="OcW-AX-rRd"/>
+                            <constraint firstItem="PWb-kB-8Ms" firstAttribute="bottom" secondItem="vRq-uY-y2H" secondAttribute="bottomMargin" id="Tte-Yl-Cbe"/>
+                            <constraint firstItem="PWb-kB-8Ms" firstAttribute="top" secondItem="vRq-uY-y2H" secondAttribute="topMargin" id="Uye-YC-iK4"/>
+                            <constraint firstItem="PWb-kB-8Ms" firstAttribute="leading" secondItem="vRq-uY-y2H" secondAttribute="leadingMargin" constant="-16" id="eEQ-h0-B5M"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="fpw-38-Cv3"/>
+                    <connections>
+                        <outlet property="tableView" destination="PWb-kB-8Ms" id="1Xj-r2-IeR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8Nk-HJ-BdR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1092" y="1046"/>
+        </scene>
+        <!--Chat View Controller-->
         <scene sceneID="bie-SJ-Ryo">
             <objects>
-                <viewController id="HUq-y4-26u" customClass="MessageViewController" sceneMemberID="viewController">
+                <viewController id="HUq-y4-26u" customClass="ChatViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="esD-y4-gI8"/>
                         <viewControllerLayoutGuide type="bottom" id="sE6-zU-zHh"/>
@@ -324,25 +374,7 @@
                     </items>
                 </toolbar>
             </objects>
-            <point key="canvasLocation" x="1128" y="1046"/>
-        </scene>
-        <!--Chat View Controller-->
-        <scene sceneID="H2F-UX-71X">
-            <objects>
-                <viewController id="9Cg-j4-JvJ" customClass="ChatViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="4pP-hw-TJp"/>
-                        <viewControllerLayoutGuide type="bottom" id="gnn-2m-NOG"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="Whg-2g-5Vn">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="AiD-Au-ajU" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1622" y="1046"/>
+            <point key="canvasLocation" x="1563" y="1046"/>
         </scene>
         <!--Activity View Controller-->
         <scene sceneID="LCh-kF-j6c">
@@ -472,7 +504,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="HUq-y4-26u" kind="relationship" relationship="rootViewController" id="oxY-r2-iHj"/>
+                        <segue destination="MFq-ct-axJ" kind="relationship" relationship="rootViewController" id="orU-zq-l12"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jQo-Cy-fal" userLabel="First Responder" sceneMemberID="firstResponder"/>
