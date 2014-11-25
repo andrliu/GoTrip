@@ -8,6 +8,7 @@
 
 #import <Parse/Parse.h>
 #import <Parse/PFObject+Subclass.h>
+#import "Profile.h"
 @class Message;
 
 @interface Message : PFObject <PFSubclassing>
@@ -15,5 +16,8 @@
 @property NSString *userName;
 @property NSDate *timeStamp;
 @property NSString *text;
+@property Profile *sender;
+@property Profile *userRecipient;
+
 
 @end

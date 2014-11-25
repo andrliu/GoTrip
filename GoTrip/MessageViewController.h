@@ -8,7 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
+#import "Profile.h"
 
 @interface MessageViewController : UIViewController
+
+@property Profile *passedProfile;
+@property Profile *passedRecipient;
 
 @end

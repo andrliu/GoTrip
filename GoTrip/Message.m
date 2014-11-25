@@ -13,7 +13,8 @@
 @dynamic userName;
 @dynamic timeStamp;
 @dynamic text;
-
+@dynamic sender;
+@dynamic userRecipient;
 
 + (void)load
 {

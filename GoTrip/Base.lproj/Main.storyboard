@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="oGT-Fa-4Bj">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="oGT-Fa-4Bj">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -297,10 +297,32 @@
                     </navigationItem>
                     <connections>
                         <outlet property="messageTableView" destination="QQp-sU-2A9" id="sE4-Kz-jCU"/>
-                        <outlet property="messageTextField" destination="7og-Ue-RCi" id="G6n-ai-iN6"/>
+                        <outlet property="messageTextField" destination="WJ5-eW-dk9" id="QCh-6I-eOC"/>
+                        <outlet property="recipientTextField" destination="7og-Ue-RCi" id="Kvw-ll-dzn"/>
+                        <outlet property="toolbar" destination="fgU-R9-LAQ" id="aEb-cy-vDI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ACb-By-GQu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="fgU-R9-LAQ">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <items>
+                        <barButtonItem style="plain" id="cWD-wU-dTN">
+                            <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="WJ5-eW-dk9">
+                                <rect key="frame" x="16" y="7" width="231" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="0sO-1A-5DA"/>
+                        <barButtonItem title="Send" id="dzf-T0-eQg">
+                            <connections>
+                                <action selector="onButtonPressedSendMessage:" destination="HUq-y4-26u" id="UpB-Pj-WZ1"/>
+                            </connections>
+                        </barButtonItem>
+                    </items>
+                </toolbar>
             </objects>
             <point key="canvasLocation" x="1128" y="1046"/>
         </scene>

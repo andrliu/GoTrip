@@ -12,9 +12,13 @@
 
 @interface MessageViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *messageTableView;
-@property (weak, nonatomic) IBOutlet UITextField *messageTextField;
+@property (weak, nonatomic) IBOutlet UITextField *recipientTextField;
 @property NSString *userName;
 @property NSMutableArray *messageData;
+@property Profile *currentUserProfile;
+@property Profile *recipientProfile;
+@property (weak, nonatomic) IBOutlet UITextField *messageTextField;
+@property (strong, nonatomic) IBOutlet UIToolbar *toolbar;
 
 @end
 
@@ -26,9 +30,26 @@
     [super viewDidLoad];
     self.messageData = [NSMutableArray array];
     self.messageTextField.delegate = self;
+    [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error) {
+        self.currentUserProfile = profile;
+    }];
+    
     self.userName = @"Jon";
+    //passed profiles username here
 }
 
+-(void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    
+    
+//    self.userTaggingTableView.contentInset = self.commentViewTable.contentInset;
+//    self.userTaggingTableView.scrollIndicatorInsets = self.commentViewTable.scrollIndicatorInsets;
+    
+    self.toolbar.frame = CGRectMake(0, self.view.frame.size.height - 100, [[UIScreen mainScreen] bounds].size.width, self.toolbar.frame.size.height);
+    [self.view addSubview:self.toolbar];
+    
+}
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.messageData.count;
@@ -39,6 +60,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     
     NSDate *theDate = [self.messageData [indexPath.row] objectForKey:@"date"];
+    
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"HH:mm a"];
     NSString *timeString = [formatter stringFromDate:theDate];
@@ -60,12 +82,14 @@
     NSLog(@"the text content%@",self.messageTextField.text);
     [textField resignFirstResponder];
     
+    self.recipientProfile = [Profile objectWithoutDataWithClassName:@"Profile" objectId:[NSString stringWithFormat:@"%@", self.recipientTextField.text]];
+        
     //need to resize table view as well
     
     if (self.messageTextField.text.length>0) {
         // updating the table immediately
-        NSArray *keys = [NSArray arrayWithObjects:@"text", @"userName", @"date", nil];
-        NSArray *objects = [NSArray arrayWithObjects:self.messageTextField.text, self.userName, [NSDate date], nil];
+        NSArray *keys = [NSArray arrayWithObjects:@"sender", @"recipient", @"text", @"userName", @"date", nil];
+        NSArray *objects = [NSArray arrayWithObjects:self.currentUserProfile, self.recipientProfile, self.messageTextField.text, self.userName, [NSDate date], nil];
         NSDictionary *dictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
         [self.messageData addObject:dictionary];
         
@@ -81,8 +105,14 @@
         
         //adds to Parse back-server.
         Message *newMessage = [Message object];
+        
+//        newMessage.userRecipient = self.recipientTextField
+        //have to find recipient using some dropdown
+
+        newMessage.userRecipient = self.recipientProfile;
         newMessage.text = self.messageTextField.text;
         newMessage.userName = self.userName;
+        newMessage.sender = self.currentUserProfile;
         [newMessage setObject:[NSDate date] forKey:@"date"];
         [newMessage saveInBackground];
 //        [newMessage setObject:self.messageTextField.text forKey:@"text"];
@@ -153,7 +183,10 @@
                     if (!error) {
                         // The find succeeded.
                         NSLog(@"Successfully retrieved %d chats.", objects.count);
+                        
                         [self.messageData addObjectsFromArray:objects];
+                        //so I need a key for profile right? but that's
+                        
                         NSMutableArray *insertIndexPaths = [[NSMutableArray alloc] init];
                         for (int ind = 0; ind < objects.count; ind++) {
                             NSIndexPath *newPath = [NSIndexPath indexPathForRow:ind inSection:0];
@@ -177,6 +210,11 @@
             number = [self.messageData count];
         }
     }];
+}
+
+- (IBAction)onButtonPressedSendMessage:(UIBarButtonItem *)sender
+{
+    [self textFieldShouldReturn:self.messageTextField];
 }
 
 
