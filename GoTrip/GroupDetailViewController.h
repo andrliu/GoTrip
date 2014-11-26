@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+@class Group;
 
 @interface GroupDetailViewController : UIViewController
+
+@property Group *group;
 
 @end

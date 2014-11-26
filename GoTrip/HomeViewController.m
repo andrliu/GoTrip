@@ -8,12 +8,17 @@
 
 #import "HomeViewController.h"
 #import "LoginViewController.h"
+#import "GroupDetailViewController.h"
 @import Parse;
 #import <ParseFacebookUtils/PFFacebookUtils.h>
 #import "Profile.h"
+#import "Group.h"
 #import "User.h"
 
 @interface HomeViewController () <PFLogInViewControllerDelegate, UITableViewDataSource, UITableViewDelegate>
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property NSArray *tableViewArray;
+
 
 @end
 
@@ -22,6 +27,21 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+//TODO: remove example group from here
+    PFQuery *query = [Group query];
+    [query getObjectInBackgroundWithId:@"Zs30vE5wdx" block:^(PFObject *object, NSError *error)
+    {
+        Group *testGroup = (Group *)object;
+
+        self.tableViewArray = @[testGroup];
+        [self.tableView reloadData];
+        
+    }];
+// to here
+
+    self.navigationItem.title = @"Featured Groups";
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -160,13 +180,17 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     //TODO: row count
-    return 0;
+    return self.tableViewArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
+
+    Group *group = self.tableViewArray[indexPath.row];
+    cell.textLabel.text = group.name;
     //TODO: cell
-    return nil;
+    return cell;
 }
 
 
@@ -181,6 +205,14 @@
                                                    handler:nil];
     [alert addAction:action];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    GroupDetailViewController *detailVC = [segue destinationViewController];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+    Group *group = self.tableViewArray[indexPath.row];
+    detailVC.group = group;
 }
 
 @end
