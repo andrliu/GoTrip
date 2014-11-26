@@ -47,9 +47,6 @@
 		7B0A12651A23C4E8000B5BA1 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B0A12641A23C4E8000B5BA1 /* Message.m */; };
 		7B16E0631A2510C6006899E6 /* MessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B16E0621A2510C6006899E6 /* MessagesViewController.m */; };
 		FA1EEE4B1A253FE9009280BA /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1EEE4A1A253FE9009280BA /* Group.m */; };
-		FA1EEE511A2566A7009280BA /* CollectionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1EEE501A2566A7009280BA /* CollectionTableViewCell.m */; };
-		FA1EEE541A2566E2009280BA /* DescriptionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1EEE531A2566E2009280BA /* DescriptionTableViewCell.m */; };
-		FA1EEE571A2566F7009280BA /* ButtonTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1EEE561A2566F7009280BA /* ButtonTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -123,12 +120,6 @@
 		7B16E0621A2510C6006899E6 /* MessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesViewController.m; sourceTree = "<group>"; };
 		FA1EEE491A253FE9009280BA /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
 		FA1EEE4A1A253FE9009280BA /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
-		FA1EEE4F1A2566A7009280BA /* CollectionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionTableViewCell.h; sourceTree = "<group>"; };
-		FA1EEE501A2566A7009280BA /* CollectionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionTableViewCell.m; sourceTree = "<group>"; };
-		FA1EEE521A2566E2009280BA /* DescriptionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionTableViewCell.h; sourceTree = "<group>"; };
-		FA1EEE531A2566E2009280BA /* DescriptionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DescriptionTableViewCell.m; sourceTree = "<group>"; };
-		FA1EEE551A2566F7009280BA /* ButtonTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonTableViewCell.h; sourceTree = "<group>"; };
-		FA1EEE561A2566F7009280BA /* ButtonTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,12 +204,6 @@
 				4937C38C1A22B7B60087E8CF /* CustomCollectionViewCell.m */,
 				4937C38E1A22B7EA0087E8CF /* CustomTableViewCell.h */,
 				4937C38F1A22B7EA0087E8CF /* CustomTableViewCell.m */,
-				FA1EEE521A2566E2009280BA /* DescriptionTableViewCell.h */,
-				FA1EEE531A2566E2009280BA /* DescriptionTableViewCell.m */,
-				FA1EEE4F1A2566A7009280BA /* CollectionTableViewCell.h */,
-				FA1EEE501A2566A7009280BA /* CollectionTableViewCell.m */,
-				FA1EEE551A2566F7009280BA /* ButtonTableViewCell.h */,
-				FA1EEE561A2566F7009280BA /* ButtonTableViewCell.m */,
 				FA1EEE481A253F80009280BA /* Model Data */,
 				4937C3571A22B4DA0087E8CF /* Main.storyboard */,
 				4937C35A1A22B4DA0087E8CF /* Images.xcassets */,
@@ -399,7 +384,6 @@
 				7B16E0631A2510C6006899E6 /* MessagesViewController.m in Sources */,
 				4937C3501A22B4DA0087E8CF /* AppDelegate.m in Sources */,
 				4937C3C41A23F76D0087E8CF /* Profile.m in Sources */,
-				FA1EEE541A2566E2009280BA /* DescriptionTableViewCell.m in Sources */,
 				4937C3781A22B72E0087E8CF /* ActivityViewController.m in Sources */,
 				4937C38D1A22B7B60087E8CF /* CustomCollectionViewCell.m in Sources */,
 				7B0A12651A23C4E8000B5BA1 /* Message.m in Sources */,
@@ -410,9 +394,7 @@
 				4937C34D1A22B4DA0087E8CF /* main.m in Sources */,
 				4937C3751A22B7200087E8CF /* SearchViewController.m in Sources */,
 				4937C3561A22B4DA0087E8CF /* HomeViewController.m in Sources */,
-				FA1EEE511A2566A7009280BA /* CollectionTableViewCell.m in Sources */,
 				4937C3531A22B4DA0087E8CF /* GoTrip.xcdatamodeld in Sources */,
-				FA1EEE571A2566F7009280BA /* ButtonTableViewCell.m in Sources */,
 				4937C3841A22B7690087E8CF /* UserDetailViewController.m in Sources */,
 				4937C37B1A22B73B0087E8CF /* ChatViewController.m in Sources */,
 				4937C3901A22B7EA0087E8CF /* CustomTableViewCell.m in Sources */,
