@@ -14,7 +14,8 @@
 @dynamic name;
 @dynamic canonicalName;
 @dynamic destination;
-@dynamic members;
+@dynamic imageData;
+@dynamic profiles;
 @dynamic creator;
 @dynamic startDate;
 @dynamic endDate;

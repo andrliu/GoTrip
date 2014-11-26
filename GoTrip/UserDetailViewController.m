@@ -13,10 +13,8 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *locationLabel;
 @property (weak, nonatomic) IBOutlet UILabel *memoLabel;
-@property (weak, nonatomic) IBOutlet UILabel *genderLabel;
-@property (weak, nonatomic) IBOutlet UILabel *ageLabel;
+
 @property BOOL isFriend;
 
 
@@ -34,16 +32,13 @@
     [super viewDidAppear:animated];
     self.imageView.image = [UIImage imageWithData:self.profile.avatarData];
     self.nameLabel.text = [NSString stringWithFormat:@"%@ %@", self.profile.firstName, self.profile.lastName];
-    self.locationLabel.text = self.profile.locationName;
     self.memoLabel.text = self.profile.memo;
-    self.genderLabel.text = self.profile.gender;
-    NSDate *birth = self.profile.birthDate;
-    NSDate *now = [NSDate date];
-    NSDateComponents* age = [[NSCalendar currentCalendar] components:NSCalendarUnitYear
-                                                            fromDate:birth
-                                                              toDate:now
-                                                             options:0];
-    self.ageLabel.text = [NSString stringWithFormat:@"%d",[age year]];
+//    NSDate *now = [NSDate date];
+//    NSDateComponents* age = [[NSCalendar currentCalendar] components:NSCalendarUnitYear
+//                                                            fromDate:birth
+//                                                              toDate:now
+//                                                             options:0];
+//    self.ageLabel.text = [NSString stringWithFormat:@"%d",[age year]];
 }
 
 //MARK: UIAlert

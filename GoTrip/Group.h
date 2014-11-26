@@ -15,8 +15,9 @@
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *canonicalName;
 @property (nonatomic, strong) NSString *destination;
+@property (nonatomic, strong) NSData *imageData;
 @property (nonatomic, strong) Profile *creator;
-@property (nonatomic, strong) NSArray *members;
+@property (nonatomic, strong) NSArray *profiles;
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;
 @property (nonatomic, strong) NSNumber *sizeLimit;

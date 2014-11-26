@@ -8,6 +8,7 @@
 
 #import "ProfileViewController.h"
 #import "CustomCollectionViewCell.h"
+#import "Group.h"
 #import "Profile.h"
 #import "User.h"
 
@@ -15,25 +16,28 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *locationLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *locationLabel;
 @property (weak, nonatomic) IBOutlet UILabel *memoLabel;
-@property (weak, nonatomic) IBOutlet UILabel *genderLabel;
-@property (weak, nonatomic) IBOutlet UILabel *birthDateLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *genderLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *birthDateLabel;
 @property (weak, nonatomic) IBOutlet UITextField *firstNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *lastNameTextField;
-@property (weak, nonatomic) IBOutlet UITextField *locationTextField;
+//@property (weak, nonatomic) IBOutlet UITextField *locationTextField;
 @property (weak, nonatomic) IBOutlet UITextField *memoTextField;
-@property (weak, nonatomic) IBOutlet UITextField *genderTextField;
-@property (weak, nonatomic) IBOutlet UITextField *birthYearTextField;
-@property (weak, nonatomic) IBOutlet UITextField *birthMonthTextField;
-@property (weak, nonatomic) IBOutlet UITextField *birthDayTextField;
+//@property (weak, nonatomic) IBOutlet UITextField *genderTextField;
+//@property (weak, nonatomic) IBOutlet UITextField *birthYearTextField;
+//@property (weak, nonatomic) IBOutlet UITextField *birthMonthTextField;
+//@property (weak, nonatomic) IBOutlet UITextField *birthDayTextField;
 @property (weak, nonatomic) IBOutlet UIButton *imageButton;
 @property (weak, nonatomic) IBOutlet UIButton *friendListButton;
 @property (weak, nonatomic) IBOutlet UIButton *groupListButton;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property Profile *profile;
 @property BOOL isImagePickerCalled;
+@property NSArray *groupListArray;
+@property NSArray *friendListArray;
 @property NSArray *listArray;
+@property BOOL isGroup;
 
 @end
 
@@ -42,7 +46,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.listArray = @[@"1",@"2"];
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -73,11 +77,31 @@
             self.imageView.layer.borderColor = [UIColor whiteColor].CGColor;
             self.imageView.image = [UIImage imageWithData:self.profile.avatarData];
             self.nameLabel.text = [NSString stringWithFormat:@"%@ %@", self.profile.firstName, self.profile.lastName];
-            self.locationLabel.text = self.profile.locationName;
+//            self.locationLabel.text = self.profile.locationName;
             self.memoLabel.text = self.profile.memo;
-            self.genderLabel.text = self.profile.gender;
-            self.birthDateLabel.text = [self stringFromDateFormat:@"MM/dd/yyyy"];
+//            self.genderLabel.text = self.profile.gender;
+//            self.birthDateLabel.text = [self stringFromDateFormat:@"MM/dd/yyyy"];
             self.isImagePickerCalled = NO;
+            self.isGroup = NO;
+            self.listArray = self.profile.friends;
+
+            PFQuery *query = [Group query];
+            [query includeKey:@"profiles"];
+            [query whereKey:@"profiles" equalTo:self.profile];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+            {
+                if (!error)
+                {
+                    self.groupListArray = objects;
+                    [self.collectionView reloadData];
+                }
+                else
+                {
+                    [self error:error];
+                }
+            }];
+
+
         }
         else
         {
@@ -86,43 +110,43 @@
     }];
 }
 
-- (NSString *)stringFromDateFormat:(NSString *)format
-{
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:format];
-    NSString *string = [dateFormatter stringFromDate:self.profile.birthDate];
-    return string;
-}
+//- (NSString *)stringFromDateFormat:(NSString *)format
+//{
+//    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+//    [dateFormatter setDateFormat:format];
+//    NSString *string = [dateFormatter stringFromDate:self.profile.birthDate];
+//    return string;
+//}
 
 //MARK: dismiss keyboard
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [self.firstNameTextField resignFirstResponder];
     [self.lastNameTextField resignFirstResponder];
-    [self.locationTextField resignFirstResponder];
+//    [self.locationTextField resignFirstResponder];
     [self.memoTextField resignFirstResponder];
-    [self.genderTextField resignFirstResponder];
-    [self.birthYearTextField resignFirstResponder];
-    [self.birthMonthTextField resignFirstResponder];
-    [self.birthDayTextField resignFirstResponder];
+//    [self.genderTextField resignFirstResponder];
+//    [self.birthYearTextField resignFirstResponder];
+//    [self.birthMonthTextField resignFirstResponder];
+//    [self.birthDayTextField resignFirstResponder];
     return YES;
 }
 
 - (void)editMode:(BOOL)yes
 {
     [self.nameLabel setHidden:yes];
-    [self.locationLabel setHidden:yes];
+//    [self.locationLabel setHidden:yes];
     [self.memoLabel setHidden:yes];
-    [self.genderLabel setHidden:yes];
-    [self.birthDateLabel setHidden:yes];
+//    [self.genderLabel setHidden:yes];
+//    [self.birthDateLabel setHidden:yes];
     [self.firstNameTextField setHidden:!yes];
     [self.lastNameTextField setHidden:!yes];
-    [self.locationTextField setHidden:!yes];
+//    [self.locationTextField setHidden:!yes];
     [self.memoTextField setHidden:!yes];
-    [self.genderTextField setHidden:!yes];
-    [self.birthYearTextField setHidden:!yes];
-    [self.birthMonthTextField setHidden:!yes];
-    [self.birthDayTextField setHidden:!yes];
+//    [self.genderTextField setHidden:!yes];
+//    [self.birthYearTextField setHidden:!yes];
+//    [self.birthMonthTextField setHidden:!yes];
+//    [self.birthDayTextField setHidden:!yes];
     [self.imageButton setHidden:!yes];
 }
 
@@ -132,12 +156,12 @@
     {
         self.firstNameTextField.text = self.profile.firstName;
         self.lastNameTextField.text = self.profile.lastName;
-        self.locationTextField.text = self.profile.locationName;
+//        self.locationTextField.text = self.profile.locationName;
         self.memoTextField.text = self.profile.memo;
-        self.genderTextField.text = self.profile.gender;
-        self.birthYearTextField.text = [self stringFromDateFormat:@"yyyy"];
-        self.birthMonthTextField.text = [self stringFromDateFormat:@"MM"];
-        self.birthDayTextField.text = [self stringFromDateFormat:@"dd"];
+//        self.genderTextField.text = self.profile.gender;
+//        self.birthYearTextField.text = [self stringFromDateFormat:@"yyyy"];
+//        self.birthMonthTextField.text = [self stringFromDateFormat:@"MM"];
+//        self.birthDayTextField.text = [self stringFromDateFormat:@"dd"];
         [self editMode:YES];
         sender.title = @"Save";
     }
@@ -147,13 +171,13 @@
         self.profile.canonicalFirstName = [self.firstNameTextField.text lowercaseString];
         self.profile.lastName = self.lastNameTextField.text;
         self.profile.canonicalLastName = [self.lastNameTextField.text lowercaseString];
-        self.profile.locationName = self.locationTextField.text;
+//        self.profile.locationName = self.locationTextField.text;
         self.profile.memo = self.memoTextField.text;
-        self.profile.gender = self.genderTextField.text;
-        NSString *stringOfDate = [NSString stringWithFormat:@"%@/%@/%@", self.birthMonthTextField.text,self.birthDayTextField.text,self.birthYearTextField.text];
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"MM/dd/yyyy"];
-        self.profile.birthDate = [dateFormatter dateFromString:stringOfDate];
+//        self.profile.gender = self.genderTextField.text;
+//        NSString *stringOfDate = [NSString stringWithFormat:@"%@/%@/%@", self.birthMonthTextField.text,self.birthDayTextField.text,self.birthYearTextField.text];
+//        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+//        [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+//        self.profile.birthDate = [dateFormatter dateFromString:stringOfDate];
         [self.profile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
         {
             if (!error)
@@ -172,12 +196,16 @@
 
 - (IBAction)friendListOnButtonPressed:(UIButton *)sender
 {
-
+    self.listArray = self.profile.friends;
+    self.isGroup = NO;
+    [self.collectionView reloadData];
 }
 
 - (IBAction)groupListOnButtonPressed:(UIButton *)sender
 {
-    
+    self.listArray = self.groupListArray;
+    self.isGroup = YES;
+    [self.collectionView reloadData];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -188,15 +216,26 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-    cell.imageView.image = [UIImage imageNamed:@"switch"];
-    cell.nameLabel.text = @"name";
-    cell.memoLabel.text = @"memo";
+    if (self.isGroup)
+    {
+        Group *group = self.listArray[indexPath.item];
+        cell.imageView.image = [UIImage imageWithData:group.imageData];
+        cell.nameLabel.text = group.name;
+        cell.memoLabel.text = group.destination;
+    }
+    else
+    {
+        Profile *profile = self.listArray[indexPath.item];
+        cell.imageView.image = [UIImage imageWithData:profile.avatarData];
+        cell.nameLabel.text = [NSString stringWithFormat:@"%@ %@", profile.firstName, profile.lastName];;
+        cell.memoLabel.text = profile.memo;
+    }
     return cell;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(self.collectionView.frame.size.width*0.4, self.collectionView.frame.size.height);
+    return CGSizeMake(self.collectionView.frame.size.width*0.4, self.collectionView.frame.size.height*0.8);
 }
 
 //MARK: triger UIImagePicker(PhotoLibrary) by button pressed
