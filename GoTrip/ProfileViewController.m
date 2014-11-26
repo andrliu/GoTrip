@@ -7,11 +7,11 @@
 //
 
 #import "ProfileViewController.h"
-#import "LoginViewController.h"
+#import "CustomCollectionViewCell.h"
 #import "Profile.h"
 #import "User.h"
 
-@interface ProfileViewController () <UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, PFLogInViewControllerDelegate>
+@interface ProfileViewController () <UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
@@ -28,8 +28,12 @@
 @property (weak, nonatomic) IBOutlet UITextField *birthMonthTextField;
 @property (weak, nonatomic) IBOutlet UITextField *birthDayTextField;
 @property (weak, nonatomic) IBOutlet UIButton *imageButton;
+@property (weak, nonatomic) IBOutlet UIButton *friendListButton;
+@property (weak, nonatomic) IBOutlet UIButton *groupListButton;
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property Profile *profile;
 @property BOOL isImagePickerCalled;
+@property NSArray *listArray;
 
 @end
 
@@ -38,6 +42,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.listArray = @[@"1",@"2"];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -163,6 +168,35 @@
             }
         }];
     }
+}
+
+- (IBAction)friendListOnButtonPressed:(UIButton *)sender
+{
+
+}
+
+- (IBAction)groupListOnButtonPressed:(UIButton *)sender
+{
+    
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return self.listArray.count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    cell.imageView.image = [UIImage imageNamed:@"switch"];
+    cell.nameLabel.text = @"name";
+    cell.memoLabel.text = @"memo";
+    return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(self.collectionView.frame.size.width*0.4, self.collectionView.frame.size.height);
 }
 
 //MARK: triger UIImagePicker(PhotoLibrary) by button pressed
