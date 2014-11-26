@@ -62,6 +62,10 @@
         if (!error)
         {
             self.profile = profile;
+            self.imageView.layer.cornerRadius = self.imageView.frame.size.width/2;
+            self.imageView.clipsToBounds = YES;
+            self.imageView.layer.borderWidth = 2.0f;
+            self.imageView.layer.borderColor = [UIColor whiteColor].CGColor;
             self.imageView.image = [UIImage imageWithData:self.profile.avatarData];
             self.nameLabel.text = [NSString stringWithFormat:@"%@ %@", self.profile.firstName, self.profile.lastName];
             self.locationLabel.text = self.profile.locationName;

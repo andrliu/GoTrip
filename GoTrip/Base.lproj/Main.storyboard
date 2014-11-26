@@ -657,7 +657,7 @@
         <image name="message" width="30" height="30"/>
         <image name="profile" width="30" height="30"/>
         <image name="search" width="30" height="30"/>
-        <image name="switch" width="45" height="45"/>
+        <image name="switch" width="30" height="30"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
