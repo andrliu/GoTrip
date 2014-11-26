@@ -22,6 +22,7 @@
 @dynamic memo;
 @dynamic avatarData;
 @dynamic user;
+@dynamic isMessaging;
 
 + (void)load
 {
@@ -37,6 +38,7 @@
 {
     PFQuery *profileQuery = [self query];
     [profileQuery whereKey:@"user" equalTo:[User currentUser]];
+    [profileQuery includeKey:@"isMessaging"];
     [profileQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error)
      {
          if (!error)

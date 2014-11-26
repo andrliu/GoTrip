@@ -8,6 +8,7 @@
 
 #import "ChatViewController.h"
 #import "Message.h"
+#import "Profile.h"
 #define MAX_ENTRIES_LOADED 10
 
 @interface ChatViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
@@ -20,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *messageTextField;
 @property (strong, nonatomic) IBOutlet UIToolbar *toolbar;
 
+
 @end
 
 @implementation ChatViewController
@@ -29,6 +31,9 @@
     
     [super viewDidLoad];
     self.messageData = [NSMutableArray array];
+    
+    //sets the recipient profile
+    self.recipientProfile = self.passedProfile;
     self.messageTextField.delegate = self;
     [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error) {
         self.currentUserProfile = profile;
@@ -43,8 +48,8 @@
     [super viewDidLayoutSubviews];
     
     
-//    self.userTaggingTableView.contentInset = self.commentViewTable.contentInset;
-//    self.userTaggingTableView.scrollIndicatorInsets = self.commentViewTable.scrollIndicatorInsets;
+    //    self.userTaggingTableView.contentInset = self.commentViewTable.contentInset;
+    //    self.userTaggingTableView.scrollIndicatorInsets = self.commentViewTable.scrollIndicatorInsets;
     
     self.toolbar.frame = CGRectMake(0, self.view.frame.size.height - 100, [[UIScreen mainScreen] bounds].size.width, self.toolbar.frame.size.height);
     [self.view addSubview:self.toolbar];
@@ -66,7 +71,7 @@
     NSString *timeString = [formatter stringFromDate:theDate];
     
     cell.textLabel.text = [self.messageData[indexPath.row] objectForKey:@"text"];
-//    cell.detailTextLabel.text =[NSString stringWithFormat:@"%@",[self.messageData[indexPath.row] objectForKey:@"date"]];
+    //    cell.detailTextLabel.text =[NSString stringWithFormat:@"%@",[self.messageData[indexPath.row] objectForKey:@"date"]];
     cell.detailTextLabel.text = timeString;
     
     return cell;
@@ -82,8 +87,13 @@
     NSLog(@"the text content%@",self.messageTextField.text);
     [textField resignFirstResponder];
     
-    self.recipientProfile = [Profile objectWithoutDataWithClassName:@"Profile" objectId:[NSString stringWithFormat:@"%@", self.recipientTextField.text]];
-        
+    //    self.recipientProfile = [Profile objectWithoutDataWithClassName:@"Profile" objectId:[NSString stringWithFormat:@"%@", self.recipientTextField.text]];
+    
+    //for test purposes
+    self.recipientProfile = [Profile objectWithoutDataWithClassName:@"Profile" objectId:@"Q8DIiKZFYI"];
+    
+    
+    
     //need to resize table view as well
     
     if (self.messageTextField.text.length>0) {
@@ -106,23 +116,25 @@
         //adds to Parse back-server.
         Message *newMessage = [Message object];
         
-//        newMessage.userRecipient = self.recipientTextField
+        //        newMessage.userRecipient = self.recipientTextField
         //have to find recipient using some dropdown
-
+        
         newMessage.userRecipient = self.recipientProfile;
         newMessage.text = self.messageTextField.text;
         newMessage.userName = self.userName;
         newMessage.sender = self.currentUserProfile;
         [newMessage setObject:[NSDate date] forKey:@"date"];
         [newMessage saveInBackground];
-//        [newMessage setObject:self.messageTextField.text forKey:@"text"];
-//        [newMessage setObject:self.userName forKey:@"userName"];
-//        [newMessage setObject:[NSDate date] forKey:@"date"]; already in parse
-//        [newMessage saveInBackground];
+        [self changeProfileMessagingSystem];
+        //        [newMessage setObject:self.messageTextField.text forKey:@"text"];
+        //        [newMessage setObject:self.userName forKey:@"userName"];
+        //        [newMessage setObject:[NSDate date] forKey:@"date"]; already in parse
+        //        [newMessage saveInBackground];
         self.messageTextField.text = @"";
     }
     
     // reload the data
+    
     [self loadLocalChat];
     return NO;
 }
@@ -159,6 +171,15 @@
     
     __block int totalNumberOfEntries = 0;
     [query orderByAscending:@"createdAt"];
+    
+//    PFQuery *a = [Message query];
+//    PFObject *abc = [Message objectWithoutDataWithClassName:@"Profile" objectId:<#(NSString *)#>]
+//    [a whereKey:@"sender" equalTo:<#(id)#>
+//    PFQuery *b = [Message query];
+    [query whereKey:@:sender" equalTo:@"yKcMGScuAa"];
+//    [query find:@"yKcMGScuaA" block:^(PFObject *object, NSError *error) {
+//        <#code#>
+//    }];
     
     [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
         if (!error) {
@@ -211,6 +232,77 @@
         }
     }];
 }
+
+- (void)changeProfileMessagingSystem
+{
+    
+    PFQuery *query = [Profile query];
+    
+    [query getObjectInBackgroundWithId:@"Q8DIiKZFYI" block:^(PFObject *object, NSError *error) {
+        
+        BOOL checkRecipientBOOL = YES;
+        
+        NSMutableArray *listOfUsersThatHaveMessagesWith = [NSMutableArray array];
+        
+        
+        self.recipientProfile = (Profile *)object;
+        if(self.recipientProfile.isMessaging.count == 0)
+        {
+            
+        }
+        else
+        {
+            listOfUsersThatHaveMessagesWith = [self.recipientProfile.isMessaging mutableCopy];
+        }
+        
+        for(Profile *profile in listOfUsersThatHaveMessagesWith){
+            if([profile.objectId isEqualToString:self.currentUserProfile.objectId])
+                checkRecipientBOOL = NO;
+        }
+        
+        
+
+        
+        if(checkRecipientBOOL)
+        {
+            [listOfUsersThatHaveMessagesWith addObject:self.currentUserProfile];
+            self.recipientProfile.isMessaging = listOfUsersThatHaveMessagesWith;
+            [self.recipientProfile saveInBackground];
+        }
+    }];
+    
+    
+    NSMutableArray *listOfUsersThatIHaveMessagesWith = [NSMutableArray array];
+    
+    
+    if(self.currentUserProfile.isMessaging.count == 0)
+    {
+    }
+    
+    else
+    {
+        listOfUsersThatIHaveMessagesWith = [self.currentUserProfile.isMessaging mutableCopy];
+    }
+    
+    BOOL checkBOOL = YES;
+    for(Profile *profile in listOfUsersThatIHaveMessagesWith){
+        
+        if([profile.objectId isEqualToString:self.recipientProfile.objectId])
+            checkBOOL = NO;
+    }
+    
+    if(checkBOOL){
+        [listOfUsersThatIHaveMessagesWith addObject:self.recipientProfile];
+        self.currentUserProfile.isMessaging = listOfUsersThatIHaveMessagesWith;
+        [self.currentUserProfile saveInBackground];
+    }
+    
+    
+    
+    
+}
+
+
 
 - (IBAction)onButtonPressedSendMessage:(UIBarButtonItem *)sender
 {
