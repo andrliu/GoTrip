@@ -28,6 +28,7 @@ typedef void(^searchCurrentProfileBlock)(Profile *profile, NSError *error);
 @property (nonatomic, strong) NSString *memo;
 @property (nonatomic, strong) NSData *avatarData;
 @property (nonatomic, strong) NSArray *friends;
+@property (nonatomic, strong) NSArray *pendingFriends;
 @property (nonatomic, strong) User *user;
 
 + (void) getCurrentProfileWithCompletion:(searchCurrentProfileBlock)complete;

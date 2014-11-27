@@ -22,6 +22,7 @@
 @dynamic memo;
 @dynamic avatarData;
 @dynamic friends;
+@dynamic pendingFriends;
 @dynamic user;
 
 + (void)load

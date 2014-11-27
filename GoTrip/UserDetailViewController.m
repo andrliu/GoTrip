@@ -25,6 +25,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSLog(@"%@", self.profile.firstName);
 }
 
 - (void)viewDidAppear:(BOOL)animated
