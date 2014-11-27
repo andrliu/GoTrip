@@ -7,6 +7,7 @@
 //
 
 #import "ProfileViewController.h"
+#import "HomeViewController.h"
 #import "CustomCollectionViewCell.h"
 #import "Group.h"
 #import "Profile.h"
@@ -46,12 +47,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+
     if (!self.isImagePickerCalled)
     {
         [self editMode:NO];
@@ -200,12 +201,22 @@
     self.isGroup = NO;
     [self.collectionView reloadData];
 }
+- (IBAction)pendingFriendListOnButtonPressed:(UIButton *)sender {
+}
 
 - (IBAction)groupListOnButtonPressed:(UIButton *)sender
 {
     self.listArray = self.groupListArray;
     self.isGroup = YES;
     [self.collectionView reloadData];
+}
+- (IBAction)pastGroupListOnButtonPressed:(id)sender {
+}
+
+- (IBAction)logOutOnButtonPressed:(UIBarButtonItem *)sender
+{
+    self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
+    [PFUser logOut];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
