@@ -39,6 +39,7 @@
 {
     PFQuery *profileQuery = [self query];
     [profileQuery includeKey:@"friends"];
+    [profileQuery includeKey:@"pendingFriends"];
     [profileQuery whereKey:@"user" equalTo:[User currentUser]];
     [profileQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error)
      {
