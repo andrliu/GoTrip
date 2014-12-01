@@ -21,6 +21,8 @@
 @dynamic birthDate;
 @dynamic memo;
 @dynamic avatarData;
+@dynamic friends;
+@dynamic pendingFriends;
 @dynamic user;
 
 + (void)load
@@ -36,6 +38,8 @@
 + (void) getCurrentProfileWithCompletion:(searchCurrentProfileBlock)complete
 {
     PFQuery *profileQuery = [self query];
+    [profileQuery includeKey:@"friends"];
+    [profileQuery includeKey:@"pendingFriends"];
     [profileQuery whereKey:@"user" equalTo:[User currentUser]];
     [profileQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error)
      {

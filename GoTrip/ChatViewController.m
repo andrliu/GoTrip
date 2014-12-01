@@ -144,7 +144,7 @@
             
             if (!error) {
                 // The find succeeded.
-                NSLog(@"Successfully retrieved %d chats from cache.", objects.count);
+                NSLog(@"Successfully retrieved %lu chats from cache.", (unsigned long)objects.count);
                 [self.messageData removeAllObjects];
                 [self.messageData addObjectsFromArray:objects];
                 [self.messageTableView reloadData];
@@ -182,7 +182,7 @@
                 [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                     if (!error) {
                         // The find succeeded.
-                        NSLog(@"Successfully retrieved %d chats.", objects.count);
+                        NSLog(@"Successfully retrieved %lu chats.", (unsigned long)objects.count);
                         
                         [self.messageData addObjectsFromArray:objects];
                         //so I need a key for profile right? but that's
