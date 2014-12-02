@@ -10,7 +10,7 @@
 #import "Message.h"
 #import "Profile.h"
 #import "ChatViewController.h"
-//#import "TestViewController.h"
+#import "TestViewController.h"
 
 @interface MessagesViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -70,8 +70,8 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // TestViewController *testVC = [[TestViewController alloc] init];
-    //  [self.navigationController pushViewController:testVC animated:YES];
+     TestViewController *testVC = [[TestViewController alloc] init];
+      [self.navigationController pushViewController:testVC animated:YES];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
