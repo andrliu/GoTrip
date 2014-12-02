@@ -24,6 +24,7 @@
 @dynamic friends;
 @dynamic pendingFriends;
 @dynamic user;
+@dynamic isMessaging;
 
 + (void)load
 {
@@ -41,6 +42,7 @@
     [profileQuery includeKey:@"friends"];
     [profileQuery includeKey:@"pendingFriends"];
     [profileQuery whereKey:@"user" equalTo:[User currentUser]];
+    [profileQuery includeKey:@"isMessaging"];
     [profileQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error)
      {
          if (!error)

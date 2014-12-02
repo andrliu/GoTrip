@@ -30,6 +30,7 @@ typedef void(^searchCurrentProfileBlock)(Profile *profile, NSError *error);
 @property (nonatomic, strong) NSArray *friends;
 @property (nonatomic, strong) NSArray *pendingFriends;
 @property (nonatomic, strong) User *user;
+@property (nonatomic, strong) NSArray *isMessaging;
 
 + (void) getCurrentProfileWithCompletion:(searchCurrentProfileBlock)complete;
 
