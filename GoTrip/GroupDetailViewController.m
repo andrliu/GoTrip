@@ -8,6 +8,7 @@
 
 #import "GroupDetailViewController.h"
 #import "Group.h"
+#import "Photo.h"
 #import "TextTableViewCell.h"
 #import "ImageTableViewCell.h"
 #import "ButtonTableViewCell.h"
@@ -28,13 +29,31 @@
 
     //TODO: clean that stuff. For testing only
 
-    UIImage *image1 = [UIImage imageNamed:@"minsk"];
-    UIImage *image2 = [UIImage imageNamed:@"portland"];
-    UIImage *image3 = [UIImage imageNamed:@"sanfrancisco"];
-    UIImage *image4 = [UIImage imageNamed:@"chicago"];
-    self.collectionViewArray = @[image1,image2,image3,image4];
+    PFQuery *photoQuery = [Photo query];
+    [photoQuery whereKey:@"group" equalTo:self.group];
+    [photoQuery orderByDescending:@"createdAt"];
+    [photoQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+     {
+         if (error)
+         {
+             [self errorAlertWindow:error.localizedDescription];
+         }
+         else
+         {
+             self.collectionViewArray = objects;
+         }
+     }];
 
-    self.aString = @"Excepteur sint occaecat \ncupidatat non proident, sunt in culpa qui officia desdolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip aute irure dolor in reprehenduptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint eserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Ut enim ad minim veniam, quis nostrud \nexercitation ullamco laboris nisi ut aliquip aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint eserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. \nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint eserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiudaUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip aute irure dolor in reprehenduptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint eserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint eserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint eserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiudaUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip aute irure dolor in reprehenduptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint eserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint eserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint eserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiudaUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip aute irure dolor in reprehenduptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint eserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint eserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint eserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda  END.";
+    //TODO: clean that stuff. For testing only
+
+    //    UIImage *image1 = [UIImage imageNamed:@"minsk"];
+    //    UIImage *image2 = [UIImage imageNamed:@"portland"];
+    //    UIImage *image3 = [UIImage imageNamed:@"sanfrancisco"];
+    //    UIImage *image4 = [UIImage imageNamed:@"chicago"];
+    //    self.collectionViewArray = @[image1,image2,image3,image4];
+
+    self.navigationItem.title = self.group.name;
+    self.aString = self.group.memo;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -138,7 +157,7 @@
             return 1;
             break;
         case 2:
-            return 2;
+            return 3;
             break;
 
         default:
@@ -146,6 +165,27 @@
             break;
     }
 }
+
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    switch (section)
+    {
+        case 0:
+            return @"Group description";
+            break;
+        case 1:
+            return @"Uploaded images";
+            break;
+            //        case 2:
+            //            return @"Control";
+            //            break;
+
+        default:
+            return nil;
+            break;
+    }
+}
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -179,7 +219,6 @@
         case 2:
         {
             ButtonTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"buttonCell" forIndexPath:indexPath];
-//cell.button.titleLabel.text = @"join the group";
 
             switch (indexPath.row)
             {
@@ -193,12 +232,17 @@
                     [cell.button setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
 //                    [cell.button.layer setCornerRadius:15];
                     break;
+                case 2:
+                    [cell.button setHidden:YES];
+                    break;
 
                 default:
                     return nil;
                     break;
             }
-//TODO: complete the ROW
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            //            cell.backgroundColor = [UIColor colorWithRed:230.0/250.0 green:230.0/250.0 blue:230.0/250.0 alpha:0.5f];
+
             return cell;
         }
             break;
@@ -221,19 +265,38 @@
 {
     GroupCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"collectionCell" forIndexPath:indexPath];
 
-    cell.customImageView.image = self.collectionViewArray[indexPath.item];
+    Photo *photoObj = self.collectionViewArray[indexPath.item];
+    PFFile *imageFile = photoObj.imageData;
+    [imageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error)
+     {
+         if (error)
+         {
+             [self errorAlertWindow:error.localizedDescription];
+         }
+         else
+         {
+             cell.customImageView.image = [UIImage imageWithData:data];
+             cell.backgroundColor = [UIColor blackColor];
+
+         }
+
+     }];
+
+    //    cell.customImageView.image = self.collectionViewArray[indexPath.item];
     //    cell.customImageView.image = [UIImage imageNamed:@"textImage"];
     cell.backgroundColor = [UIColor blackColor];
-    
-    
+
     return cell;
 }
 
 
-
-
-
-
+-(void)errorAlertWindow:(NSString *)message
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Ahtung!" message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okButton = [UIAlertAction actionWithTitle:@"😭 Mkay..." style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:okButton];
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 
 

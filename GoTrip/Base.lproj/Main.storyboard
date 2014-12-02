@@ -200,7 +200,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CmG-Ka-TcT">
-                                                    <rect key="frame" x="110" y="7" width="100" height="30"/>
+                                                    <rect key="frame" x="110" y="14" width="100" height="30"/>
                                                     <color key="backgroundColor" red="0.70196080207824707" green="0.70196080207824707" blue="0.70196080207824707" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="6rj-7C-fSh"/>
@@ -213,7 +213,7 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="centerX" secondItem="CmG-Ka-TcT" secondAttribute="centerX" id="3j3-vP-het"/>
-                                                <constraint firstAttribute="centerY" secondItem="CmG-Ka-TcT" secondAttribute="centerY" id="Lfj-YV-X6I"/>
+                                                <constraint firstAttribute="centerY" secondItem="CmG-Ka-TcT" secondAttribute="centerY" constant="-7" id="Lfj-YV-X6I"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>

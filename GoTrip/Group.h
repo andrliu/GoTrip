@@ -16,6 +16,7 @@
 @property (nonatomic, strong) NSString *canonicalName;
 @property (nonatomic, strong) NSString *destination;
 @property (nonatomic, strong) NSData *imageData;
+@property (nonatomic, strong) NSString *memo;
 @property (nonatomic, strong) Profile *creator;
 @property (nonatomic, strong) NSArray *profiles;
 @property (nonatomic, strong) NSDate *startDate;
