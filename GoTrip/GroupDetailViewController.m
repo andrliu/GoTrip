@@ -54,7 +54,7 @@
             theFloat =  100.0;
             break;
         case 2:
-            theFloat =  35.0;
+            theFloat =  44.0;
             break;
 
         default:
@@ -179,6 +179,26 @@
         case 2:
         {
             ButtonTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"buttonCell" forIndexPath:indexPath];
+//cell.button.titleLabel.text = @"join the group";
+
+            switch (indexPath.row)
+            {
+                case 0:
+                    [cell.button setTitle:@"Join group" forState:UIControlStateNormal];
+//                    [cell.button.layer setCornerRadius:15];
+                    break;
+
+                case 1:
+                    [cell.button setTitle:@"Report group" forState:UIControlStateNormal];
+                    [cell.button setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+//                    [cell.button.layer setCornerRadius:15];
+                    break;
+
+                default:
+                    return nil;
+                    break;
+            }
+//TODO: complete the ROW
             return cell;
         }
             break;
@@ -189,8 +209,6 @@
     }
 
 }
-
-
 
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
