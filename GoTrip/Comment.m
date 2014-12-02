@@ -24,4 +24,24 @@
     return @"Comment";
 }
 
++ (void) getCurrentCommentsWithCurrentProfile:(Profile *)profile withCompletion:(searchCurrentCommentsBlock)complete
+{
+    PFQuery *query = [self query];
+    [query orderByDescending:@"createdAt"];
+    [query includeKey:@"sender"];
+    [query includeKey:@"recipient"];
+    [query whereKey:@"recipient" equalTo:profile];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+     {
+         if (!error)
+         {
+             complete(objects,nil);
+         }
+         else
+         {
+             complete(nil,error);
+         }
+     }];
+}
+
 @end
