@@ -76,11 +76,11 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    //    ChatViewController *chatVC = segue.destinationViewController;
-    //
-    //    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
-    //    chatVC.passedRecipient = self.arrayOfMessages[indexPath.row];
-    //
+        ChatViewController *chatVC = segue.destinationViewController;
+    
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        chatVC.passedRecipient = self.arrayOfMessages[indexPath.row];
+    
 }
 
 /*

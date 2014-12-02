@@ -14,7 +14,7 @@
 
 @interface ChatViewController : JSQMessagesViewController
 
-@property Profile *passedProfile;
+
 @property Profile *passedRecipient;
 
 @end
