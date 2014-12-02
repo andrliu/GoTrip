@@ -73,7 +73,7 @@
             theFloat =  100.0;
             break;
         case 2:
-            theFloat =  44.0;
+            theFloat =  40.0;
             break;
 
         default:
@@ -224,20 +224,23 @@
             {
                 case 0:
                     [cell.button setTitle:@"Join group" forState:UIControlStateNormal];
+                    [cell.button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+                    [cell.button setHidden:NO];
 //                    [cell.button.layer setCornerRadius:15];
                     break;
 
                 case 1:
                     [cell.button setTitle:@"Report group" forState:UIControlStateNormal];
                     [cell.button setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+                    [cell.button setHidden:NO];
 //                    [cell.button.layer setCornerRadius:15];
                     break;
-                case 2:
-                    [cell.button setHidden:YES];
-                    break;
+//                case 2:
+//                    [cell.button setHidden:YES];
+//                    break;
 
                 default:
-                    return nil;
+                    [cell.button setHidden:YES];
                     break;
             }
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
