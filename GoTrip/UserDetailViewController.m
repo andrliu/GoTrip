@@ -7,9 +7,10 @@
 //
 
 #import "UserDetailViewController.h"
-#import "Profile.h"
+#import "Comment.h"
 
-@interface UserDetailViewController ()
+@interface UserDetailViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
@@ -19,6 +20,7 @@
 @property BOOL isFriend;
 @property BOOL isPending;
 @property BOOL isRequesting;
+@property NSArray *arrayOfComment;
 
 @end
 
@@ -54,6 +56,7 @@
              [self error:error];
          }
      }];
+    
 }
 
 - (void)checkRelationStatus
@@ -216,6 +219,79 @@
         }
     }];
 }
+
+- (IBAction)AddCommentOnButtonPressed:(UIBarButtonItem *)sender
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Add a comment"
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField *textField)
+     {
+         textField.placeholder = @"Comment";
+     }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
+    [alert addAction:cancelAction];
+    UIAlertAction *addAction = [UIAlertAction actionWithTitle:@"Add"
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction *action)
+                                {
+                                    UITextField *textFieldForText = alert.textFields.firstObject;
+                                    Comment *comment = [Comment object];
+                                    comment.text = textFieldForText.text;
+                                    comment.sender = self.currentProfile;
+                                    comment.recipient = self.profile;
+                                    [comment saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                                     {
+                                         //TODO: reload comment
+                                     }];
+                                }];
+    [alert addAction:addAction];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+//MARK: collectionview delegate
+//- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+//{
+//    return self.listArray.count;
+//}
+//
+//- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+//    if (self.isGroup)
+//    {
+//        Group *group = self.listArray[indexPath.item];
+//        cell.imageView.image = [UIImage imageWithData:group.imageData];
+//        cell.nameLabel.text = group.name;
+//        cell.memoLabel.text = group.destination;
+//    }
+//    else
+//    {
+//        Profile *profile = self.listArray[indexPath.item];
+//        cell.imageView.image = [UIImage imageWithData:profile.avatarData];
+//        cell.nameLabel.text = [NSString stringWithFormat:@"%@ %@", profile.firstName, profile.lastName];;
+//        cell.memoLabel.text = profile.memo;
+//    }
+//    return cell;
+//}
+//
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return CGSizeMake(self.collectionView.frame.size.width*0.4, self.collectionView.frame.size.width*0.4 +30);
+//}
+//
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+//{
+//    return CGSizeMake(self.collectionView.frame.size.width*0.3, self.collectionView.frame.size.height);
+//}
+//
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
+//{
+//    return CGSizeMake(self.collectionView.frame.size.width*0.3, self.collectionView.frame.size.height);
+//}
+
 
 //MARK: UIAlert
 - (void)error:(NSError *)error
