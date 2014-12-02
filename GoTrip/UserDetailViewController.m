@@ -36,16 +36,12 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    PFQuery *query = [Comment query];
-    [query whereKey:@"recipient" equalTo:self.profile];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
-    {
-        self.arrayOfComment = objects;
-    }];
-
-
-
+    [self reloadComment];
     self.imageView.image = [UIImage imageWithData:self.profile.avatarData];
+    self.imageView.layer.cornerRadius = 10.0f;
+    self.imageView.clipsToBounds = YES;
+    self.imageView.layer.borderWidth = 2.0f;
+    self.imageView.layer.borderColor = [UIColor blackColor].CGColor;
     self.nameLabel.text = [NSString stringWithFormat:@"%@ %@", self.profile.firstName, self.profile.lastName];
     self.memoLabel.text = self.profile.memo;
 //    NSDate *now = [NSDate date];
@@ -68,6 +64,27 @@
          }
      }];
     
+}
+
+- (void)reloadComment
+{
+    PFQuery *query = [Comment query];
+    [query orderByDescending:@"createdAt"];
+    [query includeKey:@"sender"];
+    [query includeKey:@"recipient"];
+    [query whereKey:@"recipient" equalTo:self.profile];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+     {
+         if (!error)
+         {
+             self.arrayOfComment = objects;
+             [self.collectionView reloadData];
+         }
+         else
+         {
+             [self error:error];
+         }
+     }];
 }
 
 - (void)checkRelationStatus
@@ -255,7 +272,14 @@
                                     comment.recipient = self.profile;
                                     [comment saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
                                      {
-                                         //TODO: reload comment
+                                         if (!error)
+                                         {
+                                             [self reloadComment];
+                                         }
+                                         else
+                                         {
+                                             [self error:error];
+                                         }
                                      }];
                                 }];
     [alert addAction:addAction];
@@ -273,22 +297,30 @@
     CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     Comment *comment = self.arrayOfComment[indexPath.item];
     cell.textView.text = comment.text;
+    [cell.imageView.layer setCornerRadius:10.0f];
+    [cell.imageView setClipsToBounds:YES];
+    [cell.imageView.layer setBorderWidth:2.0f];
+    [cell.imageView.layer setBorderColor:[UIColor blackColor].CGColor];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+    NSString *stringOfDate = [dateFormatter stringFromDate:comment.createdAt];
+    cell.nameLabel.text = [NSString stringWithFormat:@"by %@ %@", comment.sender.firstName, stringOfDate];
     return cell;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(self.collectionView.frame.size.width*0.4, self.collectionView.frame.size.height);
+    return CGSizeMake(self.collectionView.frame.size.width*0.8, self.collectionView.frame.size.height*0.6);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
-    return CGSizeMake(self.collectionView.frame.size.width*0.3, self.collectionView.frame.size.height);
+    return CGSizeMake(self.collectionView.frame.size.width*0.1, self.collectionView.frame.size.height);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
 {
-    return CGSizeMake(self.collectionView.frame.size.width*0.3, self.collectionView.frame.size.height);
+    return CGSizeMake(self.collectionView.frame.size.width*0.1, self.collectionView.frame.size.height);
 }
 
 

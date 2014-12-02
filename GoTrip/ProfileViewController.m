@@ -78,7 +78,7 @@
             self.imageView.layer.cornerRadius = self.imageView.frame.size.width/2;
             self.imageView.clipsToBounds = YES;
             self.imageView.layer.borderWidth = 2.0f;
-            self.imageView.layer.borderColor = [UIColor whiteColor].CGColor;
+            self.imageView.layer.borderColor = [UIColor blackColor].CGColor;
             self.imageView.image = [UIImage imageWithData:self.profile.avatarData];
             self.nameLabel.text = [NSString stringWithFormat:@"%@ %@", self.profile.firstName, self.profile.lastName];
             self.memoLabel.text = self.profile.memo;
@@ -104,8 +104,6 @@
                     [self error:error];
                 }
             }];
-
-
         }
         else
         {
@@ -250,6 +248,10 @@
     {
         Group *group = self.listArray[indexPath.item];
         cell.imageView.image = [UIImage imageWithData:group.imageData];
+        [cell.imageView.layer setCornerRadius:self.collectionView.frame.size.width*0.2];
+        [cell.imageView setClipsToBounds:YES];
+        [cell.imageView.layer setBorderWidth:2.0f];
+        [cell.imageView.layer setBorderColor:[UIColor blackColor].CGColor];
         cell.nameLabel.text = group.name;
         cell.memoLabel.text = group.destination;
     }
@@ -257,8 +259,11 @@
     {
         Profile *profile = self.listArray[indexPath.item];
         cell.imageView.image = [UIImage imageWithData:profile.avatarData];
-        [cell.imageView.layer setCornerRadius:self.imageView.frame.size.width/2];
-        cell.nameLabel.text = [NSString stringWithFormat:@"%@ %@", profile.firstName, profile.lastName];;
+        [cell.imageView.layer setCornerRadius:self.collectionView.frame.size.width*0.2];
+        [cell.imageView setClipsToBounds:YES];
+        [cell.imageView.layer setBorderWidth:2.0f];
+        [cell.imageView.layer setBorderColor:[UIColor blackColor].CGColor];
+        cell.nameLabel.text = [NSString stringWithFormat:@"%@ %@", profile.firstName, profile.lastName];
         cell.memoLabel.text = profile.memo;
     }
     return cell;
