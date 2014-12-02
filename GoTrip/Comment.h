@@ -10,10 +10,14 @@
 #import <Parse/PFObject+Subclass.h>
 #import "Profile.h"
 
+typedef void(^searchCurrentCommentsBlock)(NSArray *objects, NSError *error);
+
 @interface Comment : PFObject <PFSubclassing>
 
 @property (nonatomic, strong) NSString *text;
 @property Profile *recipient;
 @property Profile *sender;
+
++ (void) getCurrentCommentsWithCurrentProfile:(Profile *)profile withCompletion:(searchCurrentCommentsBlock)complete;
 
 @end

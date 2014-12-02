@@ -12,7 +12,6 @@
 
 @interface UserDetailViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
-
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
@@ -28,6 +27,7 @@
 
 @implementation UserDetailViewController
 
+//MARK: view controller life cycle
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -36,20 +36,20 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self reloadComment];
-    self.imageView.image = [UIImage imageWithData:self.profile.avatarData];
-    self.imageView.layer.cornerRadius = 10.0f;
-    self.imageView.clipsToBounds = YES;
-    self.imageView.layer.borderWidth = 2.0f;
-    self.imageView.layer.borderColor = [UIColor blackColor].CGColor;
+    [Comment getCurrentCommentsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error) {
+        if (!error)
+        {
+            self.arrayOfComment = objects;
+            [self.collectionView reloadData];
+        }
+        else
+        {
+            [self error:error];
+        }
+    }];
+    [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
     self.nameLabel.text = [NSString stringWithFormat:@"%@ %@", self.profile.firstName, self.profile.lastName];
     self.memoLabel.text = self.profile.memo;
-//    NSDate *now = [NSDate date];
-//    NSDateComponents* age = [[NSCalendar currentCalendar] components:NSCalendarUnitYear
-//                                                            fromDate:birth
-//                                                              toDate:now
-//                                                             options:0];
-//    self.ageLabel.text = [NSString stringWithFormat:@"%d",[age year]];
     [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error)
      {
          if (!error)
@@ -63,30 +63,9 @@
              [self error:error];
          }
      }];
-    
 }
 
-- (void)reloadComment
-{
-    PFQuery *query = [Comment query];
-    [query orderByDescending:@"createdAt"];
-    [query includeKey:@"sender"];
-    [query includeKey:@"recipient"];
-    [query whereKey:@"recipient" equalTo:self.profile];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
-     {
-         if (!error)
-         {
-             self.arrayOfComment = objects;
-             [self.collectionView reloadData];
-         }
-         else
-         {
-             [self error:error];
-         }
-     }];
-}
-
+//MARK: custom relation status checking method
 - (void)checkRelationStatus
 {
     for (Profile *profile in self.currentProfile.friends)
@@ -127,6 +106,7 @@
     }
 }
 
+//MARK: custom button title method
 - (void)switchButtonTitleBasedOnRelationStatus
 {
     if (self.isFriend)
@@ -150,6 +130,7 @@
     }
 }
 
+//MARK: custom button action
 - (IBAction)changeRelationOnButtonPressed:(UIButton *)sender
 {
     PFObject *currentUserProfile = [PFObject objectWithoutDataWithClassName:@"Profile"
@@ -176,7 +157,6 @@
                 self.profile.friends = userFriendArray;
             }
         }
-        [self.relationButton setTitle:@"Invite" forState:UIControlStateNormal];
     }
     else if ([self.relationButton.titleLabel.text isEqual:@"Invite"])
     {
@@ -190,7 +170,6 @@
             [userPendingFriendArray addObject:currentUserProfile];
             self.profile.pendingFriends = userPendingFriendArray;
         }
-        [self.relationButton setTitle:@"Pending" forState:UIControlStateNormal];
     }
     else if ([self.relationButton.titleLabel.text isEqual:@"Accept"])
     {
@@ -223,7 +202,6 @@
             [userCurrentFriendArray addObject:userProfile];
             self.currentProfile.friends = userCurrentFriendArray;
         }
-        [self.relationButton setTitle:@"Friend" forState:UIControlStateNormal];
     }
     [self.profile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
     {
@@ -233,7 +211,8 @@
             {
                 if (!error)
                 {
-                    NSLog(@"save finished");
+                    [self checkRelationStatus];
+                    [self switchButtonTitleBasedOnRelationStatus];
                 }
                 else
                 {
@@ -274,7 +253,17 @@
                                      {
                                          if (!error)
                                          {
-                                             [self reloadComment];
+                                             [Comment getCurrentCommentsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error) {
+                                                 if (!error)
+                                                 {
+                                                     self.arrayOfComment = objects;
+                                                     [self.collectionView reloadData];
+                                                 }
+                                                 else
+                                                 {
+                                                     [self error:error];
+                                                 }
+                                             }];
                                          }
                                          else
                                          {
@@ -284,6 +273,16 @@
                                 }];
     [alert addAction:addAction];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+//MARK: custom imageView method
+- (void)setImageView:(UIImageView *)imageView withData:(NSData *)data withLayerRadius:(CGFloat)radius withBorderColor:(CGColorRef)color
+{
+    imageView.image = [UIImage imageWithData:data];
+    [imageView.layer setCornerRadius:radius];
+    [imageView setClipsToBounds:YES];
+    [imageView.layer setBorderWidth:2.0f];
+    [imageView.layer setBorderColor:color];
 }
 
 //MARK: collectionview delegate
@@ -297,10 +296,7 @@
     CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     Comment *comment = self.arrayOfComment[indexPath.item];
     cell.textView.text = comment.text;
-    [cell.imageView.layer setCornerRadius:10.0f];
-    [cell.imageView setClipsToBounds:YES];
-    [cell.imageView.layer setBorderWidth:2.0f];
-    [cell.imageView.layer setBorderColor:[UIColor blackColor].CGColor];
+    [self setImageView:cell.imageView withData:nil withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"MM/dd/yyyy"];
     NSString *stringOfDate = [dateFormatter stringFromDate:comment.createdAt];
@@ -322,7 +318,6 @@
 {
     return CGSizeMake(self.collectionView.frame.size.width*0.1, self.collectionView.frame.size.height);
 }
-
 
 //MARK: UIAlert
 - (void)error:(NSError *)error

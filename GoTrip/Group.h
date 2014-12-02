@@ -10,6 +10,8 @@
 #import <Parse/PFObject+Subclass.h>
 @class Profile;
 
+typedef void(^searchCurrentGroupsBlock)(NSArray *objects, NSError *error);
+
 @interface Group : PFObject <PFSubclassing>
 
 @property (nonatomic, strong) NSString *name;
@@ -22,5 +24,7 @@
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;
 @property (nonatomic, strong) NSNumber *sizeLimit;
+
++ (void) getCurrentGroupsWithCurrentProfile:(Profile *)profile withCompletion:(searchCurrentGroupsBlock)complete;
 
 @end

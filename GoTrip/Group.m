@@ -32,7 +32,22 @@
     return @"Group";
 }
 
-
-
++ (void) getCurrentGroupsWithCurrentProfile:(Profile *)profile withCompletion:(searchCurrentGroupsBlock)complete
+{
+    PFQuery *query = [self query];
+    [query includeKey:@"profiles"];
+    [query whereKey:@"profiles" equalTo:profile];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+     {
+         if (!error)
+         {
+             complete(objects,nil);
+         }
+         else
+         {
+             complete(nil,error);
+         }
+     }];
+}
 
 @end
