@@ -37,6 +37,7 @@
     self.messageTextField.delegate = self;
     [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error) {
         self.currentUserProfile = profile;
+        [self loadLocalChat];
     }];
     
     self.userName = @"Jon";
@@ -67,11 +68,26 @@
     NSDate *theDate = [self.messageData [indexPath.row] objectForKey:@"date"];
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"HH:mm a"];
-    NSString *timeString = [formatter stringFromDate:theDate];
+    [formatter setDateFormat:@"MM-dd"];
+    
+    
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSDateComponents *components = [cal components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate:[NSDate date]];
+    NSDate *today = [cal dateFromComponents:components];
+    components = [cal components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate:theDate];
+    NSDate *otherDate = [cal dateFromComponents:components];
+    
+    if([today isEqualToDate:otherDate]) {
+        [formatter setDateFormat:@"HH:mm a"];
+        
+    }
     
     cell.textLabel.text = [self.messageData[indexPath.row] objectForKey:@"text"];
     //    cell.detailTextLabel.text =[NSString stringWithFormat:@"%@",[self.messageData[indexPath.row] objectForKey:@"date"]];
+    
+    
+    NSString *timeString = [formatter stringFromDate:theDate];
+    
     cell.detailTextLabel.text = timeString;
     
     return cell;
@@ -146,11 +162,17 @@
     
     // If no objects are loaded in memory, we look to the cache first to fill the table
     // and then subsequently do a query against the network.
+    
     if ([self.messageData count] == 0) {
-        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-        [query orderByAscending:@"createdAt"];
-        NSLog(@"Trying to retrieve from cache");
         
+        
+        PFQuery *a = [Message query];
+        //        PFObject *abc = [Message objectWithoutDataWithClassName:@"Profile" objectId:@"Q8DIiKZFYI"];
+        
+        PFObject *user1 = [Profile objectWithoutDataWithObjectId:@"Q8DIiKZFYI"];
+        PFObject *user2 = [Profile objectWithoutDataWithObjectId:@"yKcMGScuaA"];
+        [a whereKey:@"sender" equalTo:user1];
+        [a whereKey:@"userRecipient" equalTo:user2];
         
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             
@@ -158,6 +180,7 @@
                 // The find succeeded.
                 NSLog(@"Successfully retrieved %lu chats from cache.", (unsigned long)objects.count);
                 [self.messageData removeAllObjects];
+                
                 [self.messageData addObjectsFromArray:objects];
                 [self.messageTableView reloadData];
             } else {
@@ -165,74 +188,98 @@
                 NSLog(@"Error: %@ %@", error, [error userInfo]);
             }
         }];
+        
+        //    PFQuery *b = [Message query];
+        //    [query whereKey:@:sender" equalTo:@"yKcMGScuAa"];
+        //    [query find:@"yKcMGScuaA" block:^(PFObject *object, NSError *error) {
+        //        <#code#>
+        //    }];
+        
+        
+        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+        [query orderByDescending:@"createdAt"];
+        NSLog(@"Trying to retrieve from cache");
+        
+        
+        
+        //original query for all the data
+        
+        //        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        //
+        //            if (!error) {
+        //                // The find succeeded.
+        //                NSLog(@"Successfully retrieved %lu chats from cache.", (unsigned long)objects.count);
+        //                [self.messageData removeAllObjects];
+        //
+        //                [self.messageData addObjectsFromArray:objects];
+        //                [self.messageTableView reloadData];
+        //            } else {
+        //                // Log details of the failure
+        //                NSLog(@"Error: %@ %@", error, [error userInfo]);
+        //            }
+        //        }];
+        //    }
+        
+        
+        
+        __block int totalNumberOfEntries = 0;
+        [query orderByAscending:@"createdAt"];
+        
+        
+        
+        [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+            if (!error) {
+                // The count request succeeded. Log the count
+                NSLog(@"There are currently %d entries", number);
+                
+                
+                totalNumberOfEntries = number;
+                if (totalNumberOfEntries > [self.messageData count]) {
+                    NSLog(@"Retrieving data");
+                    
+                    int newMessageLimit;
+                    if (totalNumberOfEntries-[self.messageData count]>MAX_ENTRIES_LOADED) {
+                        newMessageLimit = MAX_ENTRIES_LOADED;
+                    }
+                    else {
+                        newMessageLimit = totalNumberOfEntries-[self.messageData count];
+                    }
+                    
+                    query.limit = (int)[NSNumber numberWithInt:newMessageLimit];
+                    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                        if (!error) {
+                            // The find succeeded.
+                            NSLog(@"Successfully retrieved %lu chats.", (unsigned long)objects.count);
+                            
+                            [self.messageData addObjectsFromArray:objects];
+                            //so I need a key for profile right? but that's
+                            
+                            NSMutableArray *insertIndexPaths = [[NSMutableArray alloc] init];
+                            for (int ind = 0; ind < objects.count; ind++) {
+                                NSIndexPath *newPath = [NSIndexPath indexPathForRow:ind inSection:0];
+                                [insertIndexPaths addObject:newPath];
+                            }
+                            
+                            [self.messageTableView beginUpdates];
+                            [self.messageTableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationTop];
+                            [self.messageTableView endUpdates];
+                            [self.messageTableView reloadData];
+                            //                        [self.messageTableView scrollsToTop];
+                        } else {
+                            // Log details of the failure
+                            NSLog(@"Error: %@ %@", error, [error userInfo]);
+                        }
+                    }];
+                }
+                
+            } else {
+                // The request failed, we'll keep the chatData count? ......
+                number = [self.messageData count];
+            }
+        }];
     }
     
-    
-    
-    __block int totalNumberOfEntries = 0;
-    [query orderByAscending:@"createdAt"];
-    
-//    PFQuery *a = [Message query];
-//    PFObject *abc = [Message objectWithoutDataWithClassName:@"Profile" objectId:<#(NSString *)#>]
-//    [a whereKey:@"sender" equalTo:<#(id)#>
-//    PFQuery *b = [Message query];
-    [query whereKey:@:sender" equalTo:@"yKcMGScuAa"];
-//    [query find:@"yKcMGScuaA" block:^(PFObject *object, NSError *error) {
-//        <#code#>
-//    }];
-    
-    [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-        if (!error) {
-            // The count request succeeded. Log the count
-            NSLog(@"There are currently %d entries", number);
-            
-            
-            totalNumberOfEntries = number;
-            if (totalNumberOfEntries > [self.messageData count]) {
-                NSLog(@"Retrieving data");
-                
-                int newMessageLimit;
-                if (totalNumberOfEntries-[self.messageData count]>MAX_ENTRIES_LOADED) {
-                    newMessageLimit = MAX_ENTRIES_LOADED;
-                }
-                else {
-                    newMessageLimit = totalNumberOfEntries-[self.messageData count];
-                }
-                
-                query.limit = (int)[NSNumber numberWithInt:newMessageLimit];
-                [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                    if (!error) {
-                        // The find succeeded.
-                        NSLog(@"Successfully retrieved %lu chats.", (unsigned long)objects.count);
-                        
-                        [self.messageData addObjectsFromArray:objects];
-                        //so I need a key for profile right? but that's
-                        
-                        NSMutableArray *insertIndexPaths = [[NSMutableArray alloc] init];
-                        for (int ind = 0; ind < objects.count; ind++) {
-                            NSIndexPath *newPath = [NSIndexPath indexPathForRow:ind inSection:0];
-                            [insertIndexPaths addObject:newPath];
-                        }
-                        
-                        [self.messageTableView beginUpdates];
-                        [self.messageTableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationTop];
-                        [self.messageTableView endUpdates];
-                        [self.messageTableView reloadData];
-                        [self.messageTableView scrollsToTop];
-                    } else {
-                        // Log details of the failure
-                        NSLog(@"Error: %@ %@", error, [error userInfo]);
-                    }
-                }];
-            }
-            
-        } else {
-            // The request failed, we'll keep the chatData count? ......
-            number = [self.messageData count];
-        }
-    }];
 }
-
 - (void)changeProfileMessagingSystem
 {
     
@@ -261,7 +308,7 @@
         }
         
         
-
+        
         
         if(checkRecipientBOOL)
         {

@@ -10,6 +10,7 @@
 #import "Message.h"
 #import "Profile.h"
 #import "ChatViewController.h"
+#import "TestViewController.h"
 
 @interface MessagesViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -67,13 +68,21 @@
     return cell;
 }
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+   // TestViewController *testVC = [[TestViewController alloc] init];
+  //  [self.navigationController pushViewController:testVC animated:YES];
+}
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    ChatViewController *chatVC = segue.destinationViewController;
-    
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
-    chatVC.passedRecipient = self.arrayOfMessages[indexPath.row];
+//    ChatViewController *chatVC = segue.destinationViewController;
+//    
+//    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+//    chatVC.passedRecipient = self.arrayOfMessages[indexPath.row];
+//
 }
+    
 /*
 #pragma mark - Navigation
 
