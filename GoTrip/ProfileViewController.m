@@ -257,6 +257,7 @@
     {
         Profile *profile = self.listArray[indexPath.item];
         cell.imageView.image = [UIImage imageWithData:profile.avatarData];
+        [cell.imageView.layer setCornerRadius:self.imageView.frame.size.width/2];
         cell.nameLabel.text = [NSString stringWithFormat:@"%@ %@", profile.firstName, profile.lastName];;
         cell.memoLabel.text = profile.memo;
     }

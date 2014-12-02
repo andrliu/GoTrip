@@ -792,6 +792,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="collectionView" destination="h8Z-8L-nrn" id="urG-Hc-8vf"/>
                         <outlet property="imageView" destination="B6g-VI-Rcl" id="3VG-0l-BAD"/>
                         <outlet property="memoLabel" destination="X52-tk-TLl" id="u0U-6w-oqm"/>
                         <outlet property="nameLabel" destination="yhi-Wu-duQ" id="J2a-VV-yqm"/>
