@@ -296,6 +296,7 @@
     CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     Comment *comment = self.arrayOfComment[indexPath.item];
     cell.textView.text = comment.text;
+    [cell.textView setFont: [UIFont fontWithName:@"Chalkduster" size:12.0f]];
     [self setImageView:cell.imageView withData:nil withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"MM/dd/yyyy"];
