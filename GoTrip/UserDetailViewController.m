@@ -297,7 +297,8 @@
     Comment *comment = self.arrayOfComment[indexPath.item];
     cell.textView.text = comment.text;
     [cell.textView setFont: [UIFont fontWithName:@"Chalkduster" size:12.0f]];
-    [self setImageView:cell.imageView withData:nil withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
+    [self setImageView:cell.backgroundImageView withData:nil withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
+    [self setImageView:cell.imageView withData:comment.sender.avatarData withLayerRadius:cell.imageView.frame.size.width/2 withBorderColor:[UIColor whiteColor].CGColor];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"MM/dd/yyyy"];
     NSString *stringOfDate = [dateFormatter stringFromDate:comment.createdAt];
