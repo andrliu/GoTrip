@@ -70,8 +70,8 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-     TestViewController *testVC = [[TestViewController alloc] init];
-      [self.navigationController pushViewController:testVC animated:YES];
+//     TestViewController *testVC = [[TestViewController alloc] init];
+//      [self.navigationController pushViewController:testVC animated:YES];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

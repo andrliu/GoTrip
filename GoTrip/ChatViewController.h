@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import "Profile.h"
+#import "JSQMessagesViewController.h"
 
-@interface ChatViewController : UIViewController
+
+@interface ChatViewController : JSQMessagesViewController
 
 @property Profile *passedProfile;
 @property Profile *passedRecipient;
