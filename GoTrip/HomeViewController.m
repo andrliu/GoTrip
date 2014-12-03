@@ -246,6 +246,7 @@
     profile.lastName = @"";
     profile.canonicalFirstName = [profile.user.username lowercaseString];
     profile.canonicalLastName = @"";
+    profile.memo = @"Newbie";
     UIImage *image = [UIImage imageNamed:@"avatar"];
     profile.avatarData = UIImageJPEGRepresentation(image, 0.1);
     [profile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
