@@ -17,9 +17,11 @@
 #import "User.h"
 #import "CustomTableViewCell.h"
 
-@interface HomeViewController () <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface HomeViewController () <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UITableViewDataSource, UITableViewDelegate, UITabBarControllerDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property NSArray *tableViewArray;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *segmentedComtrol;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *addGroupButton;
 
 
 @end
@@ -42,25 +44,11 @@
 //        [self.tableView reloadData];
 //        
 //    }];
-    PFQuery *groupListQuery = [Group query];
-    [groupListQuery whereKey:@"isFeatured" equalTo:[NSNumber numberWithBool:YES]];
-    [groupListQuery orderByAscending:@"startDate"];
-    [groupListQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
-    {
-        if (error)
-        {
-            [self error:error];
-        }
-        else
-        {
-            self.tableViewArray = objects;
-            [self.tableView reloadData];
-        }
-    }];
 
-// to here
+    [self queryForFeaturedGroups];
+
     self.tableView.tableFooterView = [[UIView alloc] init] ;
-    self.navigationItem.title = @"Featured Groups";
+//    self.navigationItem.title = @"Featured Groups";
 
 }
 
@@ -306,12 +294,91 @@
     NSString *endDateString = [dateFormat stringFromDate:group.endDate];
     cell.endLabel.text = endDateString;
 
-    cell.goingNumberLabel.text = [NSString stringWithFormat:@"☺︎ %lu",(unsigned long)group.profiles.count];
+    NSString *countText;
+    if (group.profiles.count > 0)
+    {
+        countText = [NSString stringWithFormat:@"%lu ☺︎",(unsigned long)group.profiles.count];
+    }
+    else
+    {
+        countText = @"☺︎";
+    }
+    cell.goingNumberLabel.text = countText;
 
 
     return cell;
 }
 
+- (IBAction)segmentedControlValueChanged:(UISegmentedControl *)sControl
+{
+    if (sControl.selectedSegmentIndex==1)
+    {
+
+        [UIView transitionFromView:self.tableView toView:self.tableView duration:.5 options:(UIViewAnimationOptionShowHideTransitionViews | UIViewAnimationOptionTransitionFlipFromLeft) completion:^(BOOL finished)
+         {
+             [self queryForAllGroups];
+         }];
+
+    }
+    else
+    {
+         [self queryForFeaturedGroups];
+        [UIView transitionFromView:self.tableView toView:self.tableView duration:.5 options:(UIViewAnimationOptionShowHideTransitionViews | UIViewAnimationOptionTransitionFlipFromRight)completion:^(BOOL finished)
+         {
+             [self queryForFeaturedGroups];
+         }];
+
+    }
+    
+}
+
+//creates a new group
+- (IBAction)onBarButtonPressed:(UIBarButtonItem *)sender
+{
+//TODO: implement a new group creation
+}
+
+-(void)queryForFeaturedGroups
+{
+    PFQuery *groupListQuery = [Group query];
+    [groupListQuery whereKey:@"isFeatured" equalTo:[NSNumber numberWithBool:YES]];
+    [groupListQuery orderByAscending:@"startDate"];
+    [groupListQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+     {
+         if (error)
+         {
+             [self error:error];
+         }
+         else
+         {
+             self.tableViewArray = objects;
+             [self.tableView reloadData];
+         }
+     }];
+    self.addGroupButton.enabled = NO;
+    self.addGroupButton.tintColor = [UIColor clearColor];
+
+}
+
+-(void)queryForAllGroups
+{
+    PFQuery *groupListQuery = [Group query];
+    [groupListQuery orderByAscending:@"startDate"];
+    [groupListQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+     {
+         if (error)
+         {
+             [self error:error];
+         }
+         else
+         {
+             self.tableViewArray = objects;
+             [self.tableView reloadData];
+         }
+     }];
+    self.addGroupButton.enabled = YES;
+    self.addGroupButton.tintColor = nil;
+}
 
 //MARK: UIAlert
 - (void)error:(NSError *)error
