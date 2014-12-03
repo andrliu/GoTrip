@@ -48,7 +48,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-
     if (!self.isImagePickerCalled)
     {
         [self editMode:NO];
@@ -83,7 +82,6 @@
             self.isImagePickerCalled = NO;
             self.isGroup = NO;
             self.listArray = self.profile.friends;
-
             [Group getCurrentGroupsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error)
             {
                 if (!error)
@@ -190,7 +188,10 @@
 //MARK: custom imageView method
 - (void)setImageView:(UIImageView *)imageView withData:(NSData *)data withLayerRadius:(CGFloat)radius withBorderColor:(CGColorRef)color
 {
-    imageView.image = [UIImage imageWithData:data];
+    if (data)
+    {
+        imageView.image = [UIImage imageWithData:data];
+    }
     [imageView.layer setCornerRadius:radius];
     [imageView setClipsToBounds:YES];
     [imageView.layer setBorderWidth:2.0f];

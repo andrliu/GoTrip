@@ -8,6 +8,7 @@
 
 #import "HomeViewController.h"
 #import "LoginViewController.h"
+#import "SignupViewController.h"
 #import "GroupDetailViewController.h"
 @import Parse;
 #import <ParseFacebookUtils/PFFacebookUtils.h>
@@ -16,7 +17,7 @@
 #import "User.h"
 #import "CustomTableViewCell.h"
 
-@interface HomeViewController () <PFLogInViewControllerDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface HomeViewController () <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UITableViewDataSource, UITableViewDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property NSArray *tableViewArray;
 
@@ -25,22 +26,40 @@
 
 @implementation HomeViewController
 
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
 //TODO: remove example group from here
-    PFQuery *query = [Group query];
-    [query getObjectInBackgroundWithId:@"Zs30vE5wdx" block:^(PFObject *object, NSError *error)
+//    PFQuery *query = [Group query];
+//    [query getObjectInBackgroundWithId:@"Zs30vE5wdx" block:^(PFObject *object, NSError *error)
+//    {
+//        Group *testGroup = (Group *)object;
+//
+//        self.tableViewArray = @[testGroup];
+//        [self.tableView reloadData];
+//        
+//    }];
+    PFQuery *groupListQuery = [Group query];
+    [groupListQuery whereKey:@"isFeatured" equalTo:[NSNumber numberWithBool:YES]];
+    [groupListQuery orderByAscending:@"startDate"];
+    [groupListQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
     {
-        Group *testGroup = (Group *)object;
-
-        self.tableViewArray = @[testGroup];
-        [self.tableView reloadData];
-        
+        if (error)
+        {
+            [self error:error];
+        }
+        else
+        {
+            self.tableViewArray = objects;
+            [self.tableView reloadData];
+        }
     }];
-// to here
 
+// to here
+    self.tableView.tableFooterView = [[UIView alloc] init] ;
     self.navigationItem.title = @"Featured Groups";
 
 }
@@ -145,7 +164,28 @@
     }];
 }
 
+- (void)logOutAction
+{
+    // Logout user, this automatically clears the cache
+    [PFUser logOut];
+    [self presentLoginView];
+}
+
 //MARK: PFLogInViewController delegate
+- (BOOL)logInViewController:(PFLogInViewController *)logInController shouldBeginLogInWithUsername:(NSString *)username password:(NSString *)password
+{
+    if (username && password && username.length != 0 && password.length != 0)
+    {
+        return YES;
+    }
+    [[[UIAlertView alloc] initWithTitle:@"Missing Information"
+                                message:@"Make sure you fill out all of the information!"
+                               delegate:nil
+                      cancelButtonTitle:@"ok"
+                      otherButtonTitles:nil] show];
+    return NO;
+}
+
 - (void)logInViewController:(LoginViewController *)logInController didLogInUser:(PFUser *)user
 {
     [self dismissViewControllerAnimated:YES completion:NULL];
@@ -161,20 +201,74 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)logOutAction
-{
-    // Logout user, this automatically clears the cache
-    [PFUser logOut];
-    [self presentLoginView];
-}
-
 - (void)presentLoginView
 {
     LoginViewController *logInViewController = [[LoginViewController alloc]init];
     [logInViewController setDelegate:self];
     [logInViewController setFacebookPermissions:[NSArray arrayWithObjects:@"friends_about_me", nil]];
-    logInViewController.fields = PFLogInFieldsFacebook;
+    logInViewController.fields = PFLogInFieldsUsernameAndPassword | PFLogInFieldsLogInButton | PFLogInFieldsSignUpButton | PFLogInFieldsFacebook;
+    SignupViewController *signUpViewController = [[SignupViewController alloc]init];
+    [signUpViewController setDelegate:self];
+    signUpViewController.fields = PFSignUpFieldsUsernameAndPassword | PFSignUpFieldsSignUpButton |PFSignUpFieldsDismissButton;
+    [logInViewController setSignUpController:signUpViewController];
     [self presentViewController:logInViewController animated:YES completion:NULL];
+}
+
+//MARK: PFSignUpViewController delegate
+- (BOOL)signUpViewController:(PFSignUpViewController *)signUpController shouldBeginSignUp:(NSDictionary *)info
+{
+    BOOL informationComplete = YES;
+    for (id key in info)
+    {
+        NSString *field = [info objectForKey:key];
+        if (!field || field.length == 0)
+        {
+            informationComplete = NO;
+            break;
+        }
+    }
+    if (!informationComplete)
+    {
+        [[[UIAlertView alloc] initWithTitle:@"Missing Information"
+                                    message:@"Make sure you fill out all of the information!"
+                                   delegate:nil
+                          cancelButtonTitle:@"ok"
+                          otherButtonTitles:nil] show];
+    }
+    return informationComplete;
+}
+
+- (void)signUpViewController:(PFSignUpViewController *)signUpController didSignUpUser:(PFUser *)user
+{
+    Profile *profile = [Profile object];
+    profile.user = (User *)user;
+    profile.firstName = profile.user.username;
+    profile.lastName = @"";
+    profile.canonicalFirstName = [profile.user.username lowercaseString];
+    profile.canonicalLastName = @"";
+    UIImage *image = [UIImage imageNamed:@"avatar"];
+    profile.avatarData = UIImageJPEGRepresentation(image, 0.1);
+    [profile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+    {
+        if (!error)
+        {
+            [self dismissViewControllerAnimated:YES completion:NULL];
+        }
+        else
+        {
+            [self error:error];
+        }
+    }];
+}
+
+- (void)signUpViewController:(PFSignUpViewController *)signUpController didFailToSignUpWithError:(NSError *)error
+{
+    [self error:error];
+}
+
+- (void)signUpViewControllerDidCancelSignUp:(PFSignUpViewController *)signUpController
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 //MARK: tableView delegate methods
@@ -198,16 +292,20 @@
     Group *group = self.tableViewArray[indexPath.row];
 //    cell.textLabel.text = group.name;
     //TODO: change to group.imageData
-    cell.backgroundImageView.image = [UIImage imageNamed:@"chicago"];
+    cell.backgroundImageView.image = [UIImage imageNamed:@"hawaii"];
     [cell.backgroundImageView setClipsToBounds:YES];
+    cell.nameLabel.text = group.name;
     cell.destinationLabel.text = group.destination;
 
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-    [dateFormat setDateFormat:@"MM/dd/yyyy"];
+//    [dateFormat setDateFormat:@"MM/dd/yyyy"];
+    [dateFormat setDateStyle:NSDateFormatterLongStyle];
     NSString *startDateString = [dateFormat stringFromDate:group.startDate];
     cell.startLabel.text = startDateString;
     NSString *endDateString = [dateFormat stringFromDate:group.endDate];
     cell.endLabel.text = endDateString;
+
+    cell.goingNumberLabel.text = [NSString stringWithFormat:@"☺︎ %lu",group.profiles.count];
 
 
     return cell;
