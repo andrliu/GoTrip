@@ -71,7 +71,6 @@
     //basic setup
     [super viewDidLoad];
     
-    self.userName = self.currentUserProfile.firstName;
 
     self.automaticallyScrollsToMostRecentMessage = YES;
     self.messageData = [NSMutableArray array];
@@ -83,6 +82,7 @@
     
     [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error) {
         self.currentUserProfile = profile;
+        self.userName = self.currentUserProfile.firstName;
         [self loadLocalChat];
     }];
     
@@ -106,7 +106,7 @@
 
 -(void)retrievingFromParse
 {
-//    [self loadLocalChat];
+    [self loadLocalChat];
 }
 
 -(void)viewDidLayoutSubviews
