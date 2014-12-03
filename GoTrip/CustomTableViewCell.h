@@ -15,5 +15,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *startLabel;
 @property (strong, nonatomic) IBOutlet UILabel *endLabel;
 @property (strong, nonatomic) IBOutlet UILabel *separatorLabel;
+@property (strong, nonatomic) IBOutlet UILabel *goingNumberLabel;
 
 @end

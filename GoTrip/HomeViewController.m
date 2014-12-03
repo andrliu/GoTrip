@@ -25,22 +25,40 @@
 
 @implementation HomeViewController
 
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
 //TODO: remove example group from here
-    PFQuery *query = [Group query];
-    [query getObjectInBackgroundWithId:@"Zs30vE5wdx" block:^(PFObject *object, NSError *error)
+//    PFQuery *query = [Group query];
+//    [query getObjectInBackgroundWithId:@"Zs30vE5wdx" block:^(PFObject *object, NSError *error)
+//    {
+//        Group *testGroup = (Group *)object;
+//
+//        self.tableViewArray = @[testGroup];
+//        [self.tableView reloadData];
+//        
+//    }];
+    PFQuery *groupListQuery = [Group query];
+    [groupListQuery whereKey:@"isFeatured" equalTo:[NSNumber numberWithBool:YES]];
+    [groupListQuery orderByAscending:@"startDate"];
+    [groupListQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
     {
-        Group *testGroup = (Group *)object;
-
-        self.tableViewArray = @[testGroup];
-        [self.tableView reloadData];
-        
+        if (error)
+        {
+            [self error:error];
+        }
+        else
+        {
+            self.tableViewArray = objects;
+            [self.tableView reloadData];
+        }
     }];
-// to here
 
+// to here
+    self.tableView.tableFooterView = [[UIView alloc] init] ;
     self.navigationItem.title = @"Featured Groups";
 
 }
@@ -198,16 +216,20 @@
     Group *group = self.tableViewArray[indexPath.row];
 //    cell.textLabel.text = group.name;
     //TODO: change to group.imageData
-    cell.backgroundImageView.image = [UIImage imageNamed:@"chicago"];
+    cell.backgroundImageView.image = [UIImage imageNamed:@"hawaii"];
     [cell.backgroundImageView setClipsToBounds:YES];
+    cell.nameLabel.text = group.name;
     cell.destinationLabel.text = group.destination;
 
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-    [dateFormat setDateFormat:@"MM/dd/yyyy"];
+//    [dateFormat setDateFormat:@"MM/dd/yyyy"];
+    [dateFormat setDateStyle:NSDateFormatterLongStyle];
     NSString *startDateString = [dateFormat stringFromDate:group.startDate];
     cell.startLabel.text = startDateString;
     NSString *endDateString = [dateFormat stringFromDate:group.endDate];
     cell.endLabel.text = endDateString;
+
+    cell.goingNumberLabel.text = [NSString stringWithFormat:@"☺︎ %lu",group.profiles.count];
 
 
     return cell;
