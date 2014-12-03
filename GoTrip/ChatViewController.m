@@ -12,7 +12,40 @@
 #import "JSQMessage.h"
 #import "JSQMessageBubbleImageDataSource.h"
 #import "JSQMessagesBubbleImageFactory.h"
+#import "JSQMessagesAvatarImageFactory.h"
+
 #import "UIColor+JSQMessages.h"
+
+
+
+
+#import "JSQMessagesViewController.h"
+
+#import "JSQMessagesKeyboardController.h"
+
+
+
+#import "JSQMessagesCollectionViewFlowLayoutInvalidationContext.h"
+
+#import "JSQMessageData.h"
+#import "JSQMessageBubbleImageDataSource.h"
+#import "JSQMessageAvatarImageDataSource.h"
+
+#import "JSQMessagesCollectionViewCellIncoming.h"
+#import "JSQMessagesCollectionViewCellOutgoing.h"
+
+#import "JSQMessagesTypingIndicatorFooterView.h"
+#import "JSQMessagesLoadEarlierHeaderView.h"
+
+#import "JSQMessagesToolbarContentView.h"
+#import "JSQMessagesInputToolbar.h"
+#import "JSQMessagesComposerTextView.h"
+
+#import "JSQMessagesTimestampFormatter.h"
+
+#import "NSString+JSQMessages.h"
+#import "UIColor+JSQMessages.h"
+#import "UIDevice+JSQMessages.h"
 #define MAX_ENTRIES_LOADED 10
 
 @interface ChatViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, JSQMessagesCollectionViewDelegateFlowLayout, JSQMessagesCollectionViewDataSource>
@@ -26,6 +59,8 @@
 @property (strong, nonatomic) IBOutlet UIToolbar *toolbar;
 
 
+@property (strong, nonatomic) JSQMessagesKeyboardController *keyboardController;
+
 @end
 
 @implementation ChatViewController
@@ -35,6 +70,8 @@
     
     //basic setup
     [super viewDidLoad];
+
+    self.automaticallyScrollsToMostRecentMessage = YES;
     self.messageData = [NSMutableArray array];
     self.messageTextField.delegate = self;
     [self.messageTableView setHidden:YES];
@@ -47,12 +84,30 @@
         [self loadLocalChat];
     }];
     
-    self.userName = @"Jon";
+    self.userName = self.currentUserProfile.firstName;
+    self.navigationItem.title = self.recipientProfile.firstName;
     //passed profiles username here
     
+//    NSTimer *timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:2 target:self selector:@selector(retrievingFromParse) userInfo:nil repeats:YES];
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(retrievingFromParse) userInfo:nil repeats:YES];
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(retrievingFromParse) forControlEvents:UIControlEventValueChanged];
+    [self.collectionView addSubview:refreshControl];
     
     self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
     self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
+    
+    
+//    self.textView.inputAccessoryView = [[UIView alloc] init];
+//    self.keyboardController = [[JSQMessagesKeyboardController alloc] initWithTextView:self.inputToolbar.contentView.textView
+//                                                                          contextView:self.view
+//                                                                 panGestureRecognizer:self.collectionView.panGestureRecognizer
+//                                                                             delegate:self];
+}
+
+-(void)retrievingFromParse
+{
+    [self loadLocalChat];
 }
 
 -(void)viewDidLayoutSubviews
@@ -60,8 +115,8 @@
     [super viewDidLayoutSubviews];
     
     //align toolbar to the bottom
-    self.toolbar.frame = CGRectMake(0, self.view.frame.size.height - 100, [[UIScreen mainScreen] bounds].size.width, self.toolbar.frame.size.height);
-    [self.view addSubview:self.toolbar];
+//    self.toolbar.frame = CGRectMake(0, self.view.frame.size.height - 100, [[UIScreen mainScreen] bounds].size.width, self.toolbar.frame.size.height);
+//    [self.view addSubview:self.toolbar];
     
 }
 
@@ -105,7 +160,46 @@
 
 
 
+#pragma mark - JSQMessagesViewController method overrides
 
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+- (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text senderId:(NSString *)senderId senderDisplayName:(NSString *)senderDisplayName date:(NSDate *)date
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+{
+    UITextField *textField = [[UITextField alloc] init];
+    
+    textField.text = text;
+
+    [self textFieldShouldReturn:textField];
+    
+
+}
+
+- (void)finishSendingMessage
+{
+    UITextView *textView = self.inputToolbar.contentView.textView;
+    textView.text = nil;
+    [textView.undoManager removeAllActions];
+    
+    [self.inputToolbar toggleSendButtonEnabled];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:UITextViewTextDidChangeNotification object:textView];
+    
+    [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
+    [self.collectionView reloadData];
+    
+//    if (self.automaticallyScrollsToMostRecentMessage) {
+//
+    NSInteger items = (NSInteger)self.messageData.count;
+    
+//    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:items - 1 inSection:0]
+//                                atScrollPosition:UICollectionViewScrollPositionTop
+//                                        animated:YES];
+    
+    
+    
+//    }
+}
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
@@ -140,7 +234,7 @@
     Message *newMessage = [Message object];
     
     newMessage.userRecipient = self.recipientProfile;
-    newMessage.text = self.messageTextField.text;
+    newMessage.text = textField.text;
     newMessage.userName = self.userName;
     newMessage.sender = self.currentUserProfile;
     [newMessage setObject:[NSDate date] forKey:@"date"];
@@ -162,6 +256,7 @@
     // reload the data
     
     [self loadLocalChat];
+    [self finishSendingMessage];
     return NO;
 }
 
@@ -204,7 +299,7 @@
         
         if (!error) {
             // The find succeeded.
-            NSLog(@"Successfully retrieved %lu chats from cache.", (unsigned long)objects.count);
+//            NSLog(@"Successfully retrieved %lu chats from cache.", (unsigned long)objects.count);
             [self.messageData removeAllObjects];
             
             //                [self.messageData addObjectsFromArray:objects];
@@ -214,13 +309,11 @@
                 JSQMessage *message = [[JSQMessage alloc] initWithSenderId: originalMessage.userName senderDisplayName: originalMessage.userName  date:originalMessage.createdAt text:originalMessage.text];
                 
                 [self.messageData addObject:message];
-                
-                //                }
-                [(JSQMessagesCollectionView *)self.collectionView reloadData];
-                
-                
-                
+        
             }
+            [(JSQMessagesCollectionView *)self.collectionView reloadData];
+            [self scrollToBottomAnimated:YES];
+
         }
         
 
@@ -507,7 +600,11 @@
 - (id<JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 
 {
-    return nil;
+        JSQMessagesAvatarImage *placeholderImageData = [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageNamed:@"blank_avatar"] diameter:30.0];
+    
+    
+        return placeholderImageData;
+//    return nil;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section

@@ -564,89 +564,17 @@
                         <viewControllerLayoutGuide type="bottom" id="sE6-zU-zHh"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kWa-w9-5rl">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="519"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="QQp-sU-2A9">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="Qsf-cC-dnR" detailTextLabel="yah-Se-7gw" style="IBUITableViewCellStyleValue1" id="8O8-aT-qmy">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8O8-aT-qmy" id="MT8-gE-xM9">
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Qsf-cC-dnR">
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yah-Se-7gw">
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="HUq-y4-26u" id="tN9-N5-s36"/>
-                                    <outlet property="delegate" destination="HUq-y4-26u" id="xsS-7p-o6j"/>
-                                </connections>
-                            </tableView>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="QQp-sU-2A9" firstAttribute="top" secondItem="kWa-w9-5rl" secondAttribute="topMargin" id="2wX-bI-eBJ"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="QQp-sU-2A9" secondAttribute="trailing" constant="-16" id="ExC-pG-Vtl"/>
-                            <constraint firstItem="QQp-sU-2A9" firstAttribute="leading" secondItem="kWa-w9-5rl" secondAttribute="leadingMargin" constant="-16" id="Nae-yP-Dl9"/>
-                            <constraint firstItem="QQp-sU-2A9" firstAttribute="bottom" secondItem="kWa-w9-5rl" secondAttribute="bottomMargin" id="cJ2-qf-gjy"/>
-                        </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" id="dQ3-Be-V4r">
                         <nil key="title"/>
-                        <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="7og-Ue-RCi">
-                            <rect key="frame" x="96" y="7" width="128" height="30"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <textInputTraits key="textInputTraits"/>
-                            <connections>
-                                <outlet property="delegate" destination="HUq-y4-26u" id="eRz-uF-2rH"/>
-                            </connections>
-                        </textField>
                     </navigationItem>
-                    <connections>
-                        <outlet property="messageTableView" destination="QQp-sU-2A9" id="sE4-Kz-jCU"/>
-                        <outlet property="messageTextField" destination="WJ5-eW-dk9" id="QCh-6I-eOC"/>
-                        <outlet property="recipientTextField" destination="7og-Ue-RCi" id="Kvw-ll-dzn"/>
-                        <outlet property="toolbar" destination="fgU-R9-LAQ" id="aEb-cy-vDI"/>
-                    </connections>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ACb-By-GQu" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="fgU-R9-LAQ">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <items>
-                        <barButtonItem style="plain" id="cWD-wU-dTN">
-                            <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="WJ5-eW-dk9">
-                                <rect key="frame" x="16" y="7" width="231" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                        </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="0sO-1A-5DA"/>
-                        <barButtonItem title="Send" id="dzf-T0-eQg">
-                            <connections>
-                                <action selector="onButtonPressedSendMessage:" destination="HUq-y4-26u" id="UpB-Pj-WZ1"/>
-                            </connections>
-                        </barButtonItem>
-                    </items>
-                </toolbar>
             </objects>
             <point key="canvasLocation" x="1543" y="1046"/>
         </scene>
