@@ -17,7 +17,7 @@
 @interface GroupDetailViewController () <UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSArray *collectionViewArray;
-@property NSString *aString;
+//@property NSString *aString;
 
 @end
 
@@ -53,7 +53,7 @@
     //    self.collectionViewArray = @[image1,image2,image3,image4];
 
     self.navigationItem.title = self.group.name;
-    self.aString = self.group.memo;
+//    self.aString = self.group.memo;
 
 }
 
@@ -62,7 +62,7 @@
     CGFloat theFloat = 0;
 
 
-    CGFloat height = [self heightForString:self.aString];
+    CGFloat height = [self heightForString:self.group.memo];
 
 
     switch (indexPath.section)
@@ -91,7 +91,7 @@
 - (CGFloat)heightForString:(NSString *)theString
 {
 
-    CGRect textViewSize = [self.aString boundingRectWithSize:CGSizeMake(self.view.frame.size.width - 16, CGFLOAT_MAX)
+    CGRect textViewSize = [theString boundingRectWithSize:CGSizeMake(self.view.frame.size.width - 16, CGFLOAT_MAX)
                                                      options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
                                                   attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]}
                                                      context:nil];
@@ -175,7 +175,7 @@
             return @"Group description";
             break;
         case 1:
-            return @"Uploaded images";
+            return @"User uploaded pictures";
             break;
             //        case 2:
             //            return @"Control";
@@ -197,7 +197,7 @@
             TextTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"textCell" forIndexPath:indexPath];
             //            cell.label.numberOfLines = 0;
             //            cell.label.text = self.aString;
-            cell.textView.text = self.aString;
+            cell.textView.text = self.group.memo;
 
             cell.textView.scrollEnabled = NO;
 
@@ -297,7 +297,7 @@
 -(void)errorAlertWindow:(NSString *)message
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error!" message:message preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *okButton = [UIAlertAction actionWithTitle:@"😭 Mkay..." style:UIAlertActionStyleDefault handler:nil];
+    UIAlertAction *okButton = [UIAlertAction actionWithTitle:@"😭 OK" style:UIAlertActionStyleDefault handler:nil];
     [alert addAction:okButton];
     [self presentViewController:alert animated:YES completion:nil];
 }
