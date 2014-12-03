@@ -82,7 +82,7 @@
     
     [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error) {
         self.currentUserProfile = profile;
-        self.userName = self.currentUserProfile.firstName;
+        self.userName = self.currentUserProfile.objectId;
         [self loadLocalChat];
     }];
     
@@ -527,7 +527,7 @@
 // */
 - (NSString *)senderId
 {
-    return @"Jon";
+    return self.currentUserProfile.objectId;
 }
 
 /**
@@ -575,7 +575,10 @@
     JSQMessage *message = self.messageData[indexPath.item];
     
     
-    if ([message.senderId isEqualToString:@"Jon"])
+    
+    //TODO: add this
+    if ([message.senderId isEqualToString:self.currentUserProfile.objectId])
+        
     {
         
         return outgoingBubbleImageData;
