@@ -14,6 +14,7 @@
 #import "Profile.h"
 #import "Group.h"
 #import "User.h"
+#import "CustomTableViewCell.h"
 
 @interface HomeViewController () <PFLogInViewControllerDelegate, UITableViewDataSource, UITableViewDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
@@ -177,6 +178,13 @@
 }
 
 //MARK: tableView delegate methods
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat cellHeight = self.view.frame.size.width/2.5;
+    return cellHeight;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     //TODO: row count
@@ -185,11 +193,23 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
+    CustomTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"homeCell" forIndexPath:indexPath];
 
     Group *group = self.tableViewArray[indexPath.row];
-    cell.textLabel.text = group.name;
-    //TODO: cell
+//    cell.textLabel.text = group.name;
+    //TODO: change to group.imageData
+    cell.backgroundImageView.image = [UIImage imageNamed:@"chicago"];
+    [cell.backgroundImageView setClipsToBounds:YES];
+    cell.destinationLabel.text = group.destination;
+
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"MM/dd/yyyy"];
+    NSString *startDateString = [dateFormat stringFromDate:group.startDate];
+    cell.startLabel.text = startDateString;
+    NSString *endDateString = [dateFormat stringFromDate:group.endDate];
+    cell.endLabel.text = endDateString;
+
+
     return cell;
 }
 
