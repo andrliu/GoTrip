@@ -47,7 +47,7 @@
             [self error:error];
         }
     }];
-    [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
+    [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:self.imageView.frame.size.width/2 withBorderColor:[UIColor blackColor].CGColor];
     self.nameLabel.text = [NSString stringWithFormat:@"%@ %@", self.profile.firstName, self.profile.lastName];
     self.memoLabel.text = self.profile.memo;
     [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error)
@@ -68,45 +68,24 @@
 //MARK: custom relation status checking method
 - (void)checkRelationStatus
 {
-    for (Profile *profile in self.currentProfile.friends)
-    {
-        if ([profile.objectId isEqual:self.profile.objectId])
-        {
-            self.isFriend = YES;
-            break;
-        }
-        else
-        {
-            self.isFriend = NO;
-        }
-    }
-    for (Profile *profile in self.currentProfile.pendingFriends)
-    {
-        if ([profile.objectId isEqual:self.profile.objectId])
-        {
-            self.isPending = YES;
-            break;
-        }
-        else
-        {
-            self.isPending = NO;
-        }
-    }
-    for (Profile *profile in self.profile.pendingFriends)
-    {
-        if ([profile.objectId isEqual:self.currentProfile.objectId])
-        {
-            self.isRequesting = YES;
-            break;
-        }
-        else
-        {
-            self.isRequesting = NO;
-        }
-    }
+    self.isFriend = [self getBoolValueByCheckId:self.profile.objectId inArray:self.currentProfile.friends];
+    self.isPending = [self getBoolValueByCheckId:self.profile.objectId inArray:self.currentProfile.pendingFriends];
+    self.isRequesting = [self getBoolValueByCheckId:self.currentProfile.objectId inArray:self.profile.pendingFriends];
 }
 
-//MARK: custom button title method
+- (BOOL)getBoolValueByCheckId:(NSString *)objectId inArray:(NSArray *)array
+{
+    for (Profile *profile in array)
+    {
+        if ([profile.objectId isEqual:objectId])
+        {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+//MARK: custom button title setting method
 - (void)switchButtonTitleBasedOnRelationStatus
 {
     if (self.isFriend)
@@ -139,69 +118,18 @@
                                                                 objectId:self.profile.objectId];
     if ([self.relationButton.titleLabel.text isEqual:@"Friend"])
     {
-        NSMutableArray *currentUserFriendArray = [self.currentProfile.friends mutableCopy];
-        for (PFObject *object in currentUserFriendArray)
-        {
-            if ([[object objectId] isEqual:self.profile.objectId])
-            {
-                [currentUserFriendArray removeObject:object];
-                self.currentProfile.friends = currentUserFriendArray;
-            }
-        }
-        NSMutableArray *userFriendArray = [self.profile.friends mutableCopy];
-        for (PFObject *object in userFriendArray)
-        {
-            if ([[object objectId] isEqual:self.currentProfile.objectId])
-            {
-                [userFriendArray removeObject:object];
-                self.profile.friends = userFriendArray;
-            }
-        }
+        self.currentProfile.friends = [self removeObjectId:self.profile.objectId inArray:self.currentProfile.friends];
+        self.profile.friends = [self removeObjectId:self.currentProfile.objectId inArray:self.profile.friends];
     }
     else if ([self.relationButton.titleLabel.text isEqual:@"Invite"])
     {
-        if (self.profile.pendingFriends.count == 0)
-        {
-            self.profile.pendingFriends = @[currentUserProfile];
-        }
-        else
-        {
-            NSMutableArray *userPendingFriendArray = [self.profile.pendingFriends mutableCopy];
-            [userPendingFriendArray addObject:currentUserProfile];
-            self.profile.pendingFriends = userPendingFriendArray;
-        }
+        self.profile.pendingFriends = [self addObjectId:currentUserProfile inArray:self.profile.pendingFriends];
     }
     else if ([self.relationButton.titleLabel.text isEqual:@"Accept"])
     {
-        NSMutableArray *currentUserPendingFriendArray = [self.currentProfile.pendingFriends mutableCopy];
-        for (PFObject *object in currentUserPendingFriendArray)
-        {
-            if ([[object objectId] isEqual:self.profile.objectId])
-            {
-                [currentUserPendingFriendArray removeObject:object];
-                self.currentProfile.pendingFriends = currentUserPendingFriendArray;
-            }
-        }
-        if (self.profile.friends.count == 0)
-        {
-            self.profile.friends = @[currentUserProfile];
-        }
-        else
-        {
-            NSMutableArray *userFriendArray = [self.profile.friends mutableCopy];
-            [userFriendArray addObject:currentUserProfile];
-            self.profile.friends = userFriendArray;
-        }
-        if (self.currentProfile.friends.count == 0)
-        {
-            self.currentProfile.friends = @[userProfile];
-        }
-        else
-        {
-            NSMutableArray *userCurrentFriendArray = [self.currentProfile.friends mutableCopy];
-            [userCurrentFriendArray addObject:userProfile];
-            self.currentProfile.friends = userCurrentFriendArray;
-        }
+        self.currentProfile.pendingFriends = [self removeObjectId:self.profile.objectId inArray:self.currentProfile.pendingFriends];
+        self.profile.friends = [self addObjectId:currentUserProfile inArray:self.profile.friends];
+        self.currentProfile.friends = [self addObjectId:userProfile inArray:self.currentProfile.friends];
     }
     [self.profile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
     {
@@ -225,6 +153,35 @@
             [self error:error];
         }
     }];
+}
+
+- (NSArray *)removeObjectId:(NSString *)ObjectId inArray:(NSArray *)array
+{
+    NSMutableArray *currentUserFriendArray = [array mutableCopy];
+    NSMutableArray *currentUserFriendsToRemove = [NSMutableArray array];
+    for (PFObject *object in currentUserFriendArray)
+    {
+        if ([[object objectId] isEqual:ObjectId])
+        {
+            [currentUserFriendsToRemove addObject:object];
+        }
+    }
+    [currentUserFriendArray removeObjectsInArray:currentUserFriendsToRemove];
+    return currentUserFriendArray;
+}
+
+- (NSArray *)addObjectId:(PFObject *)Object inArray:(NSArray *)array
+{
+    if (array.count == 0)
+    {
+        return @[Object];
+    }
+    else
+    {
+        NSMutableArray *userPendingFriendArray = [array mutableCopy];
+        [userPendingFriendArray addObject:Object];
+        return userPendingFriendArray;
+    }
 }
 
 - (IBAction)AddCommentOnButtonPressed:(UIBarButtonItem *)sender
@@ -253,7 +210,8 @@
                                      {
                                          if (!error)
                                          {
-                                             [Comment getCurrentCommentsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error) {
+                                             [Comment getCurrentCommentsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error)
+                                             {
                                                  if (!error)
                                                  {
                                                      self.arrayOfComment = objects;
@@ -278,7 +236,10 @@
 //MARK: custom imageView method
 - (void)setImageView:(UIImageView *)imageView withData:(NSData *)data withLayerRadius:(CGFloat)radius withBorderColor:(CGColorRef)color
 {
-    imageView.image = [UIImage imageWithData:data];
+    if (data)
+    {
+        imageView.image = [UIImage imageWithData:data];
+    }
     [imageView.layer setCornerRadius:radius];
     [imageView setClipsToBounds:YES];
     [imageView.layer setBorderWidth:2.0f];
