@@ -48,7 +48,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self setImageView:self.imageView withData:nil withLayerRadius:self.imageView.frame.size.width/2 withBorderColor:[UIColor whiteColor].CGColor];
     if (!self.isImagePickerCalled)
     {
         [self editMode:NO];

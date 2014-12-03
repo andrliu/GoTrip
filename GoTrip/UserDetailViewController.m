@@ -269,17 +269,17 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(self.collectionView.frame.size.width*0.8, self.collectionView.frame.size.height*0.6);
+    return CGSizeMake(self.collectionView.frame.size.width*0.7, self.collectionView.frame.size.height*0.6);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
-    return CGSizeMake(self.collectionView.frame.size.width*0.1, self.collectionView.frame.size.height);
+    return CGSizeMake(self.collectionView.frame.size.width*0.15, self.collectionView.frame.size.height);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
 {
-    return CGSizeMake(self.collectionView.frame.size.width*0.1, self.collectionView.frame.size.height);
+    return CGSizeMake(self.collectionView.frame.size.width*0.15, self.collectionView.frame.size.height);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
