@@ -282,6 +282,11 @@
     return CGSizeMake(self.collectionView.frame.size.width*0.1, self.collectionView.frame.size.height);
 }
 
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    return -self.collectionView.frame.size.width*0.3;
+}
+
 //MARK: UIAlert
 - (void)error:(NSError *)error
 {
