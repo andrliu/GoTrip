@@ -54,6 +54,7 @@
 
     self.navigationItem.title = self.group.name;
     self.aString = self.group.memo;
+
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -295,7 +296,7 @@
 
 -(void)errorAlertWindow:(NSString *)message
 {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Ahtung!" message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error!" message:message preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *okButton = [UIAlertAction actionWithTitle:@"😭 Mkay..." style:UIAlertActionStyleDefault handler:nil];
     [alert addAction:okButton];
     [self presentViewController:alert animated:YES completion:nil];
