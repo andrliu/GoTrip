@@ -198,8 +198,9 @@
     Group *group = self.tableViewArray[indexPath.row];
 //    cell.textLabel.text = group.name;
     //TODO: change to group.imageData
-    cell.backgroundImageView.image = [UIImage imageNamed:@"chicago"];
+    cell.backgroundImageView.image = [UIImage imageNamed:@"hawaii"];
     [cell.backgroundImageView setClipsToBounds:YES];
+    cell.nameLabel.text = 
     cell.destinationLabel.text = group.destination;
 
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
