@@ -305,7 +305,7 @@
     NSString *endDateString = [dateFormat stringFromDate:group.endDate];
     cell.endLabel.text = endDateString;
 
-    cell.goingNumberLabel.text = [NSString stringWithFormat:@"☺︎ %lu",group.profiles.count];
+    cell.goingNumberLabel.text = [NSString stringWithFormat:@"☺︎ %lu",(unsigned long)group.profiles.count];
 
 
     return cell;

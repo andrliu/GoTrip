@@ -169,9 +169,9 @@
     
     
     NSCalendar *cal = [NSCalendar currentCalendar];
-    NSDateComponents *components = [cal components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate:[NSDate date]];
+    NSDateComponents *components = [cal components:(NSCalendarUnitEra|NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay) fromDate:[NSDate date]];
     NSDate *today = [cal dateFromComponents:components];
-    components = [cal components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate:theDate];
+    components = [cal components:(NSCalendarUnitEra|NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay) fromDate:theDate];
     NSDate *otherDate = [cal dateFromComponents:components];
     
     if([today isEqualToDate:otherDate]) {
@@ -222,8 +222,8 @@
     
 //    if (self.automaticallyScrollsToMostRecentMessage) {
 //
-    NSInteger items = (NSInteger)self.messageData.count;
-    
+//    NSInteger items = (NSInteger)self.messageData.count;
+
 //    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:items - 1 inSection:0]
 //                                atScrollPosition:UICollectionViewScrollPositionTop
 //                                        animated:YES];
@@ -485,8 +485,8 @@
         if(checkRecipientBOOL)
         {
             [listOfUsersThatHaveMessagesWith addObject:self.currentUserProfile];
-            self.recipientProfile.isMessaging = listOfUsersThatHaveMessagesWith;
-            [self.recipientProfile saveInBackground];
+            self.passedRecipient.isMessaging = listOfUsersThatHaveMessagesWith;
+            [self.passedRecipient saveInBackground];
         }
     }];
     
@@ -496,6 +496,7 @@
     
     if(self.currentUserProfile.isMessaging.count == 0)
     {
+
     }
     
     else

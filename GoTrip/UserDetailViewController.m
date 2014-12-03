@@ -8,6 +8,7 @@
 
 #import "UserDetailViewController.h"
 #import "CustomCollectionViewCell.h"
+#import "ChatViewController.h"
 #import "Comment.h"
 
 @interface UserDetailViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
@@ -325,6 +326,12 @@
 //    }
 //    return array;
 //}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    ChatViewController *cvc = segue.destinationViewController;
+    cvc.passedRecipient = self.profile;
+}
 
 //MARK: UIAlert
 - (void)error:(NSError *)error
