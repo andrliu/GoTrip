@@ -117,8 +117,28 @@
 
 -(void)retrievingFromParse
 {
-    [self loadLocalChat];
-    [self.refreshControl endRefreshing];
+    PFObject *user1 = [Profile objectWithoutDataWithObjectId:self.currentUserProfile.objectId];
+    PFObject *user2 = [Profile objectWithoutDataWithObjectId:self.passedRecipient.objectId];
+    NSArray *arrayOfUsers  = @[user2, user1];
+    PFQuery *senderQuery = [Message query];
+    [senderQuery whereKey:@"sender" containedIn:arrayOfUsers];
+    [senderQuery whereKey:@"userRecipient" containedIn:arrayOfUsers];
+    [senderQuery orderByAscending:@"createdAt"];
+    [senderQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+                    if (!error) {
+                        // The count request succeeded. Log the count
+                        NSLog(@"There are currently %d entries", number);
+        
+        
+                        NSInteger totalNumberOfEntries = number;
+                        if (totalNumberOfEntries > [self.messageData count]) {
+                            NSLog(@"Retrieving data");
+                            [self loadLocalChat];
+                            [self.refreshControl endRefreshing];
+                        }
+                    }
+    }];
+
     
 }
 
