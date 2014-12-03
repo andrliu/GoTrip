@@ -90,10 +90,7 @@
             }
             else
             {
-
-
-
-
+                [self loadFacebookData];
             }
         }
         else
