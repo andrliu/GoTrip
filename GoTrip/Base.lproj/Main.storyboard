@@ -358,19 +358,19 @@
                                 </constraints>
                             </imageView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UGL-F4-5Oe">
-                                <rect key="frame" x="85" y="249" width="100" height="20"/>
+                                <rect key="frame" x="35" y="249" width="150" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="Qj2-DZ-MAw"/>
-                                    <constraint firstAttribute="width" constant="100" id="hie-LR-wnh"/>
+                                    <constraint firstAttribute="width" constant="150" id="hie-LR-wnh"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Chalkduster" family="Chalkduster" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9Cv-OF-do7">
-                                <rect key="frame" x="185" y="249" width="50" height="20"/>
+                                <rect key="frame" x="185" y="249" width="100" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="6Kd-Uh-bS4"/>
-                                    <constraint firstAttribute="width" constant="50" id="I0s-6G-Mul"/>
+                                    <constraint firstAttribute="width" constant="100" id="I0s-6G-Mul"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Chalkduster" family="Chalkduster" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -541,7 +541,7 @@
                             <constraint firstItem="6aF-to-AeI" firstAttribute="leading" secondItem="Kow-CZ-vWA" secondAttribute="trailing" constant="30" id="ACf-Zo-Qjm"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Sha-Es-mAb" secondAttribute="trailing" id="ATZ-f3-gqm"/>
                             <constraint firstItem="Sha-Es-mAb" firstAttribute="leading" secondItem="KLe-nA-sbS" secondAttribute="leadingMargin" id="BB0-Qf-1ly"/>
-                            <constraint firstAttribute="centerX" secondItem="9Cv-OF-do7" secondAttribute="centerX" constant="-50" id="CYu-m2-S2N"/>
+                            <constraint firstAttribute="centerX" secondItem="9Cv-OF-do7" secondAttribute="centerX" constant="-75" id="CYu-m2-S2N"/>
                             <constraint firstAttribute="centerY" secondItem="Sha-Es-mAb" secondAttribute="centerY" id="H0k-9a-dJh"/>
                             <constraint firstItem="6aF-to-AeI" firstAttribute="leading" secondItem="Pkm-gV-NHt" secondAttribute="trailing" constant="30" id="H63-yX-g4M"/>
                             <constraint firstItem="6aF-to-AeI" firstAttribute="top" secondItem="Sg1-pQ-eQf" secondAttribute="bottom" constant="10" id="J2L-ad-EUa"/>
@@ -554,7 +554,7 @@
                             <constraint firstAttribute="trailingMargin" secondItem="eaN-hj-KIz" secondAttribute="trailing" constant="-16" id="P1M-aQ-sYv"/>
                             <constraint firstAttribute="centerY" secondItem="e2o-dp-BNK" secondAttribute="centerY" id="PCk-cg-OR7"/>
                             <constraint firstItem="e2o-dp-BNK" firstAttribute="leading" secondItem="KLe-nA-sbS" secondAttribute="leadingMargin" id="PPv-K8-3E6"/>
-                            <constraint firstAttribute="centerX" secondItem="UGL-F4-5Oe" secondAttribute="centerX" constant="25" id="RF7-pw-6NW"/>
+                            <constraint firstAttribute="centerX" secondItem="UGL-F4-5Oe" secondAttribute="centerX" constant="50" id="RF7-pw-6NW"/>
                             <constraint firstItem="Pkm-gV-NHt" firstAttribute="top" secondItem="Sg1-pQ-eQf" secondAttribute="bottom" constant="30" id="Ua0-NQ-qlq"/>
                             <constraint firstItem="Ugg-jm-QUE" firstAttribute="leading" secondItem="6aF-to-AeI" secondAttribute="trailing" constant="30" id="YNa-wQ-NID"/>
                             <constraint firstItem="e2o-dp-BNK" firstAttribute="top" secondItem="UGL-F4-5Oe" secondAttribute="bottom" constant="5" id="Yoz-ba-SV7"/>
