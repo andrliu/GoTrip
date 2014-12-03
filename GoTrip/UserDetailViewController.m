@@ -287,6 +287,45 @@
     return -self.collectionView.frame.size.width*0.3;
 }
 
+- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
+{
+    NSMutableArray *attributes = [NSMutableArray new];
+
+    NSIndexPath *decorationIndexPath = [NSIndexPath indexPathForItem:0 inSection:0];
+
+    UICollectionViewLayoutAttributes *decorationAttributes =
+    [UICollectionViewLayoutAttributes
+     layoutAttributesForDecorationViewOfKind:@"BackgroundView"
+     withIndexPath:decorationIndexPath];
+
+    decorationAttributes.frame = CGRectMake(0.0f,
+                                            0.0f,
+                                            self.collectionViewContentSize.width,
+                                            self.collectionViewContentSize.height);
+
+    [allAttributes addObject:decorationAttributes];
+
+    ... now add the rest of the attributes ...
+
+    return attributes;
+}
+
+-(NSArray*)layoutAttributesForElementsInRect:(CGRect)rect {
+    NSArray* array = [super layoutAttributesForElementsInRect:rect];
+
+    UICollectionViewLayoutAttributes* att = [array lastObject];
+    if (att){
+        CGFloat lastY = att.frame.origin.y + att.frame.size.height;
+        CGFloat diff = self.collectionView.frame.size.height - lastY;
+        if (diff > 0){
+            for (UICollectionViewLayoutAttributes* a in array){
+                a.frame = CGRectMake(a.frame.origin.x, a.frame.origin.y + diff/2, a.frame.size.width, a.frame.size.height) ;
+            }
+        }
+    }
+    return array;
+}
+
 //MARK: UIAlert
 - (void)error:(NSError *)error
 {
