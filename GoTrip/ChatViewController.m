@@ -57,6 +57,8 @@
 @property Profile *recipientProfile;
 @property (weak, nonatomic) IBOutlet UITextField *messageTextField;
 @property (strong, nonatomic) IBOutlet UIToolbar *toolbar;
+@property NSTimer *timer;
+@property UIRefreshControl *refreshControl;
 
 
 @property (strong, nonatomic) JSQMessagesKeyboardController *keyboardController;
@@ -90,10 +92,10 @@
     //passed profiles username here
     
 //    NSTimer *timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:2 target:self selector:@selector(retrievingFromParse) userInfo:nil repeats:YES];
-    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(retrievingFromParse) userInfo:nil repeats:YES];
-    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-    [refreshControl addTarget:self action:@selector(retrievingFromParse) forControlEvents:UIControlEventValueChanged];
-    [self.collectionView addSubview:refreshControl];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(retrievingFromParse) userInfo:nil repeats:YES];
+     self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self action:@selector(retrievingFromParse) forControlEvents:UIControlEventValueChanged];
+    [self.collectionView addSubview:self.refreshControl];
     
 
     
@@ -104,9 +106,20 @@
 //                                                                             delegate:self];
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self.timer invalidate];
+
+    
+
+}
+
 -(void)retrievingFromParse
 {
     [self loadLocalChat];
+    [self.refreshControl endRefreshing];
+    
 }
 
 -(void)viewDidLayoutSubviews
@@ -119,7 +132,7 @@
     
 }
 
-#pragma <#arguments#>
+#pragma
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.messageData.count;
