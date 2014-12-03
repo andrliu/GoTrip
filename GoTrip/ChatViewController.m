@@ -70,6 +70,8 @@
     
     //basic setup
     [super viewDidLoad];
+    
+    self.userName = self.currentUserProfile.firstName;
 
     self.automaticallyScrollsToMostRecentMessage = YES;
     self.messageData = [NSMutableArray array];
@@ -84,7 +86,6 @@
         [self loadLocalChat];
     }];
     
-    self.userName = self.currentUserProfile.firstName;
     self.navigationItem.title = self.recipientProfile.firstName;
     //passed profiles username here
     
@@ -94,9 +95,7 @@
     [refreshControl addTarget:self action:@selector(retrievingFromParse) forControlEvents:UIControlEventValueChanged];
     [self.collectionView addSubview:refreshControl];
     
-    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
-    self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
-    
+
     
 //    self.textView.inputAccessoryView = [[UIView alloc] init];
 //    self.keyboardController = [[JSQMessagesKeyboardController alloc] initWithTextView:self.inputToolbar.contentView.textView
@@ -107,7 +106,7 @@
 
 -(void)retrievingFromParse
 {
-    [self loadLocalChat];
+//    [self loadLocalChat];
 }
 
 -(void)viewDidLayoutSubviews
@@ -308,6 +307,8 @@
                 //                     JSQMessage *message = [[JSQMessage alloc] initWithSenderId:@"Jon" senderDisplayName:@"Jon" date:[NSDate date] text:@"hihihihihi"];
                 JSQMessage *message = [[JSQMessage alloc] initWithSenderId: originalMessage.userName senderDisplayName: originalMessage.userName  date:originalMessage.createdAt text:originalMessage.text];
                 
+//                JSQMessage *message = [[JSQMessage alloc] initWithSenderId:@"Jon" senderDisplayName:@"Jon" date:[NSDate date] text:@"why doesnt this work"];
+//
                 [self.messageData addObject:message];
         
             }
@@ -572,6 +573,8 @@
     JSQMessagesBubbleImage *incomingBubbleImageData = [bubbleFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
     
     JSQMessage *message = self.messageData[indexPath.item];
+    
+    
     if ([message.senderId isEqualToString:@"Jon"])
     {
         
@@ -597,6 +600,7 @@
  *  @see JSQMessagesAvatarImageFactory.
  *  @see JSQMessagesCollectionViewFlowLayout.
  */
+
 - (id<JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 
 {
