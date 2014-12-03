@@ -185,7 +185,7 @@
     }
 }
 
-- (IBAction)AddCommentOnButtonPressed:(UIBarButtonItem *)sender
+- (IBAction)addCommentOnButtonPressed:(UIButton *)sender
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Add a comment"
                                                                    message:nil
