@@ -25,6 +25,8 @@
 @dynamic pendingFriends;
 @dynamic user;
 @dynamic isMessaging;
+@dynamic isGroupMessaging;
+
 
 + (void)load
 {

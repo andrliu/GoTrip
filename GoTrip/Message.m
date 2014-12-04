@@ -15,6 +15,7 @@
 @dynamic text;
 @dynamic sender;
 @dynamic userRecipient;
+@dynamic groupRecipient;
 
 + (void)load
 {

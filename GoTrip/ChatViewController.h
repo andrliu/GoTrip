@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import "Profile.h"
+#import "Group.h"
 #import "JSQMessagesViewController.h"
 
 
@@ -16,5 +17,6 @@
 
 
 @property Profile *passedRecipient;
+@property Group *passedGroup;
 
 @end

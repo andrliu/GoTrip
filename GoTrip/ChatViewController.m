@@ -59,6 +59,8 @@
 @property (strong, nonatomic) IBOutlet UIToolbar *toolbar;
 @property NSTimer *timer;
 @property UIRefreshControl *refreshControl;
+@property BOOL isGroupChat;
+@property Group *currentGroupProfile;
 
 
 @property (strong, nonatomic) JSQMessagesKeyboardController *keyboardController;
@@ -73,72 +75,99 @@
     //basic setup
     [super viewDidLoad];
     
-
+    if(self.passedGroup != nil)
+        self.isGroupChat = YES;
+    
+    
+    
+    
     self.automaticallyScrollsToMostRecentMessage = YES;
     self.messageData = [NSMutableArray array];
     self.messageTextField.delegate = self;
     [self.messageTableView setHidden:YES];
     
-    //sets the recipient profile
-      self.recipientProfile =  self.passedRecipient;
+    if(self.isGroupChat) //group converstaion logic
+    {
+        [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error) {
+            self.currentUserProfile = profile;
+            self.userName = self.currentUserProfile.objectId;
+
+            self.currentGroupProfile = self.passedGroup;
+            PFQuery *group = [Group query];
+            [group whereKey:@"objectId" equalTo:self.passedGroup.objectId];
+            [group findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                
+                self.passedGroup = objects.firstObject;
+                self.navigationItem.title = self.passedGroup.canonicalName;
+
+                [self loadLocalChat];
+                
+            }];
+        }];
+    }
     
-    [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error) {
-        self.currentUserProfile = profile;
-        self.userName = self.currentUserProfile.objectId;
-        [self loadLocalChat];
-    }];
     
-    self.navigationItem.title = self.recipientProfile.firstName;
-    //passed profiles username here
+    else //one-to-one conversations logic
+    {
+        //sets the recipient profile
+        self.recipientProfile =  self.passedRecipient;
+        
+        [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error) {
+            self.currentUserProfile = profile;
+            self.userName = self.currentUserProfile.objectId;
+            [self loadLocalChat];
+        }];
+        
+        self.navigationItem.title = self.recipientProfile.firstName;
+    }
     
-//    NSTimer *timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:2 target:self selector:@selector(retrievingFromParse) userInfo:nil repeats:YES];
+    //timer and refersh control
     self.timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(retrievingFromParse) userInfo:nil repeats:YES];
-     self.refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(retrievingFromParse) forControlEvents:UIControlEventValueChanged];
     [self.collectionView addSubview:self.refreshControl];
     
-
-    
-//    self.textView.inputAccessoryView = [[UIView alloc] init];
-//    self.keyboardController = [[JSQMessagesKeyboardController alloc] initWithTextView:self.inputToolbar.contentView.textView
-//                                                                          contextView:self.view
-//                                                                 panGestureRecognizer:self.collectionView.panGestureRecognizer
-//                                                                             delegate:self];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
     [self.timer invalidate];
-
     
-
 }
 
 -(void)retrievingFromParse
 {
-    PFObject *user1 = [Profile objectWithoutDataWithObjectId:self.currentUserProfile.objectId];
-    PFObject *user2 = [Profile objectWithoutDataWithObjectId:self.passedRecipient.objectId];
-    NSArray *arrayOfUsers  = @[user2, user1];
-    PFQuery *senderQuery = [Message query];
-    [senderQuery whereKey:@"sender" containedIn:arrayOfUsers];
-    [senderQuery whereKey:@"userRecipient" containedIn:arrayOfUsers];
-    [senderQuery orderByAscending:@"createdAt"];
-    [senderQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-                    if (!error) {
-                        // The count request succeeded. Log the count
-                        NSLog(@"There are currently %d entries", number);
+    
+    if(self.isGroupChat) //group converstaion logic
+    {
         
-        
-                        NSInteger totalNumberOfEntries = number;
-                        if (totalNumberOfEntries > [self.messageData count]) {
-                            NSLog(@"Retrieving data");
-                            [self loadLocalChat];
-                            [self.refreshControl endRefreshing];
-                        }
-                    }
-    }];
-
+    }
+    else
+    {
+        PFObject *user1 = [Profile objectWithoutDataWithObjectId:self.currentUserProfile.objectId];
+        PFObject *user2 = [Profile objectWithoutDataWithObjectId:self.passedRecipient.objectId];
+        NSArray *arrayOfUsers  = @[user2, user1];
+        PFQuery *senderQuery = [Message query];
+        [senderQuery whereKey:@"sender" containedIn:arrayOfUsers];
+        [senderQuery whereKey:@"userRecipient" containedIn:arrayOfUsers];
+        [senderQuery orderByAscending:@"createdAt"];
+        [senderQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+            if (!error) {
+                // The count request succeeded. Log the count
+                NSLog(@"There are currently %d entries", number);
+                
+                
+                NSInteger totalNumberOfEntries = number;
+                if (totalNumberOfEntries > [self.messageData count]) {
+                    NSLog(@"Retrieving data");
+                    [self loadLocalChat];
+                    [self.refreshControl endRefreshing];
+                }
+            }
+        }];
+    }
+    
     
 }
 
@@ -146,13 +175,11 @@
 {
     [super viewDidLayoutSubviews];
     
-    //align toolbar to the bottom
-//    self.toolbar.frame = CGRectMake(0, self.view.frame.size.height - 100, [[UIScreen mainScreen] bounds].size.width, self.toolbar.frame.size.height);
-//    [self.view addSubview:self.toolbar];
-    
 }
 
-#pragma
+#pragma mark: Table Method Views
+
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.messageData.count;
@@ -201,10 +228,10 @@
     UITextField *textField = [[UITextField alloc] init];
     
     textField.text = text;
-
+    
     [self textFieldShouldReturn:textField];
     
-
+    
 }
 
 - (void)finishSendingMessage
@@ -220,23 +247,12 @@
     [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
     [self.collectionView reloadData];
     
-//    if (self.automaticallyScrollsToMostRecentMessage) {
-//
-//    NSInteger items = (NSInteger)self.messageData.count;
-
-//    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:items - 1 inSection:0]
-//                                atScrollPosition:UICollectionViewScrollPositionTop
-//                                        animated:YES];
-    
-    
-    
-//    }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     
-    NSLog(@"the text content%@",self.messageTextField.text);
+//    NSLog(@"the text content%@",self.messageTextField.text);
     [textField resignFirstResponder];
     
     //    self.recipientProfile = [Profile objectWithoutDataWithClassName:@"Profile" objectId:[NSString stringWithFormat:@"%@", self.recipientTextField.text]];
@@ -263,19 +279,32 @@
     //        [self.messageTableView reloadData];
     //
     //adds to Parse back-server.
+    
+    
     Message *newMessage = [Message object];
     
-    newMessage.userRecipient = self.recipientProfile;
-    newMessage.text = textField.text;
-    newMessage.userName = self.userName;
-    newMessage.sender = self.currentUserProfile;
-    [newMessage setObject:[NSDate date] forKey:@"date"];
+    if(self.isGroupChat) //group conversation logic
+    {
+        newMessage.groupRecipient = self.currentGroupProfile;
+        newMessage.text = textField.text;
+        newMessage.userName = self.userName;
+        newMessage.sender = self.currentUserProfile;
+        [newMessage setObject:[NSDate date] forKey:@"date"];
+    }
     
+    else
+    {
+        newMessage.userRecipient = self.recipientProfile;
+        newMessage.text = textField.text;
+        newMessage.userName = self.userName;
+        newMessage.sender = self.currentUserProfile;
+        [newMessage setObject:[NSDate date] forKey:@"date"];
+    }
     
     [newMessage saveInBackground];
     
     
-    [self changeProfileMessagingSystem];
+    [self addIsMessagingRelationshipInParse];
     
     
     //        [newMessage setObject:self.messageTextField.text forKey:@"text"];
@@ -294,44 +323,54 @@
 
 - (void)loadLocalChat
 {
-    
-    
-    
-    // If no objects are loaded in memory, we look to the cache first to fill the table
-    // and then subsequently do a query against the network.
-    
-    //    if ([self.messageData count] == 0) {
-    
-    
-    //        PFObject *abc = [Message objectWithoutDataWithClassName:@"Profile" objectId:@"Q8DIiKZFYI"];
-    
-    PFObject *user1 = [Profile objectWithoutDataWithObjectId:self.currentUserProfile.objectId];
-    
-    PFObject *user2 = [Profile objectWithoutDataWithObjectId:self.passedRecipient.objectId];
-    
-    NSArray *arrayOfUsers  = @[user2, user1];
-    
-    
     PFQuery *senderQuery = [Message query];
-    [senderQuery whereKey:@"sender" containedIn:arrayOfUsers];
-    [senderQuery whereKey:@"userRecipient" containedIn:arrayOfUsers];
-    [senderQuery orderByAscending:@"createdAt"];
-    //        [senderQuery whereKey:@"sender" equalTo:user1];
-    //        [senderQuery whereKey:@"userRecipient" equalTo:user2];
-    //        PFQuery *recipientQuery = [Message query];
-    //
-    //        [recipientQuery whereKey:@"sender" equalTo:user2];
-    //        [recipientQuery whereKey:@"userRecipient" equalTo:user1];
     
     
-    //        PFQuery *bothQueries = [PFQuery orQueryWithSubqueries:@[senderQuery, recipientQuery]];
+    
+    if(self.isGroupChat) //group conversation logic
+    {
+        PFObject *group = [Group objectWithoutDataWithObjectId:self.currentGroupProfile.objectId];
+        
+        [senderQuery whereKey:@"groupRecipient" equalTo:self.currentGroupProfile];
+        //        [senderQuery whereKey:@"groupRecipient" equalTo:group];
+        [senderQuery orderByAscending:@"createdAt"];
+        
+    }
+    
+    else
+    {
+        
+        
+        PFObject *user1 = [Profile objectWithoutDataWithObjectId:self.currentUserProfile.objectId];
+        
+        PFObject *user2 = [Profile objectWithoutDataWithObjectId:self.passedRecipient.objectId];
+        
+        NSArray *arrayOfUsers  = @[user2, user1];
+        
+        
+        [senderQuery whereKey:@"sender" containedIn:arrayOfUsers];
+        [senderQuery whereKey:@"userRecipient" containedIn:arrayOfUsers];
+        [senderQuery orderByAscending:@"createdAt"];
+        
+        //  alternative query method
+        //        [senderQuery whereKey:@"sender" equalTo:user1];
+        //        [senderQuery whereKey:@"userRecipient" equalTo:user2];
+        //        PFQuery *recipientQuery = [Message query];
+        //
+        //        [recipientQuery whereKey:@"sender" equalTo:user2];
+        //        [recipientQuery whereKey:@"userRecipient" equalTo:user1];
+        
+        
+        //        PFQuery *bothQueries = [PFQuery orQueryWithSubqueries:@[senderQuery, recipientQuery]];
+    }
+    
     
     
     [senderQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
         if (!error) {
             // The find succeeded.
-//            NSLog(@"Successfully retrieved %lu chats from cache.", (unsigned long)objects.count);
+            //            NSLog(@"Successfully retrieved %lu chats from cache.", (unsigned long)objects.count);
             [self.messageData removeAllObjects];
             
             //                [self.messageData addObjectsFromArray:objects];
@@ -340,40 +379,17 @@
                 //                     JSQMessage *message = [[JSQMessage alloc] initWithSenderId:@"Jon" senderDisplayName:@"Jon" date:[NSDate date] text:@"hihihihihi"];
                 JSQMessage *message = [[JSQMessage alloc] initWithSenderId: originalMessage.userName senderDisplayName: originalMessage.userName  date:originalMessage.createdAt text:originalMessage.text];
                 
-//                JSQMessage *message = [[JSQMessage alloc] initWithSenderId:@"Jon" senderDisplayName:@"Jon" date:[NSDate date] text:@"why doesnt this work"];
-//
                 [self.messageData addObject:message];
-        
+                
             }
             [(JSQMessagesCollectionView *)self.collectionView reloadData];
             [self scrollToBottomAnimated:YES];
-
+            
         }
         
-
+        
     }];
 }
-//                JSQMessagesCollectionView *temp = [[JSQMessagesCollectionView alloc] init];
-//                [temp reloadData];
-
-//            } else {
-// Log details of the failure
-//                NSLog(@"Error: %@ %@", error, [error userInfo]);
-//            }
-//        }];
-
-//    PFQuery *b = [Message query];
-//    [query whereKey:@:sender" equalTo:@"yKcMGScuAa"];
-//    [query find:@"yKcMGScuaA" block:^(PFObject *object, NSError *error) {
-//        <#code#>
-//    }];
-
-
-//        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//        [query orderByDescending:@"createdAt"];
-//        NSLog(@"Trying to retrieve from cache");
-//
-
 
 //original query for all the data
 
@@ -452,74 +468,80 @@
 //        }];
 
 
-- (void)changeProfileMessagingSystem
+- (void)addIsMessagingRelationshipInParse
 {
-    
-    PFQuery *query = [Profile query];
-    
-    [query getObjectInBackgroundWithId:self.passedRecipient.objectId block:^(PFObject *object, NSError *error) {
-        
-        BOOL checkRecipientBOOL = YES;
-        
-        NSMutableArray *listOfUsersThatHaveMessagesWith = [NSMutableArray array];
-        
-        
-        self.passedRecipient = (Profile *)object;
-        if(self.passedRecipient.isMessaging.count == 0)
-        {
-            
-        }
-        else
-        {
-            listOfUsersThatHaveMessagesWith = [self.passedRecipient.isMessaging mutableCopy];
-        }
-        
-        for(Profile *profile in listOfUsersThatHaveMessagesWith){
-            if([profile.objectId isEqualToString:self.currentUserProfile.objectId])
-                checkRecipientBOOL = NO;
-        }
-        
-        
-        
-        
-        if(checkRecipientBOOL)
-        {
-            [listOfUsersThatHaveMessagesWith addObject:self.currentUserProfile];
-            self.passedRecipient.isMessaging = listOfUsersThatHaveMessagesWith;
-            [self.passedRecipient saveInBackground];
-        }
-    }];
-    
-    
-    NSMutableArray *listOfUsersThatIHaveMessagesWith = [NSMutableArray array];
-    
-    
-    if(self.currentUserProfile.isMessaging.count == 0)
+    if(self.isGroupChat) //group conversation logic
     {
-
+        
     }
     
     else
     {
-        listOfUsersThatIHaveMessagesWith = [self.currentUserProfile.isMessaging mutableCopy];
-    }
-    
-    BOOL checkBOOL = YES;
-    for(Profile *profile in listOfUsersThatIHaveMessagesWith){
+        PFQuery *query = [Profile query];
         
-        if([profile.objectId isEqualToString:self.passedRecipient.objectId])
-            checkBOOL = NO;
+        [query getObjectInBackgroundWithId:self.passedRecipient.objectId block:^(PFObject *object, NSError *error) {
+            
+            BOOL checkRecipientBOOL = YES;
+            
+            NSMutableArray *listOfUsersThatHaveMessagesWith = [NSMutableArray array];
+            
+            
+            self.passedRecipient = (Profile *)object;
+            if(self.passedRecipient.isMessaging.count == 0)
+            {
+                
+            }
+            else
+            {
+                listOfUsersThatHaveMessagesWith = [self.passedRecipient.isMessaging mutableCopy];
+            }
+            
+            for(Profile *profile in listOfUsersThatHaveMessagesWith){
+                if([profile.objectId isEqualToString:self.currentUserProfile.objectId])
+                    checkRecipientBOOL = NO;
+            }
+            
+            
+            
+            
+            if(checkRecipientBOOL)
+            {
+                [listOfUsersThatHaveMessagesWith addObject:self.currentUserProfile];
+                self.passedRecipient.isMessaging = listOfUsersThatHaveMessagesWith;
+                [self.passedRecipient saveInBackground];
+            }
+        }];
+        
+        
+        NSMutableArray *listOfUsersThatIHaveMessagesWith = [NSMutableArray array];
+        
+        
+        if(self.currentUserProfile.isMessaging.count == 0)
+        {
+            
+        }
+        
+        else
+        {
+            listOfUsersThatIHaveMessagesWith = [self.currentUserProfile.isMessaging mutableCopy];
+        }
+        
+        BOOL checkBOOL = YES;
+        for(Profile *profile in listOfUsersThatIHaveMessagesWith){
+            
+            if([profile.objectId isEqualToString:self.passedRecipient.objectId])
+                checkBOOL = NO;
+        }
+        
+        if(checkBOOL){
+            [listOfUsersThatIHaveMessagesWith addObject:self.passedRecipient];
+            self.currentUserProfile.isMessaging = listOfUsersThatIHaveMessagesWith;
+            [self.currentUserProfile saveInBackground];
+        }
+        
+        
+        
     }
-    
-    if(checkBOOL){
-        [listOfUsersThatIHaveMessagesWith addObject:self.passedRecipient];
-        self.currentUserProfile.isMessaging = listOfUsersThatIHaveMessagesWith;
-        [self.currentUserProfile saveInBackground];
-    }
-    
-    
-    
-    
 }
 
 
@@ -529,17 +551,6 @@
     [self textFieldShouldReturn:self.messageTextField];
 }
 
-
-
-
-
-
-
-
-
-
-
-
 /**
  *  Asks the data source for the current sender's display name, that is, the current user who is sending messages.
  *
@@ -547,10 +558,59 @@
  *
  *  @warning You must not return `nil` from this method. This value does not need to be unique.
  */
-//- (NSString *)senderDisplayName
-//{
-//    return @"Jon";
-//}
+- (NSString *)senderDisplayName
+{
+    return @"Jon";
+}
+
+
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
+{
+    JSQMessage *message = [self.messageData objectAtIndex:indexPath.item];
+    
+    /**
+     *  iOS7-style sender name labels
+     */
+    if ([message.senderId isEqualToString:self.senderId]) {
+        return nil;
+    }
+    
+    if (indexPath.item - 1 > 0) {
+        JSQMessage *previousMessage = [self.messageData objectAtIndex:indexPath.item - 1];
+        if ([[previousMessage senderId] isEqualToString:message.senderId]) {
+            return nil;
+        }
+    }
+    
+    /**
+     *  Don't specify attributes to use the defaults.
+     */
+    return [[NSAttributedString alloc] initWithString:message.senderDisplayName];
+}
+
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
+{
+    /**
+     *  This logic should be consistent with what you return from `heightForCellTopLabelAtIndexPath:`
+     *  The other label text delegate methods should follow a similar pattern.
+     *
+     *  Show a timestamp for every 3rd message
+     */
+    if (indexPath.item % 3 == 0) {
+        JSQMessage *message = [self.messageData objectAtIndex:indexPath.item];
+        return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
+    }
+    
+    return nil;
+}
+
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath   *)indexPath
+{
+    return nil;
+}
+
+
+
 //
 ///**
 // *  Asks the data source for the current sender's unique identifier, that is, the current user who is sending messages.
@@ -641,11 +701,11 @@
 - (id<JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 
 {
-        JSQMessagesAvatarImage *placeholderImageData = [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageNamed:@"blank_avatar"] diameter:30.0];
+    JSQMessagesAvatarImage *placeholderImageData = [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageNamed:@"blank_avatar"] diameter:30.0];
     
     
-        return placeholderImageData;
-//    return nil;
+    return placeholderImageData;
+    //    return nil;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -693,14 +753,6 @@
     
     return cell;
 }
-
-
-
-
-
-
-
-
 
 #pragma mark - JSQMessages collection view flow layout delegate
 
