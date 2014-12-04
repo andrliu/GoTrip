@@ -91,7 +91,7 @@
         [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error) {
             self.currentUserProfile = profile;
             self.userName = self.currentUserProfile.objectId;
-
+            
             self.currentGroupProfile = self.passedGroup;
             PFQuery *group = [Group query];
             [group whereKey:@"objectId" equalTo:self.passedGroup.objectId];
@@ -99,7 +99,7 @@
                 
                 self.passedGroup = objects.firstObject;
                 self.navigationItem.title = self.passedGroup.canonicalName;
-
+                
                 [self loadLocalChat];
                 
             }];
@@ -141,6 +141,26 @@
     
     if(self.isGroupChat) //group converstaion logic
     {
+        PFObject *group = [Group objectWithoutDataWithObjectId:self.currentGroupProfile.objectId];
+        PFQuery *senderQuery = [Message query];
+        
+        [senderQuery whereKey:@"groupRecipient" equalTo:self.currentGroupProfile];
+        //        [senderQuery whereKey:@"groupRecipient" equalTo:group];
+        
+        [senderQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+            if (!error) {
+                // The count request succeeded. Log the count
+                NSLog(@"There are currently %d entries", number);
+                
+                
+                NSInteger totalNumberOfEntries = number;
+                if (totalNumberOfEntries > [self.messageData count]) {
+                    NSLog(@"Retrieving data");
+                    [self loadLocalChat];
+                    [self.refreshControl endRefreshing];
+                }
+            }
+        }];
         
     }
     else
@@ -252,7 +272,7 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     
-//    NSLog(@"the text content%@",self.messageTextField.text);
+    //    NSLog(@"the text content%@",self.messageTextField.text);
     [textField resignFirstResponder];
     
     //    self.recipientProfile = [Profile objectWithoutDataWithClassName:@"Profile" objectId:[NSString stringWithFormat:@"%@", self.recipientTextField.text]];
