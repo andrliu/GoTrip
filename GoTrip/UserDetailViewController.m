@@ -269,11 +269,19 @@
 
     CGPoint location = CGPointMake(self.collectionView.frame.size.width/2, self.collectionView.frame.size.height/2);
     self.selectedIndexPath = [self.collectionView indexPathForItemAtPoint:location];
-    int i = abs(indexPath.item - self.selectedIndexPath.item);
-    cell.layer.zPosition = self.arrayOfComment.count - i;
 
-//    CGPoint location = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height*0.8);
-//    self.selectedIndexPath = [self.collectionView indexPathForItemAtPoint:location];
+
+//    NSIndexPath *selectedIndexPath = [self.collectionView indexPathForItemAtPoint:location];
+//    if ((self.selectedIndexPath.section == indexPath.section) & (self.selectedIndexPath.row == indexPath.row))
+    if (self.selectedIndexPath.item == indexPath.item)  //Why this line makes difference
+    {
+        int i = abs(indexPath.item - self.selectedIndexPath.item);
+        cell.layer.zPosition = self.arrayOfComment.count - i;
+    }
+    else
+    {
+
+    }
 
     return cell;
 }
@@ -281,14 +289,6 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     [self.collectionView reloadData];
-    NSLog(@"W %f", self.collectionView.frame.size.width/2);
-    NSLog(@"H %f", self.collectionView.frame.size.height*0.8);
-
-//    CGPoint location = CGPointMake(self.collectionView.frame.size.width/2, self.collectionView.frame.size.height/2);
-//    self.selectedIndexPath = [self.collectionView indexPathForItemAtPoint:location];
-
-    NSLog(@"ind %@", self.selectedIndexPath);
-    NSLog(@"INDEX %ld", (long)self.selectedIndexPath.item);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -306,7 +306,15 @@
 //    }
 //    else
 //    {
-        return CGSizeMake(self.collectionView.frame.size.width*0.7, self.collectionView.frame.size.height*0.6);
+//    if ((self.selectedIndexPath.section == indexPath.section) & (self.selectedIndexPath.row == indexPath.row))
+//    {
+
+        return CGSizeMake(self.collectionView.frame.size.width*0.7, self.collectionView.frame.size.height*0.9);
+//    }
+//    else
+//    {
+//        return CGSizeMake(self.collectionView.frame.size.width*0.7, self.collectionView.frame.size.height*0.7);
+//    }
 //    }
 }
 
