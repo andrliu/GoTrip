@@ -231,7 +231,12 @@
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="KFF-K4-Lld">
                             <connections>
                                 <action selector="onCancellButtonPressed:" destination="vac-ZB-aAC" id="GfN-tG-925"/>
-                                <segue destination="PvL-7H-a3N" kind="unwind" unwindAction="unwindToThisViewController:" id="WSI-bj-Zzb"/>
+                                <segue destination="PvL-7H-a3N" kind="unwind" identifier="goHomeSegue" unwindAction="unwindToThisViewController:" id="WSI-bj-Zzb"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="trash" id="kPf-fo-c4U">
+                            <connections>
+                                <action selector="onDeleteButtonPressed:" destination="vac-ZB-aAC" id="P0Z-hL-x3m"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
