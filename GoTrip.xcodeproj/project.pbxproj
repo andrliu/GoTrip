@@ -1028,7 +1028,7 @@
 				INFOPLIST_FILE = GoTrip/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6e8cb5f2-79b4-4ce1-8aff-0aff9c3872ea";
+				PROVISIONING_PROFILE = "0ab244fe-c9a2-425c-bd4e-bce26eab4cb7";
 			};
 			name = Debug;
 		};
@@ -1044,7 +1044,7 @@
 				INFOPLIST_FILE = GoTrip/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6e8cb5f2-79b4-4ce1-8aff-0aff9c3872ea";
+				PROVISIONING_PROFILE = "0ab244fe-c9a2-425c-bd4e-bce26eab4cb7";
 			};
 			name = Release;
 		};
