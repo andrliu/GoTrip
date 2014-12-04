@@ -105,6 +105,7 @@
 		FA14B9111A2D3B5100950C27 /* GroupCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA14B9101A2D3B5100950C27 /* GroupCollectionViewCell.m */; };
 		FA1EEE4B1A253FE9009280BA /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1EEE4A1A253FE9009280BA /* Group.m */; };
 		FA519B171A2D864D00FDD295 /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = FA519B161A2D864D00FDD295 /* Photo.m */; };
+		FA519B1D1A2FDF4500FDD295 /* GroupEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA519B1C1A2FDF4500FDD295 /* GroupEditViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -301,6 +302,8 @@
 		FA1EEE4A1A253FE9009280BA /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		FA519B151A2D864D00FDD295 /* Photo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Photo.h; sourceTree = "<group>"; };
 		FA519B161A2D864D00FDD295 /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Photo.m; sourceTree = "<group>"; };
+		FA519B1B1A2FDF4500FDD295 /* GroupEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupEditViewController.h; sourceTree = "<group>"; };
+		FA519B1C1A2FDF4500FDD295 /* GroupEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupEditViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -385,6 +388,8 @@
 				4937C37D1A22B7480087E8CF /* ProfileViewController.m */,
 				4937C37F1A22B75C0087E8CF /* GroupDetailViewController.h */,
 				4937C3801A22B75C0087E8CF /* GroupDetailViewController.m */,
+				FA519B1B1A2FDF4500FDD295 /* GroupEditViewController.h */,
+				FA519B1C1A2FDF4500FDD295 /* GroupEditViewController.m */,
 				4937C3821A22B7690087E8CF /* UserDetailViewController.h */,
 				4937C3831A22B7690087E8CF /* UserDetailViewController.m */,
 				4937C38B1A22B7B60087E8CF /* CustomCollectionViewCell.h */,
@@ -815,6 +820,7 @@
 				FA14B90B1A2D3AE300950C27 /* ImageTableViewCell.m in Sources */,
 				7B16E0631A2510C6006899E6 /* MessagesViewController.m in Sources */,
 				7B4341211A2D706C00977158 /* JSQMessagesCollectionView.m in Sources */,
+				FA519B1D1A2FDF4500FDD295 /* GroupEditViewController.m in Sources */,
 				7B43412A1A2D706C00977158 /* JSQMessagesLoadEarlierHeaderView.m in Sources */,
 				7B4341151A2D706C00977158 /* JSQMessagesToolbarButtonFactory.m in Sources */,
 				7B4341081A2D706C00977158 /* JSQSystemSoundPlayer+JSQMessages.m in Sources */,

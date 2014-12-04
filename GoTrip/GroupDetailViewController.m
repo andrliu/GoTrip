@@ -8,11 +8,13 @@
 
 #import "GroupDetailViewController.h"
 #import "Group.h"
+#import "Profile.h"
 #import "Photo.h"
 #import "TextTableViewCell.h"
 #import "ImageTableViewCell.h"
 #import "ButtonTableViewCell.h"
 #import "GroupCollectionViewCell.h"
+#import "GroupEditViewController.h"
 
 @interface GroupDetailViewController () <UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
@@ -27,34 +29,39 @@
 {
     [super viewDidLoad];
 
-    //TODO: clean that stuff. For testing only
+    //TODO: CHECK FOR THE GROUP != nil !!
 
-    PFQuery *photoQuery = [Photo query];
-    [photoQuery whereKey:@"group" equalTo:self.group];
-    [photoQuery orderByDescending:@"createdAt"];
-    [photoQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
-     {
-         if (error)
+    if (self.group.objectId)
+    {
+        PFQuery *photoQuery = [Photo query];
+        [photoQuery whereKey:@"group" equalTo:self.group];
+        [photoQuery orderByDescending:@"createdAt"];
+        [photoQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
          {
-             [self errorAlertWindow:error.localizedDescription];
-         }
-         else
-         {
-             self.collectionViewArray = objects;
-         }
-     }];
+             if (error)
+             {
+                 [self errorAlertWindow:error.localizedDescription];
+             }
+             else
+             {
+                 self.collectionViewArray = objects;
+             }
+         }];
 
-    //TODO: clean that stuff. For testing only
+        //TODO: clean that stuff. For testing only
 
-    //    UIImage *image1 = [UIImage imageNamed:@"minsk"];
-    //    UIImage *image2 = [UIImage imageNamed:@"portland"];
-    //    UIImage *image3 = [UIImage imageNamed:@"sanfrancisco"];
-    //    UIImage *image4 = [UIImage imageNamed:@"chicago"];
-    //    self.collectionViewArray = @[image1,image2,image3,image4];
+        //    UIImage *image1 = [UIImage imageNamed:@"minsk"];
+        //    UIImage *image2 = [UIImage imageNamed:@"portland"];
+        //    UIImage *image3 = [UIImage imageNamed:@"sanfrancisco"];
+        //    UIImage *image4 = [UIImage imageNamed:@"chicago"];
+        //    self.collectionViewArray = @[image1,image2,image3,image4];
 
-    self.navigationItem.title = self.group.name;
-//    self.aString = self.group.memo;
-
+        self.navigationItem.title = self.group.name;
+    }
+    else
+    {
+        [self performSegueWithIdentifier:@"editSegue" sender:self.group];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -300,6 +307,13 @@
     UIAlertAction *okButton = [UIAlertAction actionWithTitle:@"😭 OK" style:UIAlertActionStyleDefault handler:nil];
     [alert addAction:okButton];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(Group *)group
+{
+    UINavigationController *navVC = [segue destinationViewController];
+    GroupEditViewController *editVC = (GroupEditViewController *)navVC.topViewController;
+    editVC.group = group;
 }
 
 
