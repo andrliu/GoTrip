@@ -419,6 +419,9 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Chalkduster" family="Chalkduster" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="caB-bt-Glw" id="a25-vO-vwf"/>
+                                </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9Cv-OF-do7">
                                 <rect key="frame" x="185" y="249" width="100" height="20"/>
@@ -428,6 +431,9 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Chalkduster" family="Chalkduster" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="caB-bt-Glw" id="6yY-4f-evQ"/>
+                                </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Memo" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="e2o-dp-BNK">
                                 <rect key="frame" x="16" y="274" width="288" height="20"/>
@@ -436,6 +442,9 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Chalkduster" family="Chalkduster" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="caB-bt-Glw" id="Lxe-mz-d3K"/>
+                                </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pOs-zK-QYe">
                                 <rect key="frame" x="85" y="249" width="150" height="20"/>
@@ -623,7 +632,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="sTM-xW-jPV">
-                        <barButtonItem key="leftBarButtonItem" title="Out" id="tQS-i3-pUU">
+                        <barButtonItem key="leftBarButtonItem" title="Logout" id="tQS-i3-pUU">
                             <connections>
                                 <action selector="logOutOnButtonPressed:" destination="caB-bt-Glw" id="vgr-Xm-NY2"/>
                             </connections>
@@ -1086,7 +1095,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="ohF-rU-5c0"/>
         <segue reference="3F9-md-NEt"/>
-        <segue reference="bnA-uz-GEy"/>
     </inferredMetricsTieBreakers>
 </document>
