@@ -11,7 +11,7 @@
 #import "ChatViewController.h"
 #import "Comment.h"
 
-@interface UserDetailViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+@interface UserDetailViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -23,6 +23,7 @@
 @property BOOL isPending;
 @property BOOL isRequesting;
 @property NSArray *arrayOfComment;
+@property NSIndexPath *selectedIndexPath;
 
 @end
 
@@ -265,12 +266,56 @@
     [dateFormatter setDateFormat:@"MM/dd/yyyy"];
     NSString *stringOfDate = [dateFormatter stringFromDate:comment.createdAt];
     cell.nameLabel.text = [NSString stringWithFormat:@"by %@ %@", comment.sender.firstName, stringOfDate];
+
+    CGPoint location = CGPointMake(self.collectionView.frame.size.width/2, self.collectionView.frame.size.height/2);
+    self.selectedIndexPath = [self.collectionView indexPathForItemAtPoint:location];
+
+
+//    NSIndexPath *selectedIndexPath = [self.collectionView indexPathForItemAtPoint:location];
+//    if ((self.selectedIndexPath.section == indexPath.section) & (self.selectedIndexPath.row == indexPath.row))
+    if (self.selectedIndexPath.item == indexPath.item)  //Why this line makes difference
+    {
+        int i = abs(indexPath.item - self.selectedIndexPath.item);
+        cell.layer.zPosition = self.arrayOfComment.count - i;
+    }
+    else
+    {
+
+    }
+
     return cell;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.collectionView reloadData];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(self.collectionView.frame.size.width*0.7, self.collectionView.frame.size.height*0.6);
+//    CGPoint location = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height*0.8);
+//    NSIndexPath *selectedIndexPath = [self.collectionView indexPathForItemAtPoint:location];
+//    if (indexPath.item == selectedIndexPath.item)
+//    {
+
+//    if (indexPath.item == self.selectedIndexPath.item)
+//    {
+//        return CGSizeMake(self.collectionView.frame.size.width*0.7, self.collectionView.frame.size.height*0.8);
+//    }
+
+//    }
+//    else
+//    {
+//    if ((self.selectedIndexPath.section == indexPath.section) & (self.selectedIndexPath.row == indexPath.row))
+//    {
+
+        return CGSizeMake(self.collectionView.frame.size.width*0.7, self.collectionView.frame.size.height*0.9);
+//    }
+//    else
+//    {
+//        return CGSizeMake(self.collectionView.frame.size.width*0.7, self.collectionView.frame.size.height*0.7);
+//    }
+//    }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
@@ -287,45 +332,6 @@
 {
     return -self.collectionView.frame.size.width*0.3;
 }
-
-//- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
-//{
-//    NSMutableArray *attributes = [NSMutableArray new];
-//
-//    NSIndexPath *decorationIndexPath = [NSIndexPath indexPathForItem:0 inSection:0];
-//
-//    UICollectionViewLayoutAttributes *decorationAttributes =
-//    [UICollectionViewLayoutAttributes
-//     layoutAttributesForDecorationViewOfKind:@"BackgroundView"
-//     withIndexPath:decorationIndexPath];
-//
-//    decorationAttributes.frame = CGRectMake(0.0f,
-//                                            0.0f,
-//                                            self.collectionViewContentSize.width,
-//                                            self.collectionViewContentSize.height);
-//
-//    [allAttributes addObject:decorationAttributes];
-//
-//    ... now add the rest of the attributes ...
-//
-//    return attributes;
-//}
-//
-//-(NSArray*)layoutAttributesForElementsInRect:(CGRect)rect {
-//    NSArray* array = [super layoutAttributesForElementsInRect:rect];
-//
-//    UICollectionViewLayoutAttributes* att = [array lastObject];
-//    if (att){
-//        CGFloat lastY = att.frame.origin.y + att.frame.size.height;
-//        CGFloat diff = self.collectionView.frame.size.height - lastY;
-//        if (diff > 0){
-//            for (UICollectionViewLayoutAttributes* a in array){
-//                a.frame = CGRectMake(a.frame.origin.x, a.frame.origin.y + diff/2, a.frame.size.width, a.frame.size.height) ;
-//            }
-//        }
-//    }
-//    return array;
-//}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {

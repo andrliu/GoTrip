@@ -105,9 +105,7 @@
 //MARK: dismiss keyboard
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [self.firstNameTextField resignFirstResponder];
-    [self.lastNameTextField resignFirstResponder];
-    [self.memoTextField resignFirstResponder];
+    [textField resignFirstResponder];
     return YES;
 }
 
