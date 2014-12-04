@@ -30,6 +30,17 @@
     [super viewDidLoad];
 
     //TODO: CHECK FOR THE GROUP != nil !!
+    if ([self.group.creator.objectId isEqualToString:self.currentProfile.objectId])
+    {
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+        self.navigationItem.rightBarButtonItem.tintColor = nil;
+    }
+    else
+    {
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+        self.navigationItem.rightBarButtonItem.tintColor = [UIColor clearColor];
+
+    }
 
     if (self.group.objectId)
     {
@@ -300,6 +311,14 @@
     return cell;
 }
 
+//MARK: action methods
+
+- (IBAction)onEditButtonPressed:(UIBarButtonItem *)sender
+{
+    [self performSegueWithIdentifier:@"editSegue" sender:self.group];
+}
+
+
 
 -(void)errorAlertWindow:(NSString *)message
 {
@@ -315,6 +334,8 @@
     GroupEditViewController *editVC = (GroupEditViewController *)navVC.topViewController;
     editVC.group = group;
 }
+
+
 
 
 
