@@ -34,6 +34,8 @@
 {
     [super viewDidLoad];
     
+
+    
 //TODO: remove example group from here
 //    PFQuery *query = [Group query];
 //    [query getObjectInBackgroundWithId:@"Zs30vE5wdx" block:^(PFObject *object, NSError *error)
@@ -89,6 +91,10 @@
             {
                 self.currentProfile = profile;
                 NSLog(@"user has profile existed");
+                
+                PFInstallation *installation = [PFInstallation currentInstallation];
+                installation[@"user"] = [PFUser currentUser];
+                [installation saveInBackground];
             }
             else
             {

@@ -736,10 +736,11 @@
 				TargetAttributes = {
 					4937C3461A22B4DA0087E8CF = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = P9S5G5KX9S;
+						DevelopmentTeam = 8DHS8QDN9C;
 					};
 					4937C3621A22B4DA0087E8CF = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = 8DHS8QDN9C;
 						TestTargetID = 4937C3461A22B4DA0087E8CF;
 					};
 				};

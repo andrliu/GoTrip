@@ -256,6 +256,7 @@
 
 - (void)finishSendingMessage
 {
+    
     UITextView *textView = self.inputToolbar.contentView.textView;
     textView.text = nil;
     [textView.undoManager removeAllActions];
@@ -266,6 +267,34 @@
     
     [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
     [self.collectionView reloadData];
+    
+    PFObject *user1 = [Profile objectWithoutDataWithObjectId:self.currentUserProfile.objectId];
+    PFObject *user2 = [Profile objectWithoutDataWithObjectId:self.passedRecipient.objectId];
+    NSArray *arrayOfUsers  = @[user2, user1];
+    
+    PFQuery *senderQuery = [Message query];
+    [senderQuery whereKey:@"sender" containedIn:arrayOfUsers];
+    [senderQuery whereKey:@"userRecipient" containedIn:arrayOfUsers];
+    [senderQuery whereKey:@"sender" notEqualTo:user1];
+    
+    [senderQuery orderByAscending:@"createdAt"];
+    
+    [senderQuery setLimit:1000];
+    
+    PFQuery *queryInstallation = [PFInstallation query];
+    [queryInstallation whereKey:@"user" equalTo:self.passedRecipient.user];
+
+    PFPush *push = [[PFPush alloc] init];
+    [push setQuery:queryInstallation];
+    [push setMessage:@"Test"];
+    [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+     {
+         if (error != nil)
+         {
+             NSLog(@"SendPushNotification send error.");
+         }
+     }];
+
     
 }
 
