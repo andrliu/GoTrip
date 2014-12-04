@@ -32,6 +32,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.collectionView setPagingEnabled:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -270,17 +271,22 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(self.collectionView.frame.size.width*0.7, self.collectionView.frame.size.height*0.7);
+    return CGSizeMake(self.collectionView.frame.size.width - 20.0f, self.collectionView.frame.size.height*0.7);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
-    return CGSizeMake(self.collectionView.frame.size.width*0.15, self.collectionView.frame.size.height);
+    return CGSizeMake(10.0f, self.collectionView.frame.size.height);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
 {
-    return CGSizeMake(self.collectionView.frame.size.width*0.15, self.collectionView.frame.size.height);
+    return CGSizeMake(10.0f, self.collectionView.frame.size.height);
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    return 20.0f;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
