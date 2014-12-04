@@ -22,7 +22,7 @@
 @property NSArray *tableViewArray;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segmentedComtrol;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *addGroupButton;
-
+@property Profile *currentProfile;
 
 @end
 
@@ -33,7 +33,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
 //TODO: remove example group from here
 //    PFQuery *query = [Group query];
 //    [query getObjectInBackgroundWithId:@"Zs30vE5wdx" block:^(PFObject *object, NSError *error)
@@ -48,7 +48,6 @@
     [self queryForFeaturedGroups];
 
     self.tableView.tableFooterView = [[UIView alloc] init] ;
-//    self.navigationItem.title = @"Featured Groups";
 
 }
 
@@ -73,7 +72,7 @@
         {
             if (profile)
             {
-                //TODO: something after login
+                self.currentProfile = profile;
                 NSLog(@"user has profile existed");
             }
             else
@@ -270,7 +269,6 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //TODO: row count
     return self.tableViewArray.count;
 }
 
@@ -309,12 +307,22 @@
     return cell;
 }
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    Group *selectedGroup = self.tableViewArray[indexPath.row];
+    [self performSegueWithIdentifier:@"groupDetailSegue" sender:selectedGroup];
+}
+
 - (IBAction)segmentedControlValueChanged:(UISegmentedControl *)sControl
 {
     if (sControl.selectedSegmentIndex==1)
     {
 
-        [UIView transitionFromView:self.tableView toView:self.tableView duration:.5 options:(UIViewAnimationOptionShowHideTransitionViews | UIViewAnimationOptionTransitionFlipFromLeft) completion:^(BOOL finished)
+        [UIView transitionFromView:self.tableView
+                            toView:self.tableView
+                          duration:.5
+                           options:(UIViewAnimationOptionShowHideTransitionViews | UIViewAnimationOptionTransitionFlipFromLeft)
+                        completion:^(BOOL finished)
          {
              [self queryForAllGroups];
          }];
@@ -323,7 +331,11 @@
     else
     {
          [self queryForFeaturedGroups];
-        [UIView transitionFromView:self.tableView toView:self.tableView duration:.5 options:(UIViewAnimationOptionShowHideTransitionViews | UIViewAnimationOptionTransitionFlipFromRight)completion:^(BOOL finished)
+        [UIView transitionFromView:self.tableView
+                            toView:self.tableView
+                          duration:.5
+                           options:(UIViewAnimationOptionShowHideTransitionViews | UIViewAnimationOptionTransitionFlipFromRight)
+                        completion:^(BOOL finished)
          {
              [self queryForFeaturedGroups];
          }];
@@ -336,6 +348,10 @@
 - (IBAction)onBarButtonPressed:(UIBarButtonItem *)sender
 {
 //TODO: implement a new group creation
+    Group *newGroup = [Group object];
+    newGroup.creator = self.currentProfile;
+    [self performSegueWithIdentifier:@"groupDetailSegue" sender:newGroup];
+
 }
 
 -(void)queryForFeaturedGroups
@@ -396,9 +412,10 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     GroupDetailViewController *detailVC = [segue destinationViewController];
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
-    Group *group = self.tableViewArray[indexPath.row];
-    detailVC.group = group;
+//    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+//    Group *group = self.tableViewArray[indexPath.row];
+    detailVC.group = sender;
+    detailVC.currentProfile = self.currentProfile;
 }
 
 @end
