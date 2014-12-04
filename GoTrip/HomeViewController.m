@@ -45,10 +45,23 @@
 //        
 //    }];
 
-    [self queryForFeaturedGroups];
+    [self queryForFeaturedGroups:YES];
 
     self.tableView.tableFooterView = [[UIView alloc] init] ;
 
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+     if (self.segmentedComtrol.selectedSegmentIndex == 1)
+     {
+         [self queryForAllGroups:NO];
+     }
+    else
+    {
+        [self queryForFeaturedGroups:NO];
+    }
 }
 
 
@@ -320,30 +333,10 @@
     if (sControl.selectedSegmentIndex==1)
     {
         [self queryForAllGroups:YES];
-//flip transition animation
-//        [UIView transitionFromView:self.tableView
-//                            toView:self.tableView
-//                          duration:.5
-//                           options:(UIViewAnimationOptionShowHideTransitionViews | UIViewAnimationOptionTransitionFlipFromLeft)
-//                        completion:^(BOOL finished)
-//         {
-//             [self queryForAllGroups];
-//         }];
-
     }
     else
     {
-         [self queryForFeaturedGroups];
-////flip transition animation
-//        [UIView transitionFromView:self.tableView
-//                            toView:self.tableView
-//                          duration:.5
-//                           options:(UIViewAnimationOptionShowHideTransitionViews | UIViewAnimationOptionTransitionFlipFromRight)
-//                        completion:^(BOOL finished)
-//         {
-//             [self queryForFeaturedGroups];
-//         }];
-
+        [self queryForFeaturedGroups:NO];
     }
     
 }
@@ -358,7 +351,7 @@
 
 }
 
--(void)queryForFeaturedGroups
+-(void)queryForFeaturedGroups:(BOOL)animated
 {
     PFQuery *groupListQuery = [Group query];
     [groupListQuery whereKey:@"isFeatured" equalTo:[NSNumber numberWithBool:YES]];
@@ -372,8 +365,19 @@
          else
          {
              self.tableViewArray = objects;
-//             [self.tableView reloadData];
-              [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
+             switch ([[NSNumber numberWithBool:animated]intValue])
+             {
+                 case 0:
+                     [self.tableView reloadData];
+                     break;
+                 case 1:
+                     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationBottom];
+                     break;
+
+                 default:
+                     break;
+             }
+
          }
      }];
     self.addGroupButton.enabled = NO;

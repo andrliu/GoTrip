@@ -736,6 +736,7 @@
 				TargetAttributes = {
 					4937C3461A22B4DA0087E8CF = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = P9S5G5KX9S;
 					};
 					4937C3621A22B4DA0087E8CF = {
 						CreatedOnToolsVersion = 6.1;
@@ -1020,7 +1021,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Andrew Liu (4569Z5KKMP)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1028,7 +1030,7 @@
 				INFOPLIST_FILE = GoTrip/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0ab244fe-c9a2-425c-bd4e-bce26eab4cb7";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -1036,7 +1038,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1044,7 +1047,7 @@
 				INFOPLIST_FILE = GoTrip/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0ab244fe-c9a2-425c-bd4e-bce26eab4cb7";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

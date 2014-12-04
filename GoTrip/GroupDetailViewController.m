@@ -32,30 +32,13 @@
     //TODO: CHECK FOR THE GROUP != nil !!
     if ([self.group.creator.objectId isEqualToString:self.currentProfile.objectId])
     {
+        //add an Edit button is current profile is the owner
         self.navigationItem.rightBarButtonItem.enabled = YES;
         self.navigationItem.rightBarButtonItem.tintColor = nil;
     }
     else
     {
-            BOOL isInGroup = [self isProfileInGroup:self.group profile:self.currentProfile];
-            if (isInGroup)
-            {
-                self.navigationItem.rightBarButtonItem.enabled = NO;
-                self.navigationItem.rightBarButtonItem.tintColor = [UIColor clearColor];
-            }
-            else
-            {
-                //            UIBarButtonItem *groupJoinButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:nil title  target:self action:@selector(testButton:)];
-                //            groupJoinButton.style = UIBarButtonItemStylePlain;
-
-                UIBarButtonItem *groupJoinButton = [[UIBarButtonItem alloc] initWithTitle:@"Join" style:UIBarButtonItemStylePlain target:self action:@selector(onGroupJoinButtonPressed:)];
-
-                self.navigationItem.rightBarButtonItem = groupJoinButton;
-                self.navigationItem.rightBarButtonItem.enabled = YES;
-                self.navigationItem.rightBarButtonItem.tintColor = nil;
-            }
-
-
+        [self showJoinButtonIfNotInGroup];
     }
 
     if (self.group.objectId)
@@ -89,6 +72,28 @@
     {
         [self performSegueWithIdentifier:@"editSegue" sender:self.group];
     }
+}
+
+-(void)showJoinButtonIfNotInGroup
+{
+    BOOL isInGroup = [self isProfileInGroup:self.group profile:self.currentProfile];
+    if (isInGroup)
+    {
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+        self.navigationItem.rightBarButtonItem.tintColor = [UIColor clearColor];
+    }
+    else
+    {
+        //            UIBarButtonItem *groupJoinButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:nil title  target:self action:@selector(testButton:)];
+        //            groupJoinButton.style = UIBarButtonItemStylePlain;
+
+        UIBarButtonItem *groupJoinButton = [[UIBarButtonItem alloc] initWithTitle:@"Join" style:UIBarButtonItemStylePlain target:self action:@selector(onGroupJoinButtonPressed:)];
+
+        self.navigationItem.rightBarButtonItem = groupJoinButton;
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+        self.navigationItem.rightBarButtonItem.tintColor = nil;
+    }
+    
 }
 
 -(BOOL)isProfileInGroup:(Group *)group profile:(Profile *)profile
@@ -219,7 +224,7 @@
             return 1;
             break;
         case 2:
-            return 3;
+            return 0; //number of buttons at the bottom. 3 by default.
             break;
 
         default:
@@ -363,7 +368,33 @@
 
 -(void)onGroupJoinButtonPressed:(id)sender
 {
-    NSLog(@"test test test");
+
+    NSLog(@"group.profiles.count = %lu", self.group.profiles.count);
+
+    //create a Parse's pointer to the current Profile object
+    Profile *profile = [Profile objectWithoutDataWithClassName:@"Profile" objectId:self.currentProfile.objectId];
+    NSMutableArray *profilesArray = [NSMutableArray array];
+    if (self.group.profiles.count != 0)
+    {
+        profilesArray = [self.group.profiles mutableCopy];
+    }
+    [profilesArray addObject:profile];
+    self.group.profiles = profilesArray;
+
+    NSLog(@"group.profiles.count = %lu", self.group.profiles.count);
+
+    [self.group saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+    {
+        if (error)
+        {
+            [self errorAlertWindow:error.localizedDescription];
+        }
+        else
+        {
+            [self showJoinButtonIfNotInGroup];
+        }
+    }];
+
 }
 
 
