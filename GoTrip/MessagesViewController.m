@@ -15,6 +15,7 @@
 @interface MessagesViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSArray *arrayOfMessages;
+@property (strong, nonatomic) NSArray *arrayOfGroupMessages;
 @property Profile *currentProfile;
 @property Profile *recipientProfile;
 @end
@@ -27,6 +28,8 @@
     // Do any additional setup after loading the view.
 }
 
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -37,7 +40,7 @@
     [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error) {
         self.currentProfile = profile;
         self.arrayOfMessages = profile.isMessaging;
-        
+        self.arrayOfGroupMessages= profile.isGroupMessaging;
         
         [self.tableView reloadData];
     }];
@@ -45,41 +48,73 @@
     
 }
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    //    if(self.currentProfile.isGroupMessaging )
+    return 2;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;    // fixed font style. use custom view (UILabel) if you want something different
+{
+    if (section == 0)
+    return @"Group";
+    else
+        return @"User";
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.arrayOfMessages.count;
+    if(section == 1)
+        return self.arrayOfMessages.count;
+    
+    else
+        return self.arrayOfGroupMessages.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
+
+    if(indexPath.section == 1)
+    {
     Profile *linkedProfile = self.arrayOfMessages[indexPath.row];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@",linkedProfile.firstName ];
+
+    }
     
-    //    this is for alexey's bs
-    //    PFQuery *query = [Profile query];
-    //
-    //    [query getObjectInBackgroundWithId:linkedProfile.objectId block:^(PFObject *object, NSError *error) {
-    //        self.recipientProfile = (Profile *)object;
-    //
-    //    }];
+    else
+    {
+        
+        Group *linkedGroup = self.arrayOfGroupMessages[indexPath.row];
+        PFQuery *group = [Group query];
+        [group whereKey:@"objectId" equalTo:linkedGroup.objectId];
+        [group findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            Group *tempGroup = objects.firstObject;
+        cell.textLabel.text = [NSString stringWithFormat:@"%@",tempGroup.canonicalName ];
+        }];
+    }
     
     
-    cell.textLabel.text = [NSString stringWithFormat:@"%@",linkedProfile.firstName ];
+    
     return cell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//     TestViewController *testVC = [[TestViewController alloc] init];
-//      [self.navigationController pushViewController:testVC animated:YES];
+    //     TestViewController *testVC = [[TestViewController alloc] init];
+    //      [self.navigationController pushViewController:testVC animated:YES];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-        ChatViewController *chatVC = segue.destinationViewController;
+    ChatViewController *chatVC = segue.destinationViewController;
     
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
-        chatVC.passedRecipient = self.arrayOfMessages[indexPath.row];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+    if(indexPath.section == 1)
+    chatVC.passedRecipient = self.arrayOfMessages[indexPath.row];
+    else
+        chatVC.passedGroup = self.arrayOfGroupMessages[indexPath.row];
+
     
 }
 

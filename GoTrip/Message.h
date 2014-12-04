@@ -9,6 +9,7 @@
 #import <Parse/Parse.h>
 #import <Parse/PFObject+Subclass.h>
 #import "Profile.h"
+#import "Group.h"
 @class Message;
 
 @interface Message : PFObject <PFSubclassing>
@@ -18,6 +19,7 @@
 @property NSString *text;
 @property Profile *sender;
 @property Profile *userRecipient;
+@property Group *groupRecipient;
 
 
 @end
