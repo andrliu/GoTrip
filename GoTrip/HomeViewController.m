@@ -51,6 +51,7 @@
 
 }
 
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -63,6 +64,7 @@
         [self checkUserProfileAccountExisted];
     }
 }
+
 
 - (void)checkUserProfileAccountExisted
 {
@@ -317,28 +319,30 @@
 {
     if (sControl.selectedSegmentIndex==1)
     {
-
-        [UIView transitionFromView:self.tableView
-                            toView:self.tableView
-                          duration:.5
-                           options:(UIViewAnimationOptionShowHideTransitionViews | UIViewAnimationOptionTransitionFlipFromLeft)
-                        completion:^(BOOL finished)
-         {
-             [self queryForAllGroups];
-         }];
+        [self queryForAllGroups:YES];
+//flip transition animation
+//        [UIView transitionFromView:self.tableView
+//                            toView:self.tableView
+//                          duration:.5
+//                           options:(UIViewAnimationOptionShowHideTransitionViews | UIViewAnimationOptionTransitionFlipFromLeft)
+//                        completion:^(BOOL finished)
+//         {
+//             [self queryForAllGroups];
+//         }];
 
     }
     else
     {
          [self queryForFeaturedGroups];
-        [UIView transitionFromView:self.tableView
-                            toView:self.tableView
-                          duration:.5
-                           options:(UIViewAnimationOptionShowHideTransitionViews | UIViewAnimationOptionTransitionFlipFromRight)
-                        completion:^(BOOL finished)
-         {
-             [self queryForFeaturedGroups];
-         }];
+////flip transition animation
+//        [UIView transitionFromView:self.tableView
+//                            toView:self.tableView
+//                          duration:.5
+//                           options:(UIViewAnimationOptionShowHideTransitionViews | UIViewAnimationOptionTransitionFlipFromRight)
+//                        completion:^(BOOL finished)
+//         {
+//             [self queryForFeaturedGroups];
+//         }];
 
     }
     
@@ -377,7 +381,7 @@
 
 }
 
--(void)queryForAllGroups
+-(void)queryForAllGroups:(BOOL)animated
 {
     PFQuery *groupListQuery = [Group query];
     [groupListQuery orderByAscending:@"startDate"];
@@ -390,8 +394,21 @@
          else
          {
              self.tableViewArray = objects;
-//             [self.tableView reloadData];
-             [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationBottom];
+             switch ([[NSNumber numberWithBool:animated]intValue])
+             {
+                 case 0:
+                     [self.tableView reloadData];
+                     break;
+                 case 1:
+                     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationBottom];
+                     break;
+
+                 default:
+                     break;
+             }
+//             self.tableViewArray = objects;
+////             [self.tableView reloadData];
+//             [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationBottom];
          }
      }];
     self.addGroupButton.enabled = YES;
@@ -423,6 +440,19 @@
 - (IBAction)unwindToThisViewController:(UIStoryboardSegue *)unwindSegue
 {
    //groupEditViewController jumps here is the group has been deleted
+//    switch (self.segmentedComtrol.selectedSegmentIndex)
+//    {
+//        case 0:
+//            [self queryForFeaturedGroups];
+//            break;
+//        case 1:
+//            [self queryForAllGroups];
+//            break;
+//        default:
+//            break;
+//    }
+    self.segmentedComtrol.selectedSegmentIndex = 1;
+    [self queryForAllGroups:NO];
 }
 
 @end

@@ -37,8 +37,24 @@
     }
     else
     {
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        self.navigationItem.rightBarButtonItem.tintColor = [UIColor clearColor];
+            BOOL isInGroup = [self isProfileInGroup:self.group profile:self.currentProfile];
+            if (isInGroup)
+            {
+                self.navigationItem.rightBarButtonItem.enabled = NO;
+                self.navigationItem.rightBarButtonItem.tintColor = [UIColor clearColor];
+            }
+            else
+            {
+                //            UIBarButtonItem *groupJoinButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:nil title  target:self action:@selector(testButton:)];
+                //            groupJoinButton.style = UIBarButtonItemStylePlain;
+
+                UIBarButtonItem *groupJoinButton = [[UIBarButtonItem alloc] initWithTitle:@"Join" style:UIBarButtonItemStylePlain target:self action:@selector(onGroupJoinButtonPressed:)];
+
+                self.navigationItem.rightBarButtonItem = groupJoinButton;
+                self.navigationItem.rightBarButtonItem.enabled = YES;
+                self.navigationItem.rightBarButtonItem.tintColor = nil;
+            }
+
 
     }
 
@@ -73,6 +89,33 @@
     {
         [self performSegueWithIdentifier:@"editSegue" sender:self.group];
     }
+}
+
+-(BOOL)isProfileInGroup:(Group *)group profile:(Profile *)profile
+{
+    int i=0;
+    BOOL soIsIt = NO;
+    for (Profile *profileFromGroup in group.profiles)
+    {
+        if ([profileFromGroup.objectId isEqualToString:profile.objectId])
+        {
+            soIsIt = YES;
+            break;
+        }
+        else
+        {
+            if (i>group.profiles.count)
+            {
+                break;
+            }
+            else
+            {
+                i++;
+            }
+        }
+
+    }
+    return soIsIt;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -316,6 +359,11 @@
 - (IBAction)onEditButtonPressed:(UIBarButtonItem *)sender
 {
     [self performSegueWithIdentifier:@"editSegue" sender:self.group];
+}
+
+-(void)onGroupJoinButtonPressed:(id)sender
+{
+    NSLog(@"test test test");
 }
 
 
