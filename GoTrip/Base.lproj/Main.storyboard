@@ -227,9 +227,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="kGK-1U-YSB"/>
+                    <navigationItem key="navigationItem" id="kGK-1U-YSB">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="KFF-K4-Lld">
+                            <connections>
+                                <action selector="onCancellButtonPressed:" destination="vac-ZB-aAC" id="GfN-tG-925"/>
+                                <segue destination="PvL-7H-a3N" kind="unwind" unwindAction="unwindToThisViewController:" id="WSI-bj-Zzb"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vui-MW-LVB" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="PvL-7H-a3N" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1993" y="-996"/>
         </scene>
@@ -368,10 +376,16 @@
                             <constraint firstItem="Gig-xG-m8c" firstAttribute="top" secondItem="UDM-bJ-kpB" secondAttribute="topMargin" id="nl5-zc-5rt"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="InX-xL-wgN"/>
+                    <navigationItem key="navigationItem" id="InX-xL-wgN">
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="mWJ-an-JWZ">
+                            <connections>
+                                <action selector="onEditButtonPressed:" destination="zvt-cb-nWk" id="mjm-cx-SVH"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="Gig-xG-m8c" id="N73-KS-FAZ"/>
-                        <segue destination="Dq0-t9-c3O" kind="modal" identifier="editSegue" animates="NO" id="0WE-y8-lAg"/>
+                        <segue destination="Dq0-t9-c3O" kind="modal" identifier="editSegue" modalTransitionStyle="crossDissolve" animates="NO" id="0WE-y8-lAg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QV5-l3-9mr" userLabel="First Responder" sceneMemberID="firstResponder"/>
