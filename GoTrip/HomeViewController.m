@@ -344,7 +344,6 @@
     {
         [self queryForFeaturedGroups:NO];
     }
-    
 }
 
 //creates a new group
@@ -387,6 +386,7 @@
              }
 
          }
+         [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
      }];
     self.addGroupButton.enabled = NO;
     self.addGroupButton.tintColor = [UIColor clearColor];
@@ -419,6 +419,8 @@
                      break;
              }
          }
+         [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+
      }];
     self.addGroupButton.enabled = YES;
     self.addGroupButton.tintColor = nil;
