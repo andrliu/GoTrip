@@ -56,7 +56,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:YES];
+    [super viewWillAppear:animated];
     if (self.segmentedComtrol.selectedSegmentIndex == 1)
     {
         [self queryForAllGroups:NO];
