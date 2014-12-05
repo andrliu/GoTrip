@@ -60,6 +60,8 @@
     if (self.segmentedComtrol.selectedSegmentIndex == 1)
     {
         [self queryForAllGroups:NO];
+        [self checkCurrentUser];
+
     }
     else
     {
@@ -67,44 +69,23 @@
     }
 }
 
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-//    if (![PFUser currentUser])
-//    {
-//        [self presentLoginView];
-//    }
-//    else
-//    {
-//        [self checkUserProfileAccountExisted];
-//    }
-}
-
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    if (self.currentProfile)
-    {
+    [self checkCurrentUser];
+}
 
+- (void)checkCurrentUser
+{
+    if (![PFUser currentUser])
+    {
+        [self presentLoginView];
     }
     else
     {
-
-        if (![PFUser currentUser])
-        {
-            [self presentLoginView];
-        }
-        else
-        {
-            [self checkUserProfileAccountExisted];
-        }
+        [self checkUserProfileAccountExisted];
     }
-
-
-
 }
-
 
 - (void)checkUserProfileAccountExisted
 {
@@ -242,7 +223,8 @@
 - (void)logInViewControllerDidCancelLogIn:(PFLogInViewController *)logInController
 {
     [self.navigationController popViewControllerAnimated:YES];
-        self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
+    self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
+    self.segmentedComtrol.selectedSegmentIndex = 0;
 }
 
 - (void)presentLoginView
@@ -396,6 +378,7 @@
     if (sControl.selectedSegmentIndex==1)
     {
         [self queryForAllGroups:YES];
+        [self checkCurrentUser];
     }
     else
     {
