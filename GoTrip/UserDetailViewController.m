@@ -11,7 +11,7 @@
 #import "ChatViewController.h"
 #import "Comment.h"
 
-@interface UserDetailViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+@interface UserDetailViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -38,11 +38,20 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self refreshView];
+}
+
+- (void)refreshView
+{
     [Comment getCurrentCommentsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error) {
         if (!error)
         {
             self.arrayOfComment = objects;
             [self.collectionView reloadData];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
+            [self.collectionView scrollToItemAtIndexPath:indexPath
+                                        atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                                animated:YES];
         }
         else
         {
@@ -92,31 +101,26 @@
 {
     if (self.isFriend)
     {
-//        [self.relationButton setTitle:@"Remove" forState:UIControlStateNormal];
         self.relationButton.title = @"Remove";
     }
     else
     {
         if (self.isPending == YES && self.isRequesting == NO)
         {
-//            [self.relationButton setTitle:@"Accept" forState:UIControlStateNormal];
             self.relationButton.title = @"Accept";
         }
         else if (self.isPending == NO && self.isRequesting == YES)
         {
-//            [self.relationButton setTitle:@"Pending" forState:UIControlStateNormal];
             self.relationButton.title = @"Pending";
         }
         else
         {
-//            [self.relationButton setTitle:@"Invite" forState:UIControlStateNormal];
             self.relationButton.title = @"Invite";
         }
     }
 }
 
 //MARK: custom button action
-
 - (IBAction)changeRelationshipOnButtonPressed:(UIBarButtonItem *)sender{
 
     PFObject *currentUserProfile = [PFObject objectWithoutDataWithClassName:@"Profile"
@@ -277,8 +281,9 @@
 {
     Comment *comment = self.arrayOfComment[indexPath.item];
     self.profile = comment.sender;
-    [self.collectionView reloadData];
+    [self refreshView];
 }
+
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
