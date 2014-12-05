@@ -237,7 +237,7 @@
     [signUpViewController setDelegate:self];
     signUpViewController.fields = PFSignUpFieldsUsernameAndPassword | PFSignUpFieldsSignUpButton |PFSignUpFieldsDismissButton;
     [logInViewController setSignUpController:signUpViewController];
-    [self presentViewController:logInViewController animated:YES completion:NULL];
+    [self presentViewController:logInViewController animated:NO completion:NULL];
 }
 
 //MARK: PFSignUpViewController delegate
