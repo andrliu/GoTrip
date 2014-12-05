@@ -10,6 +10,7 @@
 #import "Group.h"
 #import "Profile.h"
 #import "Photo.h"
+#import "CustomTableViewCell.h"
 #import "TextTableViewCell.h"
 #import "ImageTableViewCell.h"
 #import "ButtonTableViewCell.h"
@@ -144,12 +145,15 @@
     switch (indexPath.section)
     {
         case 0:
-            theFloat = height*1.03 + 20;
+            theFloat = self.view.frame.size.width/2.5;
             break;
         case 1:
-            theFloat =  190.0;
+            theFloat = height*1.03 + 20;
             break;
         case 2:
+            theFloat =  190.0;
+            break;
+        case 3:
             theFloat =  40.0;
             break;
 
@@ -195,12 +199,15 @@
     switch (section)
     {
         case 0:
-            label.text = @"Description";
+            label.text = self.group.destination;
             break;
         case 1:
-            label.text = @"Uploaded pictures";
+            label.text = @"Description";
             break;
         case 2:
+            label.text = @"Uploaded pictures";
+            break;
+        case 3:
             label.text = @"";
             break;
 
@@ -217,7 +224,14 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
+    if (section == 0)
+    {
+        return 0;
+    }
+    else
+    {
     return 30;
+    }
 }
 
 
@@ -226,7 +240,7 @@
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 
-    return 3;
+    return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -241,6 +255,9 @@
             return 1;
             break;
         case 2:
+            return 1;
+            break;
+        case 3:
             return 0; //number of buttons at the bottom. 3 by default.
             break;
 
@@ -250,25 +267,26 @@
     }
 }
 
--(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    switch (section)
-    {
-        case 0:
-            return @"Group description";
-            break;
-        case 1:
-            return @"User uploaded pictures";
-            break;
-            //        case 2:
-            //            return @"Control";
-            //            break;
-
-        default:
-            return nil;
-            break;
-    }
-}
+////using header VIEW method instead
+//-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+//{
+//    switch (section)
+//    {
+//        case 0:
+//            return @"Group description";
+//            break;
+//        case 1:
+//            return @"User uploaded pictures";
+//            break;
+//            //        case 2:
+//            //            return @"Control";
+//            //            break;
+//
+//        default:
+//            return nil;
+//            break;
+//    }
+//}
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -277,10 +295,19 @@
     {
         case 0:
         {
+            CustomTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"logoCell"];
+//            cell.backgroundImageView.image = [UIImage imageWithData:self.group.imageData];
+            cell.backgroundImageView.image = [UIImage imageNamed:@"hawaii"];
+            return cell;
+        }
+            break;
+        case 1:
+        {
             TextTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"textCell" forIndexPath:indexPath];
             //            cell.label.numberOfLines = 0;
             //            cell.label.text = self.aString;
             cell.textView.text = self.group.memo;
+            cell.textView.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
 
             cell.textView.scrollEnabled = NO;
 
@@ -288,19 +315,19 @@
         }
             break;
 
-        case 1:
+        case 2:
         {
             ImageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"imageCell" forIndexPath:indexPath];
 
             cell.collectionView.dataSource = self;
             cell.collectionView.delegate = self;
-            cell.collectionView.pagingEnabled = YES;
+            cell.collectionView.pagingEnabled = NO;
 
             return cell;
         }
             break;
 
-        case 2:
+        case 3:
         {
             ButtonTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"buttonCell" forIndexPath:indexPath];
 
