@@ -1,4 +1,4 @@
-//
+ //
 //  MessageViewController.m
 //  GoTrip
 //
@@ -90,8 +90,10 @@
     {
         [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error) {
             self.currentUserProfile = profile;
-            self.userName = self.currentUserProfile.objectId;
-            
+            NSString *nameString = [NSString stringWithFormat:@"%@ %@",self.currentUserProfile.firstName, self.currentUserProfile.lastName];
+//            self.userName = self.currentUserProfile.objectId;
+            self.userName = nameString;
+            self.senderId = nameString;
             self.currentGroupProfile = self.passedGroup;
             PFQuery *group = [Group query];
             [group whereKey:@"objectId" equalTo:self.passedGroup.objectId];
@@ -734,7 +736,7 @@
 // */
 - (NSString *)senderId
 {
-    return self.currentUserProfile.objectId;
+    return self.userName;
 }
 
 /**
@@ -784,7 +786,7 @@
     
     
     //TODO: add this
-    if ([message.senderId isEqualToString:self.currentUserProfile.objectId])
+    if ([message.senderId isEqualToString:self.userName])
         
     {
         
@@ -853,7 +855,7 @@
     JSQMessage *message = [self.messageData objectAtIndex:indexPath.item];
     
     
-    if ([message.senderId isEqualToString:self.senderId]){
+    if ([message.senderId isEqualToString:self.userName]){
         cell.textView.textColor = [UIColor whiteColor];
     }
     else {
@@ -887,7 +889,7 @@
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
     JSQMessage *message = self.messageData[indexPath.item];
-    if ([message.senderId isEqualToString:self.senderId])
+    if ([message.senderId isEqualToString:self.userName])
     {
         return 0.0f;
     }
@@ -902,6 +904,7 @@
     }
     return kJSQMessagesCollectionViewCellLabelHeightDefault;
 }
+
 
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------
