@@ -33,6 +33,7 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
+    self.collectionView.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
     [self.collectionView setPagingEnabled:YES];
 }
 
@@ -67,8 +68,8 @@
          if (!error)
          {
              self.currentProfile = profile;
-             [self checkRelationStatus];
-             [self switchButtonTitleBasedOnRelationStatus];
+            [self checkRelationStatus];
+            [self switchButtonTitleBasedOnRelationStatus];
          }
          else
          {
@@ -100,23 +101,30 @@
 //MARK: custom button title setting method
 - (void)switchButtonTitleBasedOnRelationStatus
 {
-    if (self.isFriend)
+    if ([self.profile.objectId isEqual: self.currentProfile.objectId])
     {
-        self.relationButton.title = @"Remove";
+        self.relationButton.title = @"";
     }
     else
     {
-        if (self.isPending == YES && self.isRequesting == NO)
+        if (self.isFriend)
         {
-            self.relationButton.title = @"Accept";
-        }
-        else if (self.isPending == NO && self.isRequesting == YES)
-        {
-            self.relationButton.title = @"Pending";
+            self.relationButton.title = @"Remove";
         }
         else
         {
-            self.relationButton.title = @"Invite";
+            if (self.isPending == YES && self.isRequesting == NO)
+            {
+                self.relationButton.title = @"Accept";
+            }
+            else if (self.isPending == NO && self.isRequesting == YES)
+            {
+                self.relationButton.title = @"Pending";
+            }
+            else
+            {
+                self.relationButton.title = @"Invite";
+            }
         }
     }
 }

@@ -442,13 +442,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="6aF-to-AeI">
-                                <rect key="frame" x="10" y="74" width="195" height="195"/>
-                                <color key="backgroundColor" red="0.89721038310000001" green="1" blue="0.9959064648" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="6aF-to-AeI" secondAttribute="height" multiplier="1:1" id="044-Ga-Q9P"/>
-                                </constraints>
-                            </imageView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UGL-F4-5Oe">
                                 <rect key="frame" x="215" y="74" width="95" height="30"/>
                                 <constraints>
@@ -525,7 +518,6 @@
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="eaN-hj-KIz">
                                 <rect key="frame" x="0.0" y="314" width="320" height="205"/>
-                                <color key="backgroundColor" red="0.89721038310000001" green="1" blue="0.9959064648" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="aMk-qW-OKJ">
                                     <size key="itemSize" width="150" height="200"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -604,8 +596,13 @@
                                     <action selector="segmentedControl:" destination="caB-bt-Glw" eventType="valueChanged" id="hrg-X4-DOn"/>
                                 </connections>
                             </segmentedControl>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="6aF-to-AeI">
+                                <rect key="frame" x="10" y="74" width="195" height="195"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="6aF-to-AeI" secondAttribute="height" multiplier="1:1" id="044-Ga-Q9P"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.89721038310000001" green="1" blue="0.9959064648" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="UGL-F4-5Oe" firstAttribute="top" secondItem="Sg1-pQ-eQf" secondAttribute="bottom" constant="10" id="2KO-zt-WPZ"/>
                             <constraint firstItem="Sha-Es-mAb" firstAttribute="top" secondItem="pOs-zK-QYe" secondAttribute="bottom" constant="20" id="9kI-ZD-7Da"/>
@@ -791,7 +788,6 @@
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="h8Z-8L-nrn">
                                 <rect key="frame" x="0.0" y="314" width="320" height="205"/>
-                                <color key="backgroundColor" red="0.89721038310000001" green="1" blue="0.9959064648" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="6Ba-wq-fQ4">
                                     <size key="itemSize" width="220" height="150"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -808,7 +804,6 @@
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bg8-2d-hzd">
                                                     <rect key="frame" x="0.0" y="0.0" width="220" height="150"/>
-                                                    <color key="backgroundColor" red="0.89721038310000001" green="1" blue="0.9959064648" alpha="1" colorSpace="calibratedRGB"/>
                                                 </imageView>
                                                 <textView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fob-du-xin">
                                                     <rect key="frame" x="33" y="3" width="184" height="129"/>
@@ -897,7 +892,6 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.89721038310000001" green="1" blue="0.9959064648" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="9uM-7q-pL2" firstAttribute="leading" secondItem="D0T-Se-lVw" secondAttribute="leadingMargin" constant="-6" id="3DB-7U-8gy"/>
                             <constraint firstItem="h8Z-8L-nrn" firstAttribute="leading" secondItem="D0T-Se-lVw" secondAttribute="leadingMargin" constant="-16" id="3Mr-6t-a9D"/>
@@ -1088,7 +1082,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="ohF-rU-5c0"/>
         <segue reference="3F9-md-NEt"/>
-        <segue reference="bnA-uz-GEy"/>
     </inferredMetricsTieBreakers>
 </document>
