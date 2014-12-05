@@ -244,7 +244,6 @@
                             </state>
                             <connections>
                                 <action selector="onSaveButtonPressed:" destination="vac-ZB-aAC" eventType="touchUpInside" id="iOr-jk-lsZ"/>
-                                <segue destination="PvL-7H-a3N" kind="unwind" unwindAction="unwindToThisViewController:" id="S9z-bZ-EKz"/>
                             </connections>
                         </button>
                         <barButtonItem key="rightBarButtonItem" systemItem="trash" id="kPf-fo-c4U">

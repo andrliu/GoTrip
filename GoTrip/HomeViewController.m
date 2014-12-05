@@ -300,8 +300,9 @@
 
     Group *group = self.tableViewArray[indexPath.row];
 //    cell.textLabel.text = group.name;
+//    cell.backgroundImageView.image = [UIImage imageNamed:@"hawaii"];
     //TODO: change to group.imageData
-    cell.backgroundImageView.image = [UIImage imageNamed:@"hawaii"];
+    cell.backgroundImageView.image = [UIImage imageWithData:group.imageData];
     [cell.backgroundImageView setClipsToBounds:YES];
     cell.nameLabel.text = group.name;
     cell.destinationLabel.text = group.destination;

@@ -27,6 +27,7 @@
 
 @implementation GroupDetailViewController
 
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -297,7 +298,8 @@
         {
             CustomTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"logoCell"];
 //            cell.backgroundImageView.image = [UIImage imageWithData:self.group.imageData];
-            cell.backgroundImageView.image = [UIImage imageNamed:@"hawaii"];
+            cell.backgroundImageView.image = [UIImage imageWithData:self.group.imageData];
+            [cell.backgroundImageView setClipsToBounds:YES];
             return cell;
         }
             break;
