@@ -313,7 +313,7 @@
 //    cell.backgroundImageView.image = [UIImage imageNamed:@"hawaii"];
     //TODO: change to group.imageData
     cell.backgroundImageView.image = [UIImage imageNamed:@"noimage"];
-    
+
     if ([[group allKeys] containsObject:@"imageData"])
     {
         cell.backgroundImageView.image = [UIImage imageWithData:group.imageData];
