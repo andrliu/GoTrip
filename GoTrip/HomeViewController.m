@@ -350,9 +350,11 @@
 //creates a new group
 - (IBAction)onBarButtonPressed:(UIBarButtonItem *)sender
 {
-//TODO: implement a new group creation
+    //TODO: implement a new group creation
     Group *newGroup = [Group object];
     newGroup.creator = self.currentProfile;
+    Profile *profile = [Profile objectWithoutDataWithClassName:@"Profile" objectId:self.currentProfile.objectId];
+    newGroup.profiles = @[profile];
     [self performSegueWithIdentifier:@"groupDetailSegue" sender:newGroup];
 
 }
@@ -447,19 +449,19 @@
 - (IBAction)unwindToThisViewController:(UIStoryboardSegue *)unwindSegue
 {
    //groupEditViewController jumps here is the group has been deleted
-//    switch (self.segmentedComtrol.selectedSegmentIndex)
-//    {
-//        case 0:
-//            [self queryForFeaturedGroups];
-//            break;
-//        case 1:
-//            [self queryForAllGroups];
-//            break;
-//        default:
-//            break;
-//    }
-    self.segmentedComtrol.selectedSegmentIndex = 1;
-    [self queryForAllGroups:NO];
+    switch (self.segmentedComtrol.selectedSegmentIndex)
+    {
+        case 0:
+            [self queryForFeaturedGroups:NO];
+            break;
+        case 1:
+            [self queryForAllGroups:NO];
+            break;
+        default:
+            break;
+    }
+//    self.segmentedComtrol.selectedSegmentIndex = 1;
+//    [self queryForAllGroups:NO];
 }
 
 @end
