@@ -897,7 +897,7 @@
     if (indexPath.item - 1 > 0)
     {
         JSQMessage *previousMessage = self.messageData[indexPath.item-1];
-        if ([previousMessage.senderId isEqualToString:self.senderId])
+        if ([previousMessage.senderId isEqualToString:message.senderId])
         {
             return 0.0f;
         }
