@@ -147,7 +147,7 @@
             theFloat = height*1.03 + 20;
             break;
         case 1:
-            theFloat =  100.0;
+            theFloat =  190.0;
             break;
         case 2:
             theFloat =  40.0;
@@ -184,36 +184,43 @@
 
 }
 
-//-(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    CGFloat theFloat = 0;
-//
-//    switch (indexPath.section)
-//        {
-//            case 0:
-//                theFloat = 44.0;
-//                break;
-//            case 1:
-//                theFloat =  100.0;
-//                break;
-//            case 2:
-//                theFloat =  44.0;
-//                break;
-//
-//            default:
-//                theFloat =  0;
-//                break;
-//        }
-//
-//    NSLog(@"section: %li row: %li height: %f",(long)indexPath.section, (long)indexPath.row, theFloat);
-//    return 0;
-//
-//}
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    return nil;
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 30)];
+//   [headerView setBackgroundColor:[UIColor grayColor]];
+    [headerView setBackgroundColor:[UIColor colorWithRed:(33.0/255.0) green:(33.0/255.0) blue:(33.0/255.0) alpha:1.0f]];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, tableView.bounds.size.width - 10, 20)];
+
+    switch (section)
+    {
+        case 0:
+            label.text = @"Description";
+            break;
+        case 1:
+            label.text = @"Uploaded pictures";
+            break;
+        case 2:
+            label.text = @"";
+            break;
+
+        default:
+            label.text = @"";
+            break;
+    }
+
+    label.textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.75];
+    label.backgroundColor = [UIColor clearColor];
+    [headerView addSubview:label];
+    return headerView;
 }
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 30;
+}
+
+
 
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -389,8 +396,6 @@
     [profilesArray addObject:profile];
     self.group.profiles = profilesArray;
 
-    NSLog(@"group.profiles.count = %lu", self.group.profiles.count);
-
     [self.group saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
     {
         if (error)
@@ -410,8 +415,6 @@
     NSMutableArray *profilesArray = [self.group.profiles mutableCopy];
     [profilesArray removeObjectAtIndex:[self isProfileInGroup:self.group profile:self.currentProfile]];
     self.group.profiles = profilesArray;
-
-    NSLog(@"group.profiles.count = %lu", self.group.profiles.count);
 
     [self.group saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {

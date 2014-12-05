@@ -48,7 +48,8 @@
 //    }];
 
 //    [self queryForFeaturedGroups:YES];
-
+//    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:(247.0/255.0) green:(247/255.0) blue:(247/255.0) alpha:1.0f];
+//    self.tabBarController.tabBar.barTintColor = [UIColor colorWithRed:(100.0/255.0) green:(100.0/255.0) blue:(100.0/255.0) alpha:1.0f];
     self.tableView.tableFooterView = [[UIView alloc] init] ;
 
 }
@@ -323,8 +324,6 @@
         countText = @"☺︎";
     }
     cell.goingNumberLabel.text = countText;
-
-
     return cell;
 }
 
