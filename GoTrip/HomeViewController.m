@@ -47,7 +47,7 @@
 //        
 //    }];
 
-    [self queryForFeaturedGroups:YES];
+//    [self queryForFeaturedGroups:YES];
 
     self.tableView.tableFooterView = [[UIView alloc] init] ;
 
@@ -416,9 +416,6 @@
                  default:
                      break;
              }
-//             self.tableViewArray = objects;
-////             [self.tableView reloadData];
-//             [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationBottom];
          }
      }];
     self.addGroupButton.enabled = YES;
