@@ -48,7 +48,8 @@
 //    }];
 
 //    [self queryForFeaturedGroups:YES];
-
+//    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:(247.0/255.0) green:(247/255.0) blue:(247/255.0) alpha:1.0f];
+//    self.tabBarController.tabBar.barTintColor = [UIColor colorWithRed:(100.0/255.0) green:(100.0/255.0) blue:(100.0/255.0) alpha:1.0f];
     self.tableView.tableFooterView = [[UIView alloc] init] ;
 
 }
@@ -323,8 +324,6 @@
         countText = @"☺︎";
     }
     cell.goingNumberLabel.text = countText;
-
-
     return cell;
 }
 
@@ -350,9 +349,11 @@
 //creates a new group
 - (IBAction)onBarButtonPressed:(UIBarButtonItem *)sender
 {
-//TODO: implement a new group creation
+    //TODO: implement a new group creation
     Group *newGroup = [Group object];
     newGroup.creator = self.currentProfile;
+    Profile *profile = [Profile objectWithoutDataWithClassName:@"Profile" objectId:self.currentProfile.objectId];
+    newGroup.profiles = @[profile];
     [self performSegueWithIdentifier:@"groupDetailSegue" sender:newGroup];
 
 }
@@ -447,19 +448,19 @@
 - (IBAction)unwindToThisViewController:(UIStoryboardSegue *)unwindSegue
 {
    //groupEditViewController jumps here is the group has been deleted
-//    switch (self.segmentedComtrol.selectedSegmentIndex)
-//    {
-//        case 0:
-//            [self queryForFeaturedGroups];
-//            break;
-//        case 1:
-//            [self queryForAllGroups];
-//            break;
-//        default:
-//            break;
-//    }
-    self.segmentedComtrol.selectedSegmentIndex = 1;
-    [self queryForAllGroups:NO];
+    switch (self.segmentedComtrol.selectedSegmentIndex)
+    {
+        case 0:
+            [self queryForFeaturedGroups:NO];
+            break;
+        case 1:
+            [self queryForAllGroups:NO];
+            break;
+        default:
+            break;
+    }
+//    self.segmentedComtrol.selectedSegmentIndex = 1;
+//    [self queryForAllGroups:NO];
 }
 
 @end
