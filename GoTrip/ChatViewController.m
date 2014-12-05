@@ -254,7 +254,7 @@
     
 }
 
-- (void)finishSendingMessage
+- (void)finishSendingMessage: (NSString *)text
 {
     
     UITextView *textView = self.inputToolbar.contentView.textView;
@@ -268,33 +268,96 @@
     [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
     [self.collectionView reloadData];
     
-    PFObject *user1 = [Profile objectWithoutDataWithObjectId:self.currentUserProfile.objectId];
-    PFObject *user2 = [Profile objectWithoutDataWithObjectId:self.passedRecipient.objectId];
-    NSArray *arrayOfUsers  = @[user2, user1];
     
     PFQuery *senderQuery = [Message query];
-    [senderQuery whereKey:@"sender" containedIn:arrayOfUsers];
-    [senderQuery whereKey:@"userRecipient" containedIn:arrayOfUsers];
-    [senderQuery whereKey:@"sender" notEqualTo:user1];
-    
-    [senderQuery orderByAscending:@"createdAt"];
-    
-    [senderQuery setLimit:1000];
     
     PFQuery *queryInstallation = [PFInstallation query];
-    [queryInstallation whereKey:@"user" equalTo:self.passedRecipient.user];
+    
+    if(self.isGroupChat) //group converstaion logic
+    {
+        NSMutableArray *tempArray = [NSMutableArray array];
+        NSMutableArray *tempArray2 = [NSMutableArray array];
+        
+        
+        //            PFObject *group = [Group objectWithoutDataWithObjectId:self.currentGroupProfile.objectId];
+        [senderQuery whereKey:@"groupRecipient" equalTo:self.currentGroupProfile];
+        //        [senderQuery whereKey:@"groupRecipient" co
+        
+        
+        //        [senderQuery whereKey:@"groupRecipient" equalTo:group];
+        [senderQuery orderByAscending:@"createdAt"];
+        [senderQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            
+            for(Message *message in objects)
+            {
+                if([tempArray containsObject:message.userName])
+                {
+                    
+                }
+                else
+                {
+                    [tempArray addObject: message.userName];
+                }
+                
+            }
+            
+            
+            PFQuery *query = [Profile query];
+            [query whereKey:@"objectId" containedIn:tempArray];
+            
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                
+                for(Profile *profile in objects)
+                {
+                    [tempArray2 addObject:profile.user];
+                }
+                
+                [queryInstallation whereKey:@"user" containedIn:tempArray2];
 
-    PFPush *push = [[PFPush alloc] init];
-    [push setQuery:queryInstallation];
-    [push setMessage:@"Test"];
-    [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
-     {
-         if (error != nil)
+                PFPush *push = [[PFPush alloc] init];
+                [push setQuery:queryInstallation];
+                [push setMessage:text];
+                [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                 {
+                     if (error != nil)
+                     {
+                         NSLog(@"SendPushNotification send error.");
+                     }
+                 }];
+          
+            }];
+            
+
+            
+        }];
+        
+    }
+    else
+    {
+        PFObject *user1 = [Profile objectWithoutDataWithObjectId:self.currentUserProfile.objectId];
+        PFObject *user2 = [Profile objectWithoutDataWithObjectId:self.passedRecipient.objectId];
+        NSArray *arrayOfUsers  = @[user2, user1];
+        
+        [senderQuery whereKey:@"sender" containedIn:arrayOfUsers];
+        [senderQuery whereKey:@"userRecipient" containedIn:arrayOfUsers];
+        [senderQuery whereKey:@"sender" notEqualTo:user1];
+        
+        [senderQuery orderByAscending:@"createdAt"];
+        
+        [senderQuery setLimit:1000];
+        [queryInstallation whereKey:@"user" equalTo:self.passedRecipient.user];
+        
+        PFPush *push = [[PFPush alloc] init];
+        [push setQuery:queryInstallation];
+        [push setMessage:text];
+        [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
          {
-             NSLog(@"SendPushNotification send error.");
-         }
-     }];
-
+             if (error != nil)
+             {
+                 NSLog(@"SendPushNotification send error.");
+             }
+         }];
+    }
     
 }
 
@@ -366,7 +429,7 @@
     // reload the data
     
     [self loadLocalChat];
-    [self finishSendingMessage];
+    [self finishSendingMessage: textField.text];
     return NO;
 }
 
