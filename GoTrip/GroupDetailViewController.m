@@ -19,6 +19,7 @@
 @interface GroupDetailViewController () <UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSArray *collectionViewArray;
+
 //@property NSString *aString;
 
 @end
@@ -76,11 +77,18 @@
 
 -(void)showJoinButtonIfNotInGroup
 {
-    BOOL isInGroup = [self isProfileInGroup:self.group profile:self.currentProfile];
-    if (isInGroup)
+    NSInteger profileIndex = [self isProfileInGroup:self.group profile:self.currentProfile];
+    if (profileIndex != -1)
     {
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        self.navigationItem.rightBarButtonItem.tintColor = [UIColor clearColor];
+//        self.navigationItem.rightBarButtonItem.enabled = NO;
+//        self.navigationItem.rightBarButtonItem.tintColor = [UIColor clearColor];
+        UIBarButtonItem *groupLeaveButton = [[UIBarButtonItem alloc] initWithTitle:@"Leave" style:UIBarButtonItemStylePlain target:self action:@selector(onGroupLeaveButtonPressed:)];
+
+        self.navigationItem.rightBarButtonItem = groupLeaveButton;
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+        self.navigationItem.rightBarButtonItem.tintColor = [UIColor redColor]; //nil;
+
+
     }
     else
     {
@@ -96,15 +104,17 @@
     
 }
 
--(BOOL)isProfileInGroup:(Group *)group profile:(Profile *)profile
+-(NSInteger)isProfileInGroup:(Group *)group profile:(Profile *)profile
 {
-    int i=0;
-    BOOL soIsIt = NO;
+
+    NSInteger i=0;
+    NSInteger objectIndex = -1;
     for (Profile *profileFromGroup in group.profiles)
     {
         if ([profileFromGroup.objectId isEqualToString:profile.objectId])
         {
-            soIsIt = YES;
+            objectIndex = i;
+
             break;
         }
         else
@@ -120,7 +130,7 @@
         }
 
     }
-    return soIsIt;
+    return objectIndex;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -369,8 +379,6 @@
 -(void)onGroupJoinButtonPressed:(id)sender
 {
 
-    NSLog(@"group.profiles.count = %lu", self.group.profiles.count);
-
     //create a Parse's pointer to the current Profile object
     Profile *profile = [Profile objectWithoutDataWithClassName:@"Profile" objectId:self.currentProfile.objectId];
     NSMutableArray *profilesArray = [NSMutableArray array];
@@ -397,7 +405,27 @@
 
 }
 
+-(void)onGroupLeaveButtonPressed:(id)sender
+{
+    NSMutableArray *profilesArray = [self.group.profiles mutableCopy];
+    [profilesArray removeObjectAtIndex:[self isProfileInGroup:self.group profile:self.currentProfile]];
+    self.group.profiles = profilesArray;
 
+    NSLog(@"group.profiles.count = %lu", self.group.profiles.count);
+
+    [self.group saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+     {
+         if (error)
+         {
+             [self errorAlertWindow:error.localizedDescription];
+         }
+         else
+         {
+             [self showJoinButtonIfNotInGroup];
+         }
+     }];
+
+}
 
 -(void)errorAlertWindow:(NSString *)message
 {
