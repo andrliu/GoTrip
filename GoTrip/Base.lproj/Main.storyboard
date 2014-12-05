@@ -1082,7 +1082,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="ohF-rU-5c0"/>
         <segue reference="3F9-md-NEt"/>
+        <segue reference="bnA-uz-GEy"/>
     </inferredMetricsTieBreakers>
 </document>
