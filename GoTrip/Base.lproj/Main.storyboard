@@ -228,12 +228,25 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="kGK-1U-YSB">
+                        <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="KFF-K4-Lld">
                             <connections>
                                 <action selector="onCancellButtonPressed:" destination="vac-ZB-aAC" id="GfN-tG-925"/>
                                 <segue destination="PvL-7H-a3N" kind="unwind" identifier="goHomeSegue" unwindAction="unwindToThisViewController:" id="WSI-bj-Zzb"/>
                             </connections>
                         </barButtonItem>
+                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="7Vz-dc-8tc">
+                            <rect key="frame" x="96" y="7" width="128" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <state key="normal" title="Save">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="onSaveButtonPressed:" destination="vac-ZB-aAC" eventType="touchUpInside" id="iOr-jk-lsZ"/>
+                                <segue destination="PvL-7H-a3N" kind="unwind" unwindAction="unwindToThisViewController:" id="S9z-bZ-EKz"/>
+                            </connections>
+                        </button>
                         <barButtonItem key="rightBarButtonItem" systemItem="trash" id="kPf-fo-c4U">
                             <connections>
                                 <action selector="onDeleteButtonPressed:" destination="vac-ZB-aAC" id="P0Z-hL-x3m"/>
