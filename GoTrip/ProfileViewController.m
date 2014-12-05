@@ -16,21 +16,21 @@
 
 @interface ProfileViewController () <UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
+
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
-@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *firstNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *lastNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *memoLabel;
 @property (weak, nonatomic) IBOutlet UITextField *firstNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *lastNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *memoTextField;
 @property (weak, nonatomic) IBOutlet UIButton *imageButton;
-@property (weak, nonatomic) IBOutlet UIButton *friendListButton;
-@property (weak, nonatomic) IBOutlet UIButton *groupListButton;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property Profile *profile;
 @property BOOL isImagePickerCalled;
 @property NSArray *groupListArray;
 @property NSArray *friendListArray;
-@property NSArray *pastGroupListArray;
 @property NSArray *pendingFriendListArray;
 @property NSArray *listArray;
 @property BOOL isGroup;
@@ -76,12 +76,14 @@
         if (!error)
         {
             self.profile = profile;
-            [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:self.imageView.frame.size.width/2 withBorderColor:[UIColor blackColor].CGColor];
-            self.nameLabel.text = [NSString stringWithFormat:@"%@ %@", self.profile.firstName, self.profile.lastName];
+            [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:15.0f withBorderColor:[UIColor blackColor].CGColor];
+            self.firstNameLabel.text = self.profile.firstName;
+            self.lastNameLabel.text = self.profile.lastName;
             self.memoLabel.text = self.profile.memo;
             self.isImagePickerCalled = NO;
             self.isGroup = NO;
             self.listArray = self.profile.friends;
+            self.segmentedControl.selectedSegmentIndex = 0;
             [Group getCurrentGroupsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error)
             {
                 if (!error)
@@ -112,7 +114,8 @@
 //MARK: custom IBOutlet hidden method
 - (void)editMode:(BOOL)yes
 {
-    [self.nameLabel setHidden:yes];
+    [self.firstNameLabel setHidden:yes];
+    [self.lastNameLabel setHidden:yes];
     [self.memoLabel setHidden:yes];
     [self.firstNameTextField setHidden:!yes];
     [self.lastNameTextField setHidden:!yes];
@@ -154,32 +157,24 @@
     }
 }
 
-//MARK: custom button action
-- (IBAction)friendListOnButtonPressed:(UIButton *)sender
+//MARK: custom segment action
+- (IBAction)segmentedControl:(UISegmentedControl *)sender
 {
-    self.listArray = self.profile.friends;
-    self.isGroup = NO;
-    [self.collectionView reloadData];
-}
-
-- (IBAction)pendingFriendListOnButtonPressed:(UIButton *)sender
-{
-    self.listArray = self.profile.pendingFriends;
-    self.isGroup = NO;
-    [self.collectionView reloadData];
-}
-
-- (IBAction)groupListOnButtonPressed:(UIButton *)sender
-{
-    self.listArray = self.groupListArray;
-    self.isGroup = YES;
-    [self.collectionView reloadData];
-}
-
-- (IBAction)pastGroupListOnButtonPressed:(id)sender
-{
-    self.listArray = self.pastGroupListArray;
-    self.isGroup = YES;
+    if (sender.selectedSegmentIndex == 0)
+    {
+        self.listArray = self.profile.friends;
+        self.isGroup = NO;
+    }
+    else if (sender.selectedSegmentIndex == 1)
+    {
+        self.listArray = self.profile.pendingFriends;
+        self.isGroup = NO;
+    }
+    else
+    {
+        self.listArray = self.groupListArray;
+        self.isGroup = YES;
+    }
     [self.collectionView reloadData];
 }
 
@@ -215,8 +210,8 @@
     else
     {
         Profile *profile = self.listArray[indexPath.item];
-        [self setImageView:cell.imageView withData:profile.avatarData withLayerRadius:self.collectionView.frame.size.width*0.2 withBorderColor:[UIColor blackColor].CGColor];
-        cell.nameLabel.text = [NSString stringWithFormat:@"%@ %@", profile.firstName, profile.lastName];
+        [self setImageView:cell.imageView withData:profile.avatarData withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
+        cell.nameLabel.text = profile.firstName;
         cell.memoLabel.text = profile.memo;
     }
     return cell;
@@ -224,17 +219,17 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(self.collectionView.frame.size.width*0.4, self.collectionView.frame.size.width*0.4 +30);
+    return CGSizeMake(self.collectionView.frame.size.width*0.4, self.collectionView.frame.size.width*0.4 + 30.0f);
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
-    return CGSizeMake(self.collectionView.frame.size.width*0.3, self.collectionView.frame.size.height);
+    return CGSizeMake(10.0f, self.collectionView.frame.size.height);
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
 {
-    return CGSizeMake(self.collectionView.frame.size.width*0.3, self.collectionView.frame.size.height);
+    return CGSizeMake(10.0f, self.collectionView.frame.size.height);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath

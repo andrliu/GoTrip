@@ -17,7 +17,7 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *memoLabel;
-@property (weak, nonatomic) IBOutlet UIButton *relationButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *relationButton;
 @property Profile *currentProfile;
 @property BOOL isFriend;
 @property BOOL isPending;
@@ -49,8 +49,8 @@
             [self error:error];
         }
     }];
-    [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:self.imageView.frame.size.width/2 withBorderColor:[UIColor blackColor].CGColor];
-    self.nameLabel.text = [NSString stringWithFormat:@"%@ %@", self.profile.firstName, self.profile.lastName];
+    [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:15.0f withBorderColor:[UIColor blackColor].CGColor];
+    self.nameLabel.text = self.profile.firstName;
     self.memoLabel.text = self.profile.memo;
     [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error)
      {
@@ -92,42 +92,47 @@
 {
     if (self.isFriend)
     {
-        [self.relationButton setTitle:@"Friend" forState:UIControlStateNormal];
+//        [self.relationButton setTitle:@"Remove" forState:UIControlStateNormal];
+        self.relationButton.title = @"Remove";
     }
     else
     {
         if (self.isPending == YES && self.isRequesting == NO)
         {
-            [self.relationButton setTitle:@"Accept" forState:UIControlStateNormal];
+//            [self.relationButton setTitle:@"Accept" forState:UIControlStateNormal];
+            self.relationButton.title = @"Accept";
         }
         else if (self.isPending == NO && self.isRequesting == YES)
         {
-            [self.relationButton setTitle:@"Pending" forState:UIControlStateNormal];
+//            [self.relationButton setTitle:@"Pending" forState:UIControlStateNormal];
+            self.relationButton.title = @"Pending";
         }
         else
         {
-            [self.relationButton setTitle:@"Invite" forState:UIControlStateNormal];
+//            [self.relationButton setTitle:@"Invite" forState:UIControlStateNormal];
+            self.relationButton.title = @"Invite";
         }
     }
 }
 
 //MARK: custom button action
-- (IBAction)changeRelationOnButtonPressed:(UIButton *)sender
-{
+
+- (IBAction)changeRelationshipOnButtonPressed:(UIBarButtonItem *)sender{
+
     PFObject *currentUserProfile = [PFObject objectWithoutDataWithClassName:@"Profile"
                                                                 objectId:self.currentProfile.objectId];
     PFObject *userProfile = [PFObject objectWithoutDataWithClassName:@"Profile"
                                                                 objectId:self.profile.objectId];
-    if ([self.relationButton.titleLabel.text isEqual:@"Friend"])
+    if ([self.relationButton.title isEqual:@"Remove"])
     {
         self.currentProfile.friends = [self removeObjectId:self.profile.objectId inArray:self.currentProfile.friends];
         self.profile.friends = [self removeObjectId:self.currentProfile.objectId inArray:self.profile.friends];
     }
-    else if ([self.relationButton.titleLabel.text isEqual:@"Invite"])
+    else if ([self.relationButton.title isEqual:@"Invite"])
     {
         self.profile.pendingFriends = [self addObjectId:currentUserProfile inArray:self.profile.pendingFriends];
     }
-    else if ([self.relationButton.titleLabel.text isEqual:@"Accept"])
+    else if ([self.relationButton.title isEqual:@"Accept"])
     {
         self.currentProfile.pendingFriends = [self removeObjectId:self.profile.objectId inArray:self.currentProfile.pendingFriends];
         self.profile.friends = [self addObjectId:currentUserProfile inArray:self.profile.friends];
@@ -259,7 +264,6 @@
     CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     Comment *comment = self.arrayOfComment[indexPath.item];
     cell.textView.text = comment.text;
-    [cell.textView setFont: [UIFont fontWithName:@"Chalkduster" size:12.0f]];
     [self setImageView:cell.backgroundImageView withData:nil withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
     [self setImageView:cell.imageView withData:comment.sender.avatarData withLayerRadius:cell.imageView.frame.size.width/2 withBorderColor:[UIColor whiteColor].CGColor];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -267,6 +271,13 @@
     NSString *stringOfDate = [dateFormatter stringFromDate:comment.createdAt];
     cell.nameLabel.text = [NSString stringWithFormat:@"by %@ %@", comment.sender.firstName, stringOfDate];
     return cell;
+}
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    Comment *comment = self.arrayOfComment[indexPath.item];
+    self.profile = comment.sender;
+    [self.collectionView reloadData];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
