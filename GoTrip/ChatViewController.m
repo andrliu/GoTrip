@@ -301,6 +301,7 @@
                 
             }
             
+            [tempArray removeObject:self.currentUserProfile.objectId];
             
             PFQuery *query = [Profile query];
             [query whereKey:@"objectId" containedIn:tempArray];

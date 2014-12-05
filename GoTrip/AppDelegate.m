@@ -18,14 +18,14 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-
+    
     // [Parse setApplicationId:@"your_application_id" clientKey:@"your_client_key"];
     [Parse setApplicationId:@"wjnW8TFmco9fUa1p3FEhaRJuTXuUiKrODeccxD3k"
                   clientKey:@"l2ZgEylA6lyPc1037K3bj0KfUt6j8558DhCV4upM"];
-
+    
     // Your Facebook application id is configured in Info.plist.
     [PFFacebookUtils initializeFacebook];
-
+    
     // Register for Push Notifications
     UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
                                                     UIUserNotificationTypeBadge |
@@ -34,7 +34,7 @@
                                                                              categories:nil];
     [application registerUserNotificationSettings:settings];
     [application registerForRemoteNotifications];
-
+    
     return YES;
 }
 
@@ -54,7 +54,14 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
+    UIApplicationState state = [application applicationState];
+    if (state == UIApplicationStateActive)
+    {
+    }
+    else
+    {
     [PFPush handlePush:userInfo];
+    }
 }
 
 // App switching methods to support Facebook Single Sign-On.
