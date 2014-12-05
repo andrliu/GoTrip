@@ -98,18 +98,16 @@
                 self.currentProfile = profile;
                 NSLog(@"user has profile existed");
                 
-                PFQuery *queryInstallation = [PFInstallation query];
-                [queryInstallation whereKey:@"user" equalTo:[PFUser currentUser]];
-                [queryInstallation countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-                    if(number == 0)
-                    {
+//                PFQuery *queryInstallation = [PFInstallation query];
+//                [queryInstallation whereKey:@"user" equalTo:[PFUser currentUser]];
+//                [queryInstallation countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+//                    if(number == 0)
+//                    {
                         PFInstallation *installation = [PFInstallation currentInstallation];
                         installation[@"user"] = [PFUser currentUser];
                         [installation saveInBackground];
-                    }
-                }];
-
-
+//                    }
+//                }];
 
             }
             else

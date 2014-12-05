@@ -68,7 +68,6 @@
     self.isImagePickerCalled = NO;
     self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
     [PFUser logOut];
-    User *currentUser = [User currentUser];
 }
 
 //MARK: custom refresh method
