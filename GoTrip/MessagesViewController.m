@@ -25,11 +25,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self loadGroupMessages];
+    self.navigationItem.title = @"Messages";
+    self.tableView.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
+    self.tableView.tableFooterView = [[UIView alloc] init];
+
     // Do any additional setup after loading the view.
 }
 
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -43,9 +51,51 @@
         self.arrayOfGroupMessages= profile.isGroupMessaging;
         
         [self.tableView reloadData];
+//        [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:  withRowAnimation:UITableViewRowAnimationBottom];
+//          [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationBottom];
+
+//        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationBottom];
+
     }];
     
     
+}
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 30)];
+    //   [headerView setBackgroundColor:[UIColor grayColor]];
+    [headerView setBackgroundColor:[UIColor colorWithRed:(33.0/255.0) green:(33.0/255.0) blue:(33.0/255.0) alpha:1.0f]];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, tableView.bounds.size.width - 10, 20)];
+    
+    switch (section)
+    {
+        case 0:
+            label.text = @"Groups";
+            break;
+        case 1:
+            label.text = @"Users";
+            break;
+        default:
+            label.text = @"";
+            break;
+    }
+    
+    label.textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.75];
+    label.backgroundColor = [UIColor clearColor];
+    [headerView addSubview:label];
+    return headerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+//    if (section == 0)
+//    {
+//        return 0;
+//    }
+//    else
+//    {
+        return 30;
+//    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -74,6 +124,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
+    cell.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
 
     if(indexPath.section == 1)
     {
@@ -99,11 +150,11 @@
     return cell;
 }
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    //     TestViewController *testVC = [[TestViewController alloc] init];
-    //      [self.navigationController pushViewController:testVC animated:YES];
-}
+//-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    //     TestViewController *testVC = [[TestViewController alloc] init];
+//    //      [self.navigationController pushViewController:testVC animated:YES];
+//}
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
