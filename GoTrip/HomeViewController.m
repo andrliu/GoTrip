@@ -19,7 +19,7 @@
 
 @interface HomeViewController () <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UITableViewDataSource, UITableViewDelegate, UITabBarControllerDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
-@property NSArray *tableViewArray;
+@property NSMutableArray *tableViewArray;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segmentedComtrol;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *addGroupButton;
 @property Profile *currentProfile;
@@ -34,7 +34,7 @@
 {
     [super viewDidLoad];
     
-
+    self.tableViewArray = [NSMutableArray array];
     
 //TODO: remove example group from here
 //    PFQuery *query = [Group query];
@@ -302,7 +302,29 @@
 //    cell.textLabel.text = group.name;
 //    cell.backgroundImageView.image = [UIImage imageNamed:@"hawaii"];
     //TODO: change to group.imageData
-    cell.backgroundImageView.image = [UIImage imageWithData:group.imageData];
+    cell.backgroundImageView.image = [UIImage imageNamed:@"noimage"];
+    
+    if ([[group allKeys] containsObject:@"imageData"])
+    {
+        cell.backgroundImageView.image = [UIImage imageWithData:group.imageData];
+    }
+    else
+    {
+        PFQuery *individualGroupQuery = [Group query];
+        [individualGroupQuery getObjectInBackgroundWithId:group.objectId
+                                                    block:^(PFObject *object, NSError *error)
+         {
+             if (error)
+             {
+                 [self error:error];
+             }
+             else
+             {
+                 self.tableViewArray[indexPath.row] = object;
+                 cell.backgroundImageView.image = [UIImage imageWithData:[self.tableViewArray[indexPath.row] imageData]];
+             }
+         }];
+    }
     [cell.backgroundImageView setClipsToBounds:YES];
     cell.nameLabel.text = group.name;
     cell.destinationLabel.text = group.destination;
@@ -363,6 +385,7 @@
     PFQuery *groupListQuery = [Group query];
     [groupListQuery whereKey:@"isFeatured" equalTo:[NSNumber numberWithBool:YES]];
     [groupListQuery orderByAscending:@"startDate"];
+    [groupListQuery selectKeys:@[@"name", @"destination", @"startDate", @"endDate", @"profiles"]]; //inlcudes specific fields, need to requery later
     [groupListQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
          if (error)
@@ -371,7 +394,7 @@
          }
          else
          {
-             self.tableViewArray = objects;
+             self.tableViewArray = [objects mutableCopy];
              switch ([[NSNumber numberWithBool:animated]intValue])
              {
                  case 0:
@@ -397,6 +420,7 @@
 {
     PFQuery *groupListQuery = [Group query];
     [groupListQuery orderByAscending:@"startDate"];
+    [groupListQuery selectKeys:@[@"name", @"destination", @"startDate", @"endDate", @"profiles"]]; //inlcudes specific fields, need to requery later
     [groupListQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
          if (error)
@@ -405,7 +429,7 @@
          }
          else
          {
-             self.tableViewArray = objects;
+             self.tableViewArray = [objects mutableCopy];
              switch ([[NSNumber numberWithBool:animated]intValue])
              {
                  case 0:
