@@ -25,29 +25,31 @@
     // Dispose of any resources that can be recreated.
 }
 
+//both Cancel and Save are tide to the unwindSegue and dismiss the view smart based on the group object
 - (IBAction)onCancellButtonPressed:(UIBarButtonItem *)sender
 {
 //   [self dismissViewControllerAnimated:NO completion:^{
 ////
 //   }];
 }
+- (IBAction)onSaveButtonPressed:(UIButton *)sender
+{
+    [self.group saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+    {
+        if (error)
+        {
+            [self errorAlertWindow:error.localizedDescription];
+        }
+        else
+        {
+
+        }
+    }];
+}
 
 - (IBAction)onDeleteButtonPressed:(UIBarButtonItem *)sender
 {
     [self deleteGroupAlertWindow];
-}
-
--(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
-{
-    if (self.group.objectId)
-    {
-        [self dismissViewControllerAnimated:YES completion:nil];
-        return NO;
-    }
-    else
-    {
-        return YES;
-    }
 }
 
 //deletes the group and jumps to the homeViewController
@@ -91,5 +93,17 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
+-(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+{
+    if (self.group.objectId)
+    {
+        [self dismissViewControllerAnimated:YES completion:nil];
+        return NO;
+    }
+    else
+    {
+        return YES;
+    }
+}
 
 @end
