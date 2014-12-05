@@ -206,7 +206,7 @@
     {
         Group *group = self.listArray[indexPath.item];
         [self setImageView:cell.imageView withData:group.imageData withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
-        cell.nameLabel.text = group.name;
+        cell.nameLabel.text = [NSString stringWithFormat:@"%@ (%lu☺︎)",group.name,(unsigned long)group.profiles.count];
         cell.memoLabel.text = group.destination;
     }
     else
