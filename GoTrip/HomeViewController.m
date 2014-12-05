@@ -35,7 +35,7 @@
     [super viewDidLoad];
     
     self.tableViewArray = [NSMutableArray array];
-    
+
 //TODO: remove example group from here
 //    PFQuery *query = [Group query];
 //    [query getObjectInBackgroundWithId:@"Zs30vE5wdx" block:^(PFObject *object, NSError *error)
@@ -57,10 +57,10 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-     if (self.segmentedComtrol.selectedSegmentIndex == 1)
-     {
-         [self queryForAllGroups:NO];
-     }
+    if (self.segmentedComtrol.selectedSegmentIndex == 1)
+    {
+        [self queryForAllGroups:NO];
+    }
     else
     {
         [self queryForFeaturedGroups:NO];
@@ -71,14 +71,38 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    if (![PFUser currentUser])
+//    if (![PFUser currentUser])
+//    {
+//        [self presentLoginView];
+//    }
+//    else
+//    {
+//        [self checkUserProfileAccountExisted];
+//    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    if (self.currentProfile)
     {
-        [self presentLoginView];
+
     }
     else
     {
-        [self checkUserProfileAccountExisted];
+
+        if (![PFUser currentUser])
+        {
+            [self presentLoginView];
+        }
+        else
+        {
+            [self checkUserProfileAccountExisted];
+        }
     }
+
+
+
 }
 
 
@@ -218,6 +242,7 @@
 - (void)logInViewControllerDidCancelLogIn:(PFLogInViewController *)logInController
 {
     [self.navigationController popViewControllerAnimated:YES];
+        self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
 }
 
 - (void)presentLoginView
@@ -225,7 +250,7 @@
     LoginViewController *logInViewController = [[LoginViewController alloc]init];
     [logInViewController setDelegate:self];
     [logInViewController setFacebookPermissions:[NSArray arrayWithObjects:@"friends_about_me", nil]];
-    logInViewController.fields = PFLogInFieldsUsernameAndPassword | PFLogInFieldsLogInButton | PFLogInFieldsSignUpButton | PFLogInFieldsFacebook;
+    logInViewController.fields = PFLogInFieldsUsernameAndPassword | PFLogInFieldsLogInButton | PFLogInFieldsSignUpButton | PFLogInFieldsFacebook | PFLogInFieldsDismissButton;
     SignupViewController *signUpViewController = [[SignupViewController alloc]init];
     [signUpViewController setDelegate:self];
     signUpViewController.fields = PFSignUpFieldsUsernameAndPassword | PFSignUpFieldsSignUpButton |PFSignUpFieldsDismissButton;
