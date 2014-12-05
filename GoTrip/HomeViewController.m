@@ -57,12 +57,11 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if (self.segmentedComtrol.selectedSegmentIndex == 1)
-    {
-        [self queryForAllGroups:NO];
-        [self checkCurrentUser];
 
-    }
+     if (self.segmentedComtrol.selectedSegmentIndex == 1)
+     {
+         [self queryForAllGroups:NO];
+     }
     else
     {
         [self queryForFeaturedGroups:NO];
@@ -365,10 +364,14 @@
     return cell;
 }
 
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+     if ([[self.tableViewArray[indexPath.row] allKeys] containsObject:@"imageData"])
+     {
     Group *selectedGroup = self.tableViewArray[indexPath.row];
     [self performSegueWithIdentifier:@"groupDetailSegue" sender:selectedGroup];
+     }
 }
 
 - (IBAction)segmentedControlValueChanged:(UISegmentedControl *)sControl
@@ -382,6 +385,7 @@
     {
         [self queryForFeaturedGroups:NO];
     }
+    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
 }
 
 //creates a new group
@@ -401,7 +405,7 @@
     PFQuery *groupListQuery = [Group query];
     [groupListQuery whereKey:@"isFeatured" equalTo:[NSNumber numberWithBool:YES]];
     [groupListQuery orderByAscending:@"startDate"];
-    [groupListQuery selectKeys:@[@"name", @"destination", @"startDate", @"endDate", @"profiles"]]; //inlcudes specific fields, need to requery later
+    [groupListQuery selectKeys:@[@"name", @"destination", @"startDate", @"endDate", @"profiles", @"creator"]]; //inlcudes specific fields, need to requery later
     [groupListQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
          if (error)
@@ -425,7 +429,7 @@
              }
 
          }
-         [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+//         [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
      }];
     self.addGroupButton.enabled = NO;
     self.addGroupButton.tintColor = [UIColor clearColor];
@@ -436,7 +440,7 @@
 {
     PFQuery *groupListQuery = [Group query];
     [groupListQuery orderByAscending:@"startDate"];
-    [groupListQuery selectKeys:@[@"name", @"destination", @"startDate", @"endDate", @"profiles"]]; //inlcudes specific fields, need to requery later
+    [groupListQuery selectKeys:@[@"name", @"destination", @"startDate", @"endDate", @"profiles", @"creator"]]; //inlcudes specific fields, need to requery later
     [groupListQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
          if (error)
@@ -459,7 +463,7 @@
                      break;
              }
          }
-         [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+//         [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
 
      }];
     self.addGroupButton.enabled = YES;
@@ -484,8 +488,8 @@
     GroupDetailViewController *detailVC = [segue destinationViewController];
 //    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
 //    Group *group = self.tableViewArray[indexPath.row];
-    detailVC.group = sender;
-    detailVC.currentProfile = self.currentProfile;
+        detailVC.group = sender;
+        detailVC.currentProfile = self.currentProfile;
 }
 
 - (IBAction)unwindToThisViewController:(UIStoryboardSegue *)unwindSegue
