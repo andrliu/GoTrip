@@ -84,7 +84,8 @@
     {
         
         [PFPush handlePush:userInfo];
-//        self.profileId = userInfo[@"]
+        
+        self.profileId = userInfo[@"profileId"];
         
     }
 }

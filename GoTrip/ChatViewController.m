@@ -320,7 +320,7 @@
                 PFPush *push = [[PFPush alloc] init];
                 [push setQuery:queryInstallation];
                 
-                [push setValue:self.currentUserProfile.objectId forKey:@"profileId"];
+//                [push setValue:self.currentUserProfile.objectId forKey:@"profileId"];
                 [push setMessage:text];
                 [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
                  {
@@ -355,6 +355,7 @@
         PFPush *push = [[PFPush alloc] init];
         [push setQuery:queryInstallation];
         [push setMessage:text];
+        [push setData:@{@"profileId":self.currentUserProfile.objectId}];
         [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
          {
              if (error != nil)
