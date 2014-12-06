@@ -680,6 +680,8 @@
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
+    if(self.isGroupChat) //group converstaion logic
+    {
     JSQMessage *message = [self.messageData objectAtIndex:indexPath.item];
     
     /**
@@ -700,6 +702,9 @@
      *  Don't specify attributes to use the defaults.
      */
     return [[NSAttributedString alloc] initWithString:message.senderDisplayName];
+    }
+    else
+        return nil;
 }
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
@@ -887,6 +892,9 @@
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
+    if(self.isGroupChat) //group converstaion logic
+
+    {
     JSQMessage *message = self.messageData[indexPath.item];
     if ([message.senderId isEqualToString:self.userName])
     {
@@ -902,9 +910,12 @@
         }
     }
     return kJSQMessagesCollectionViewCellLabelHeightDefault;
+    }
+    else
+        return 0.0f;
 }
 
-
+t
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
