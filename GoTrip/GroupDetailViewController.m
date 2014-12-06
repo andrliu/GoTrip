@@ -418,11 +418,25 @@
     //create a Parse's pointer to the current Profile object
     Profile *profile = [Profile objectWithoutDataWithClassName:@"Profile" objectId:self.currentProfile.objectId];
     NSMutableArray *profilesArray = [NSMutableArray array];
+//    NSMutableArray *groupMessageArray = [NSMutableArray array];
     if (self.group.profiles.count != 0)
     {
         profilesArray = [self.group.profiles mutableCopy];
     }
     [profilesArray addObject:profile];
+
+    PFObject *currentGroup = [PFObject objectWithoutDataWithClassName:@"Group" objectId:self.group.objectId];
+
+    self.currentProfile.isGroupMessaging = [self addObjectId:currentGroup inArray:self.currentProfile.isGroupMessaging];
+
+    [self.currentProfile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+    {
+        if (error)
+        {
+            [self errorAlertWindow:error.localizedDescription];
+        }
+    }];
+//    [self.currentProfile.isGroupMessaging addObject:self.group]
     self.group.profiles = profilesArray;
 
     [self.group saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
@@ -445,6 +459,16 @@
     [profilesArray removeObjectAtIndex:[self isProfileInGroup:self.group profile:self.currentProfile]];
     self.group.profiles = profilesArray;
 
+    self.currentProfile.isGroupMessaging = [self removeObjectId:self.group.objectId inArray:self.currentProfile.isGroupMessaging];
+
+    [self.currentProfile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+    {
+        if (error)
+        {
+            [self errorAlertWindow:error.localizedDescription];
+        }
+    }];
+
     [self.group saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
          if (error)
@@ -457,6 +481,34 @@
          }
      }];
 
+}
+
+- (NSArray *)addObjectId:(PFObject *)Object inArray:(NSArray *)array
+{
+    if (array.count == 0)
+    {
+        return @[Object];
+    }
+    else
+    {
+        NSMutableArray *groupArray = [array mutableCopy];
+        [groupArray addObject:Object];
+        return groupArray;
+    }
+}
+- (NSArray *)removeObjectId:(NSString *)ObjectId inArray:(NSArray *)array
+{
+    NSMutableArray *currentUserFriendArray = [array mutableCopy];
+    NSMutableArray *currentUserFriendsToRemove = [NSMutableArray array];
+    for (PFObject *object in currentUserFriendArray)
+    {
+        if ([[object objectId] isEqual:ObjectId])
+        {
+            [currentUserFriendsToRemove addObject:object];
+        }
+    }
+    [currentUserFriendArray removeObjectsInArray:currentUserFriendsToRemove];
+    return currentUserFriendArray;
 }
 
 -(void)errorAlertWindow:(NSString *)message
