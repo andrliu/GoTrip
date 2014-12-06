@@ -146,7 +146,12 @@
         [group whereKey:@"objectId" equalTo:linkedGroup.objectId];
         [group findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             Group *tempGroup = objects.firstObject;
-        cell.textLabel.text = [NSString stringWithFormat:@"%@",tempGroup.canonicalName ];
+            if (tempGroup != nil) {
+                cell.textLabel.text = [NSString stringWithFormat:@"%@",tempGroup.canonicalName ];
+            }
+            else{
+                cell.textLabel.text = @"Deleted group";
+            }
         }];
     }
     

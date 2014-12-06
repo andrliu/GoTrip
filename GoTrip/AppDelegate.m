@@ -14,7 +14,6 @@
 #import "MessagesViewController.h"
 
 @interface AppDelegate ()
-@property NSString *profileId;
 
 @end
 
@@ -78,14 +77,15 @@
     UIApplicationState state = [application applicationState];
     if (state == UIApplicationStateActive)
     {
-        
+//        self.profileId = userInfo[@"profileId"];
+
     }
     else
     {
-        
+        self.profileId = userInfo[@"profileId"];
+
         [PFPush handlePush:userInfo];
         
-        self.profileId = userInfo[@"profileId"];
         
     }
 }
@@ -117,10 +117,12 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    if(self.profileId)
+    {
     UIStoryboard *mainStoryboard = self.window.rootViewController.storyboard;
     ChatViewController *chatVC = (ChatViewController*)[mainStoryboard instantiateViewControllerWithIdentifier: @"chat"];
     PFQuery *query = [Profile query];
-    [query whereKey:@"objectId" equalTo:@"Q8DIiKZFYI"];
+    [query whereKey:@"objectId" equalTo:self.profileId];
 //    [Profile objectWithoutDataWithClassName:@"Profile" objectId:[NSString stringWithFormat:@"%@", @"yKcMGScuaA"]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         chatVC.passedRecipient = objects.firstObject;
@@ -133,6 +135,7 @@
         [navigationController pushViewController:chatVC animated:YES];
 
     }];
+    }
 //    chatVC.passedRecipient =
 
     
