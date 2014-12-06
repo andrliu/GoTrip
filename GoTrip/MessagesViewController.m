@@ -166,7 +166,7 @@
         //        [group findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         //            Group *tempGroup = objects.firstObject;
         //            if (tempGroup != nil) {
-        cell.textLabel.text = [NSString stringWithFormat:@"%@",linkedGroup.canonicalName ];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@",linkedGroup.name ];
         //            }
         //            else{
         //                cell.textLabel.text = @"Deleted group";
