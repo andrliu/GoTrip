@@ -16,7 +16,6 @@
 
 @interface ProfileViewController () <UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
-
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *firstNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *lastNameLabel;
@@ -47,9 +46,9 @@
     self.collectionView.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
+    [super viewWillAppear:animated];
     if (!self.isImagePickerCalled)
     {
         [self editMode:NO];
@@ -93,12 +92,12 @@
             self.isGroup = NO;
             self.listArray = self.profile.friends;
             self.segmentedControl.selectedSegmentIndex = 0;
+            [self.collectionView reloadData];
             [Group getCurrentGroupsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error)
             {
                 if (!error)
                 {
                     self.groupListArray = objects;
-                    [self.collectionView reloadData];
                 }
                 else
                 {
