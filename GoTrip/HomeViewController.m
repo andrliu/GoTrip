@@ -57,6 +57,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self checkCurrentUser];
 
      if (self.segmentedComtrol.selectedSegmentIndex == 1)
      {
@@ -71,7 +72,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self checkCurrentUser];
+//    [self checkCurrentUser];
 }
 
 - (void)checkCurrentUser
@@ -220,8 +221,8 @@
 - (void)logInViewControllerDidCancelLogIn:(PFLogInViewController *)logInController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
-    self.segmentedComtrol.selectedSegmentIndex = 0;
+//    self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
+//    self.segmentedComtrol.selectedSegmentIndex = 0;
 }
 
 - (void)presentLoginView
@@ -379,7 +380,7 @@
     if (sControl.selectedSegmentIndex==1)
     {
         [self queryForAllGroups:YES];
-        [self checkCurrentUser];
+//        [self checkCurrentUser];
     }
     else
     {
