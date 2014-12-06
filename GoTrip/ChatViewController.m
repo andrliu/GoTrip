@@ -320,7 +320,8 @@
 
                 PFPush *push = [[PFPush alloc] init];
                 [push setQuery:queryInstallation];
-                [push setMessage:text];
+                NSDictionary *dict = @{@"aps":@{@"alert":text},@"groupId":self.currentGroupProfile.objectId};
+                [push setData:dict];
                 [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
                  {
                      if (error != nil)

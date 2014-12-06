@@ -66,7 +66,12 @@
     }
     else
     {
-        self.profileId = userInfo[@"objectId"];
+        if(userInfo[@"objectId"] != nil){
+            self.profileId = userInfo[@"objectId"];
+        }
+        if(userInfo[@"groupId"] != nil){
+            self.groupId = userInfo[@"groupId"];
+        }
         [PFPush handlePush:userInfo];
         
     }
@@ -102,6 +107,30 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    if(self.groupId)
+    {
+        UIStoryboard *mainStoryboard = self.window.rootViewController.storyboard;
+        ChatViewController *chatVC = (ChatViewController *)[mainStoryboard instantiateViewControllerWithIdentifier: @"chat"];
+        PFQuery *query = [Group query];
+        [query whereKey:@"objectId" equalTo:self.groupId];
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            chatVC.passedGroup = objects.firstObject;
+            
+            //            MessagesViewController *messageVC = (MessagesViewController *)[mainStoryboard instantiateViewControllerWithIdentifier: @"message"];
+            //
+            
+            // [self.window.rootViewController.navigationController pushViewController:messageVC animated:YES];
+            UITabBarController *tabBarVC = (UITabBarController *)self.window.rootViewController;
+            
+            
+            UINavigationController *navigationController = tabBarVC.childViewControllers[0];
+            [navigationController pushViewController:chatVC animated:YES];
+            
+            self.groupId = nil;
+        }];
+    }
+    
+    
     if(self.profileId)
     {
         UIStoryboard *mainStoryboard = self.window.rootViewController.storyboard;
@@ -111,8 +140,8 @@
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             chatVC.passedRecipient = objects.firstObject;
             
-//            MessagesViewController *messageVC = (MessagesViewController *)[mainStoryboard instantiateViewControllerWithIdentifier: @"message"];
-//            
+            //            MessagesViewController *messageVC = (MessagesViewController *)[mainStoryboard instantiateViewControllerWithIdentifier: @"message"];
+            //
             
             // [self.window.rootViewController.navigationController pushViewController:messageVC animated:YES];
             UITabBarController *tabBarVC = (UITabBarController *)self.window.rootViewController;
@@ -120,6 +149,8 @@
             
             UINavigationController *navigationController = tabBarVC.childViewControllers[0];
             [navigationController pushViewController:chatVC animated:YES];
+            
+            self.profileId = nil;
             
         }];
         
