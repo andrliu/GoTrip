@@ -27,20 +27,20 @@
     self.navigationItem.title = @"Messages";
     self.tableView.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
     self.tableView.tableFooterView = [[UIView alloc] init];
-
+    
     // Do any additional setup after loading the view.
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     [self loadGroupMessages];
-
+    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-
+    
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -53,13 +53,33 @@
         self.currentProfile = profile;
         self.arrayOfMessages = profile.isMessaging;
         self.arrayOfGroupMessages= profile.isGroupMessaging;
+        NSMutableArray *tempArray = [NSMutableArray array];
+        for(Group *linkedGroup in self.arrayOfGroupMessages)
+        {
+            PFQuery *group = [Group query];
+            [group whereKey:@"objectId" equalTo:linkedGroup.objectId];
+            Group *tempGroup = [[group findObjects] firstObject];
+            //            [group findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            //                Group *tempGroup = objects.firstObject;
+            if (tempGroup != nil) {
+                [tempArray addObject:tempGroup];
+            }
+            else{
+                
+                //forget this group, it's deleted
+            }
+            if ([self.arrayOfGroupMessages lastObject] == linkedGroup) {
+                NSLog(@"Last iteration");
+                self.arrayOfGroupMessages = tempArray;
+                [self.tableView reloadData];
+            }
+            //        }];
+        }
+        //        [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:  withRowAnimation:UITableViewRowAnimationBottom];
+        //          [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationBottom];
         
-        [self.tableView reloadData];
-//        [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:  withRowAnimation:UITableViewRowAnimationBottom];
-//          [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationBottom];
-
-//        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationBottom];
-
+        //        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationBottom];
+        
     }];
     
     
@@ -92,14 +112,14 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-//    if (section == 0)
-//    {
-//        return 0;
-//    }
-//    else
-//    {
-        return 30;
-//    }
+    //    if (section == 0)
+    //    {
+    //        return 0;
+    //    }
+    //    else
+    //    {
+    return 30;
+    //    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -111,7 +131,7 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;    // fixed font style. use custom view (UILabel) if you want something different
 {
     if (section == 0)
-    return @"Group";
+        return @"Group";
     else
         return @"User";
 }
@@ -129,24 +149,29 @@
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     cell.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
-
+    
     if(indexPath.section == 1)
     {
-    Profile *linkedProfile = self.arrayOfMessages[indexPath.row];
+        Profile *linkedProfile = self.arrayOfMessages[indexPath.row];
         cell.textLabel.text = [NSString stringWithFormat:@"%@",linkedProfile.firstName ];
-
+        
     }
     
     else
     {
         
         Group *linkedGroup = self.arrayOfGroupMessages[indexPath.row];
-        PFQuery *group = [Group query];
-        [group whereKey:@"objectId" equalTo:linkedGroup.objectId];
-        [group findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            Group *tempGroup = objects.firstObject;
-        cell.textLabel.text = [NSString stringWithFormat:@"%@",tempGroup.canonicalName ];
-        }];
+        //        PFQuery *group = [Group query];
+        //        [group whereKey:@"objectId" equalTo:linkedGroup.objectId];
+        //        [group findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        //            Group *tempGroup = objects.firstObject;
+        //            if (tempGroup != nil) {
+        cell.textLabel.text = [NSString stringWithFormat:@"%@",linkedGroup.name ];
+        //            }
+        //            else{
+        //                cell.textLabel.text = @"Deleted group";
+        //            }
+        //        }];
     }
     
     
@@ -166,10 +191,10 @@
     
     NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
     if(indexPath.section == 1)
-    chatVC.passedRecipient = self.arrayOfMessages[indexPath.row];
+        chatVC.passedRecipient = self.arrayOfMessages[indexPath.row];
     else
         chatVC.passedGroup = self.arrayOfGroupMessages[indexPath.row];
-
+    
     
 }
 
