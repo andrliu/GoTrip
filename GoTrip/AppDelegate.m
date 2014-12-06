@@ -69,7 +69,7 @@
         if(userInfo[@"objectId"] != nil){
             self.profileId = userInfo[@"objectId"];
         }
-        if(userInfo[@"groupId"] != nil){
+        else if(userInfo[@"groupId"] != nil){
             self.groupId = userInfo[@"groupId"];
         }
         [PFPush handlePush:userInfo];
