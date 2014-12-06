@@ -226,8 +226,6 @@
 - (void)logInViewController:(LoginViewController *)logInController didLogInUser:(PFUser *)user
 {
     [self updateInstallationWith:user];
-    self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
-    self.segmentedComtrol.selectedSegmentIndex = 0;
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
