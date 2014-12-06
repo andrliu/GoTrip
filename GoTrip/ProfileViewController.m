@@ -46,9 +46,9 @@
     self.collectionView.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+    [super viewDidAppear:animated];
     if (!self.isImagePickerCalled)
     {
         [self editMode:NO];
