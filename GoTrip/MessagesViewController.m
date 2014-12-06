@@ -58,21 +58,22 @@
         {
             PFQuery *group = [Group query];
             [group whereKey:@"objectId" equalTo:linkedGroup.objectId];
-            [group findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                Group *tempGroup = objects.firstObject;
-                if (tempGroup != nil) {
-                    [tempArray addObject:tempGroup];
-                }
-                else{
-                    
-                    //forget this group, it's deleted
-                    }
-                if ([self.arrayOfGroupMessages lastObject] == linkedGroup) {
-                    NSLog(@"Last iteration");
-                    self.arrayOfGroupMessages = tempArray;
-                    [self.tableView reloadData];
-                }
-            }];
+            Group *tempGroup = [[group findObjects] firstObject];
+            //            [group findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            //                Group *tempGroup = objects.firstObject;
+            if (tempGroup != nil) {
+                [tempArray addObject:tempGroup];
+            }
+            else{
+                
+                //forget this group, it's deleted
+            }
+            if ([self.arrayOfGroupMessages lastObject] == linkedGroup) {
+                NSLog(@"Last iteration");
+                self.arrayOfGroupMessages = tempArray;
+                [self.tableView reloadData];
+            }
+            //        }];
         }
         //        [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:  withRowAnimation:UITableViewRowAnimationBottom];
         //          [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationBottom];
@@ -160,17 +161,17 @@
     {
         
         Group *linkedGroup = self.arrayOfGroupMessages[indexPath.row];
-//        PFQuery *group = [Group query];
-//        [group whereKey:@"objectId" equalTo:linkedGroup.objectId];
-//        [group findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//            Group *tempGroup = objects.firstObject;
-//            if (tempGroup != nil) {
-                cell.textLabel.text = [NSString stringWithFormat:@"%@",linkedGroup.canonicalName ];
-//            }
-//            else{
-//                cell.textLabel.text = @"Deleted group";
-//            }
-//        }];
+        //        PFQuery *group = [Group query];
+        //        [group whereKey:@"objectId" equalTo:linkedGroup.objectId];
+        //        [group findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        //            Group *tempGroup = objects.firstObject;
+        //            if (tempGroup != nil) {
+        cell.textLabel.text = [NSString stringWithFormat:@"%@",linkedGroup.canonicalName ];
+        //            }
+        //            else{
+        //                cell.textLabel.text = @"Deleted group";
+        //            }
+        //        }];
     }
     
     
