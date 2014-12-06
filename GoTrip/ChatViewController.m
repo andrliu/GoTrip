@@ -351,7 +351,10 @@
         
         PFPush *push = [[PFPush alloc] init];
         [push setQuery:queryInstallation];
+        NSDictionary *dict = @{@"hi":@"hi"};
+        [push setData:dict];
         [push setMessage:text];
+
         [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
          {
              if (error != nil)
@@ -915,7 +918,7 @@
         return 0.0f;
 }
 
-t
+
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView

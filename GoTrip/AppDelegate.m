@@ -9,6 +9,9 @@
 #import "AppDelegate.h"
 @import Parse;
 #import <ParseFacebookUtils/PFFacebookUtils.h>
+#import "ChatViewController.h"
+#import "MessagesViewController.h"
+#import "Profile.h"
 
 @interface AppDelegate ()
 
@@ -62,8 +65,8 @@
     }
     else
     {
-    [PFPush handlePush:userInfo];
-
+        [PFPush handlePush:userInfo];
+        
     }
 }
 
@@ -97,9 +100,30 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
-    [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
+    if(self.profileId)
+    {
+        UIStoryboard *mainStoryboard = self.window.rootViewController.storyboard;
+        ChatViewController *chatVC = (ChatViewController *)[mainStoryboard instantiateViewControllerWithIdentifier: @"chat"];
+        PFQuery *query = [Profile query];
+        [query whereKey:@"objectId" equalTo:self.profileId];
+        // [Profile objectWithoutDataWithClassName:@“Profile” objectId:[NSString stringWithFormat:@“%@”, @“yKcMGScuaA”]];
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            chatVC.passedRecipient = objects.firstObject;
+            MessagesViewController *messageVC = (MessagesViewController *)[mainStoryboard instantiateViewControllerWithIdentifier: @"message"];
+            
+            
+            // [self.window.rootViewController.navigationController pushViewController:messageVC animated:YES];
+            UITabBarController *tabBarVC = (UITabBarController *)self.window.rootViewController;
+            
+            
+            UINavigationController *navigationController = tabBarVC.childViewControllers[0];
+            [navigationController pushViewController:chatVC animated:YES];
+            
+        }];
+        [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
+    }
+    
 }
-
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     /*
