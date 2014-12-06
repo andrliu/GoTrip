@@ -32,7 +32,6 @@
 @property NSArray *friendListArray;
 @property NSArray *pendingFriendListArray;
 @property NSArray *listArray;
-@property BOOL isGroup;
 
 @end
 
@@ -46,9 +45,9 @@
     self.collectionView.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+    [super viewDidAppear:animated];
     if (!self.isImagePickerCalled)
     {
         [self editMode:NO];
@@ -89,7 +88,6 @@
             self.lastNameLabel.text = self.profile.lastName;
             self.memoLabel.text = self.profile.memo;
             self.isImagePickerCalled = NO;
-            self.isGroup = NO;
             self.listArray = self.profile.friends;
             self.segmentedControl.selectedSegmentIndex = 0;
             [self.collectionView reloadData];
@@ -98,6 +96,11 @@
                 if (!error)
                 {
                     self.groupListArray = objects;
+                    if (self.segmentedControl.selectedSegmentIndex == 2)
+                    {
+                        self.listArray = self.groupListArray;
+                        [self.collectionView reloadData];
+                    }
                 }
                 else
                 {
@@ -171,17 +174,14 @@
     if (sender.selectedSegmentIndex == 0)
     {
         self.listArray = self.profile.friends;
-        self.isGroup = NO;
     }
     else if (sender.selectedSegmentIndex == 1)
     {
         self.listArray = self.profile.pendingFriends;
-        self.isGroup = NO;
     }
-    else
+    else if (sender.selectedSegmentIndex == 2)
     {
         self.listArray = self.groupListArray;
-        self.isGroup = YES;
     }
     [self.collectionView reloadData];
 }
@@ -208,7 +208,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-    if (self.isGroup)
+    if (self.segmentedControl.selectedSegmentIndex == 2)
     {
         Group *group = self.listArray[indexPath.item];
         [self setImageView:cell.imageView withData:group.imageData withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
@@ -242,7 +242,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.isGroup)
+    if (self.segmentedControl.selectedSegmentIndex == 2)
     {
         Group *group = self.listArray[indexPath.item];
         [self performSegueWithIdentifier:@"groupSegue" sender:group];
