@@ -116,14 +116,17 @@
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             chatVC.passedGroup = objects.firstObject;
             
-            //            MessagesViewController *messageVC = (MessagesViewController *)[mainStoryboard instantiateViewControllerWithIdentifier: @"message"];
+            MessagesViewController *messageVC = (MessagesViewController *)[mainStoryboard instantiateViewControllerWithIdentifier: @"message"];
             //
             
             // [self.window.rootViewController.navigationController pushViewController:messageVC animated:YES];
             UITabBarController *tabBarVC = (UITabBarController *)self.window.rootViewController;
             
+            tabBarVC.selectedViewController = [tabBarVC.viewControllers objectAtIndex:1];
             
-            UINavigationController *navigationController = tabBarVC.childViewControllers[0];
+            UINavigationController *navigationController = tabBarVC.childViewControllers[1];
+//            [navigationController popToViewController:messageVC animated:YES];
+            [navigationController popToRootViewControllerAnimated:YES];
             [navigationController pushViewController:chatVC animated:YES];
             
             self.groupId = nil;
