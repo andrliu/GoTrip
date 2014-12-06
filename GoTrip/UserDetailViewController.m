@@ -23,6 +23,7 @@
 @property BOOL isPending;
 @property BOOL isRequesting;
 @property NSArray *arrayOfComment;
+@property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 
 @end
 
@@ -34,13 +35,43 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
     self.collectionView.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
-    [self.collectionView setPagingEnabled:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [self refreshView];
+}
+
+- (void)refreshNumberOfPageControl
+{
+    if (self.arrayOfComment.count < 3)
+    {
+        self.pageControl.numberOfPages = self.arrayOfComment.count;
+    }
+    else
+    {
+        self.pageControl.numberOfPages = 3;
+    }
+    [self refreshCurrentPageControl];
+}
+
+- (void)refreshCurrentPageControl
+{
+    NSArray *array = [self.collectionView indexPathsForVisibleItems];
+    NSIndexPath *index = array.firstObject;
+    if (index.item == 0)
+    {
+        self.pageControl.currentPage = 0;
+    }
+    else if (index.item == self.arrayOfComment.count - 1)
+    {
+        self.pageControl.currentPage = 2;
+    }
+    else
+    {
+        self.pageControl.currentPage = 1;
+    }
 }
 
 - (void)refreshView
@@ -54,6 +85,7 @@
             [self.collectionView scrollToItemAtIndexPath:indexPath
                                         atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
                                                 animated:YES];
+            [self refreshNumberOfPageControl];
         }
         else
         {
@@ -236,6 +268,7 @@
                                                  {
                                                      self.arrayOfComment = objects;
                                                      [self.collectionView reloadData];
+                                                    [self refreshNumberOfPageControl];
                                                  }
                                                  else
                                                  {
@@ -286,13 +319,18 @@
     return cell;
 }
 
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self refreshCurrentPageControl];
+}
+
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     Comment *comment = self.arrayOfComment[indexPath.item];
     self.profile = comment.sender;
     [self refreshView];
 }
-
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
