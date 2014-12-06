@@ -240,6 +240,7 @@
 {
     self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
     self.segmentedComtrol.selectedSegmentIndex = 0;
+    [self segmentedControlValueChanged:self.segmentedComtrol];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -398,8 +399,8 @@
 {
     if (sControl.selectedSegmentIndex==1)
     {
-        [self queryForAllGroups:YES];
         [self checkCurrentUser];
+        [self queryForAllGroups:YES];
     }
     else
     {
