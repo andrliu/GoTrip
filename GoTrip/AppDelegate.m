@@ -9,14 +9,33 @@
 #import "AppDelegate.h"
 @import Parse;
 #import <ParseFacebookUtils/PFFacebookUtils.h>
+#import "ChatViewController.h"
+#import "HomeViewController.h"
+#import "MessagesViewController.h"
 
 @interface AppDelegate ()
+@property NSString *profileId;
 
 @end
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    
+//    
+//    NSDictionary *userInfo = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+//    if (userInfo == NULL)
+//    {
+//        NSLog(@"didFinishLaunchingWithOptions user startup userinfo: %@", userInfo);
+//    }
+//    else
+//    {
+//        ChatViewController *chatVC = [[ChatViewController alloc] init];
+//        NSLog(@"didFinishLaunchingWithOptions notification startup userinfo: %@", userInfo);
+//        //            [senavigationController pushViewController:chatVC animated:YES];
+//        [self.window.rootViewController.navigationController pushViewController:chatVC animated:YES];
+//    }
     // Override point for customization after application launch.
     
     // [Parse setApplicationId:@"your_application_id" clientKey:@"your_client_key"];
@@ -55,6 +74,7 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
+    
     UIApplicationState state = [application applicationState];
     if (state == UIApplicationStateActive)
     {
@@ -62,8 +82,10 @@
     }
     else
     {
-    [PFPush handlePush:userInfo];
-
+        
+        [PFPush handlePush:userInfo];
+//        self.profileId = userInfo[@"]
+        
     }
 }
 
@@ -94,6 +116,66 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    UIStoryboard *mainStoryboard = self.window.rootViewController.storyboard;
+    ChatViewController *chatVC = (ChatViewController*)[mainStoryboard instantiateViewControllerWithIdentifier: @"chat"];
+    PFQuery *query = [Profile query];
+    [query whereKey:@"objectId" equalTo:@"Q8DIiKZFYI"];
+//    [Profile objectWithoutDataWithClassName:@"Profile" objectId:[NSString stringWithFormat:@"%@", @"yKcMGScuaA"]];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        chatVC.passedRecipient = objects.firstObject;
+        MessagesViewController *messageVC = (MessagesViewController*)[mainStoryboard instantiateViewControllerWithIdentifier: @"message"];
+        
+        //    [self.window.rootViewController.navigationController pushViewController:messageVC animated:YES];
+        UITabBarController *tabBarVC = (UITabBarController *)self.window.rootViewController;
+        
+        UINavigationController *navigationController = tabBarVC.childViewControllers[0];
+        [navigationController pushViewController:chatVC animated:YES];
+
+    }];
+//    chatVC.passedRecipient =
+
+    
+    //    HomeViewController *homeVC = [[HomeViewController alloc] init] ; //ojo recomendado por apple!!!
+    //    MessagesViewController* messageVC = [[MessagesViewController alloc] init];
+    //    ChatViewController* chatVC = [[ChatViewController alloc] init];
+    ////    SocialViewController* SocialViewController_ = [[[SocialViewController alloc] init] autorelease];
+    //
+    //
+    //
+    //    NSArray* controllers = [NSArray arrayWithObjects: homeVC,messageVC,chatVC, nil];
+    //
+    //    self.tabBarController.viewControllers = controllers;
+    //    self.pagesNavigation = [[[UINavigationController alloc] initWithRootViewController:startViewControllerView] autorelease];
+    //    self.pagesNavigation.navigationBarHidden = NO;
+    //
+    //    [self tabBarConfig];
+    //
+    //    [self.tabBarController setViewControllers:controllers animated:YES];
+    //
+    //
+    //    [self.window addSubview:self.pagesNavigation.view];
+    
+    
+    
+    
+    
+    //    self.window.rootViewController = self.tabBarController;
+    
+    //self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+    
+    //    [self.window makeKeyAndVisible];
+    
+    //    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:detailViewController];
+    //    navigationController.navigationBar.tintColor = [UIColor blackColor];
+    //    navigationController.toolbar.tintColor = [UIColor blackColor];
+    //    [self.window.rootViewController presentViewController:navigationController animated:YES completion:NULL];
+    //
+    //    ChatViewController *chatVC = [[ChatViewController alloc] init];
+    //    NSLog(@"didFinishLaunchingWithOptions notification startup userinfo: %@", userInfo);
+    //            [senavigationController pushViewController:chatVC animated:YES];
+    //]
+    //    [self.window.rootViewController.navigationController pushViewController:chatVC animated:YES];
+    
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
