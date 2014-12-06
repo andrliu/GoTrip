@@ -134,8 +134,9 @@
     }
     
     
-    if(self.profileId)
+    else if(self.profileId)
     {
+        
         UIStoryboard *mainStoryboard = self.window.rootViewController.storyboard;
         ChatViewController *chatVC = (ChatViewController *)[mainStoryboard instantiateViewControllerWithIdentifier: @"chat"];
         PFQuery *query = [Profile query];
@@ -149,9 +150,13 @@
             // [self.window.rootViewController.navigationController pushViewController:messageVC animated:YES];
             UITabBarController *tabBarVC = (UITabBarController *)self.window.rootViewController;
             
-            
-            UINavigationController *navigationController = tabBarVC.childViewControllers[0];
+            tabBarVC.selectedViewController = [tabBarVC.viewControllers objectAtIndex:1];
+
+            UINavigationController *navigationController = tabBarVC.childViewControllers[1];
+            //            [navigationController popToViewController:messageVC animated:YES];
+            [navigationController popToRootViewControllerAnimated:YES];
             [navigationController pushViewController:chatVC animated:YES];
+            
             
             self.profileId = nil;
             
