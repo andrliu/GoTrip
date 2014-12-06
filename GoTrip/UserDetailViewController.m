@@ -15,6 +15,7 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *memoLabel;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *relationButton;
@@ -22,7 +23,10 @@
 @property BOOL isFriend;
 @property BOOL isPending;
 @property BOOL isRequesting;
+@property NSArray *arrayOfGroup;
+@property NSArray *arrayOfFriend;
 @property NSArray *arrayOfComment;
+@property NSArray *listArray;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 
 @end
@@ -37,10 +41,47 @@
     self.collectionView.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
+    [super viewWillAppear:animated];
     [self refreshView];
+}
+
+//MARK: custom refresh method
+- (void)refreshUserGroups
+{
+    [Group getCurrentGroupsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error)
+    {
+        if (!error)
+        {
+            self.arrayOfGroup = objects;
+            [self.collectionView reloadData];
+        }
+        else
+        {
+            [self error:error];
+        }
+    }];
+}
+
+- (void)refreshUserComments
+{
+    [Comment getCurrentCommentsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error) {
+        if (!error)
+        {
+            self.arrayOfComment = objects;
+            [self.collectionView reloadData];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
+            [self.collectionView scrollToItemAtIndexPath:indexPath
+                                        atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                                animated:YES];
+            [self refreshNumberOfPageControl];
+        }
+        else
+        {
+            [self error:error];
+        }
+    }];
 }
 
 - (void)refreshNumberOfPageControl
@@ -235,6 +276,14 @@
         return userPendingFriendArray;
     }
 }
+
+- (IBAction)changeStatusOnSegmentedControll:(UISegmentedControl *)sender
+{
+
+
+
+}
+
 
 - (IBAction)addCommentOnButtonPressed:(UIButton *)sender
 {
