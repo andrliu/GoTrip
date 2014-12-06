@@ -23,6 +23,7 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segmentedComtrol;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *addGroupButton;
 @property Profile *currentProfile;
+@property NSIndexPath *selectedIndexPath;
 
 @end
 
@@ -35,6 +36,19 @@
     [super viewDidLoad];
     
     self.tableViewArray = [NSMutableArray array];
+//        if (self.segmentedComtrol.selectedSegmentIndex == 1)
+//        {
+//            [self queryForAllGroups:YES];
+//        }
+//        else
+//        {
+//            [self queryForFeaturedGroups:YES];
+//        }
+
+    [self refreshDisplay:nil];
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(refreshDisplay:) forControlEvents:UIControlEventValueChanged];
+    [self.tableView addSubview:refreshControl];
 
 //TODO: remove example group from here
 //    PFQuery *query = [Group query];
@@ -57,13 +71,20 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if (self.segmentedComtrol.selectedSegmentIndex == 1)
+
+//    [self refreshDisplay:nil];
+//    if (self.segmentedComtrol.selectedSegmentIndex == 1)
+//    {
+//        [self queryForAllGroups:NO];
+//    }
+//    else
+//    {
+//        [self queryForFeaturedGroups:NO];
+//    }
+    if (self.selectedIndexPath)
     {
-        [self queryForAllGroups:NO];
-    }
-    else
-    {
-        [self queryForFeaturedGroups:NO];
+        [self.tableView reloadRowsAtIndexPaths:@[self.selectedIndexPath] withRowAnimation:UITableViewRowAnimationRight];
+        self.selectedIndexPath = nil;
     }
 }
 
@@ -369,6 +390,7 @@
      {
     Group *selectedGroup = self.tableViewArray[indexPath.row];
     [self performSegueWithIdentifier:@"groupDetailSegue" sender:selectedGroup];
+         self.selectedIndexPath = indexPath;
      }
 }
 
@@ -468,6 +490,40 @@
     self.addGroupButton.tintColor = nil;
 }
 
+//refresh tableview on down slode
+-(void)refreshDisplay:(UIRefreshControl *)refreshControl
+{
+
+    if (self.segmentedComtrol.selectedSegmentIndex == 1)
+    {
+        [self queryForAllGroups:YES];
+    }
+    else
+    {
+        [self queryForFeaturedGroups:NO];
+    }
+    [refreshControl endRefreshing];
+//    PFQuery *query = [PFQuery queryWithClassName:@"Person"];
+//    [query orderByAscending:@"name"]; //sort query
+//    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+//     {
+//         if (error)
+//         {
+//         }
+//         else
+//         {
+//             self.people = objects;
+//             [self.tableView reloadData];
+//         }
+//
+//         [refreshControl endRefreshing];
+//         
+//     }];
+
+    
+}
+
+
 //MARK: UIAlert
 - (void)error:(NSError *)error
 {
@@ -486,6 +542,7 @@
     GroupDetailViewController *detailVC = [segue destinationViewController];
 //    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
 //    Group *group = self.tableViewArray[indexPath.row];
+        detailVC.indexPath = self.selectedIndexPath;
         detailVC.group = sender;
         detailVC.currentProfile = self.currentProfile;
 }
