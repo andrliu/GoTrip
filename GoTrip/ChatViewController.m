@@ -111,6 +111,7 @@
     
     else //one-to-one conversations logic
     {
+        
         //sets the recipient profile
         self.recipientProfile =  self.passedRecipient;
         
@@ -351,7 +352,7 @@
         
         PFPush *push = [[PFPush alloc] init];
         [push setQuery:queryInstallation];
-        NSDictionary *dict = @{@"aps":@{@"alert":@"hi"},@"objectId":self.currentUserProfile.objectId};
+        NSDictionary *dict = @{@"aps":@{@"alert":text},@"objectId":self.currentUserProfile.objectId};
         [push setData:dict];
 //        [push setMessage:text];
 

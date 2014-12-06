@@ -66,7 +66,7 @@
     }
     else
     {
-
+        self.profileId = userInfo[@"objectId"];
         [PFPush handlePush:userInfo];
         
     }
@@ -108,11 +108,11 @@
         ChatViewController *chatVC = (ChatViewController *)[mainStoryboard instantiateViewControllerWithIdentifier: @"chat"];
         PFQuery *query = [Profile query];
         [query whereKey:@"objectId" equalTo:self.profileId];
-        // [Profile objectWithoutDataWithClassName:@“Profile” objectId:[NSString stringWithFormat:@“%@”, @“yKcMGScuaA”]];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             chatVC.passedRecipient = objects.firstObject;
-            MessagesViewController *messageVC = (MessagesViewController *)[mainStoryboard instantiateViewControllerWithIdentifier: @"message"];
             
+//            MessagesViewController *messageVC = (MessagesViewController *)[mainStoryboard instantiateViewControllerWithIdentifier: @"message"];
+//            
             
             // [self.window.rootViewController.navigationController pushViewController:messageVC animated:YES];
             UITabBarController *tabBarVC = (UITabBarController *)self.window.rootViewController;
@@ -122,6 +122,8 @@
             [navigationController pushViewController:chatVC animated:YES];
             
         }];
+        
+        
         [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
     }
     
