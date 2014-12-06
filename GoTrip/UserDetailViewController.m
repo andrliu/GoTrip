@@ -268,7 +268,7 @@
                                                  {
                                                      self.arrayOfComment = objects;
                                                      [self.collectionView reloadData];
-                                                    [self refreshNumberOfPageControl];
+                                                     [self refreshNumberOfPageControl];
                                                  }
                                                  else
                                                  {
