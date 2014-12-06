@@ -57,12 +57,10 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self checkCurrentUser];
-
-     if (self.segmentedComtrol.selectedSegmentIndex == 1)
-     {
-         [self queryForAllGroups:NO];
-     }
+    if (self.segmentedComtrol.selectedSegmentIndex == 1)
+    {
+        [self queryForAllGroups:NO];
+    }
     else
     {
         [self queryForFeaturedGroups:NO];
@@ -72,7 +70,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-//    [self checkCurrentUser];
+    [self checkCurrentUser];
 }
 
 - (void)checkCurrentUser
@@ -84,7 +82,15 @@
     else
     {
         [self checkUserProfileAccountExisted];
+        [self updateInstallationWith:[PFUser currentUser]];
     }
+}
+
+- (void)updateInstallationWith:(PFUser *)user
+{
+    PFInstallation *installation = [PFInstallation currentInstallation];
+    installation[@"user"] = user;
+    [installation saveInBackground];
 }
 
 - (void)checkUserProfileAccountExisted
@@ -97,18 +103,6 @@
             {
                 self.currentProfile = profile;
                 NSLog(@"user has profile existed");
-                
-//                PFQuery *queryInstallation = [PFInstallation query];
-//                [queryInstallation whereKey:@"user" equalTo:[PFUser currentUser]];
-//                [queryInstallation countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-//                    if(number == 0)
-//                    {
-                        PFInstallation *installation = [PFInstallation currentInstallation];
-                        installation[@"user"] = [PFUser currentUser];
-                        [installation saveInBackground];
-//                    }
-//                }];
-
             }
             else
             {
@@ -210,6 +204,9 @@
 
 - (void)logInViewController:(LoginViewController *)logInController didLogInUser:(PFUser *)user
 {
+    [self updateInstallationWith:user];
+    self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
+    self.segmentedComtrol.selectedSegmentIndex = 0;
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
@@ -220,9 +217,9 @@
 
 - (void)logInViewControllerDidCancelLogIn:(PFLogInViewController *)logInController
 {
+    self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
+    self.segmentedComtrol.selectedSegmentIndex = 0;
     [self.navigationController popViewControllerAnimated:YES];
-//    self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
-//    self.segmentedComtrol.selectedSegmentIndex = 0;
 }
 
 - (void)presentLoginView
@@ -380,7 +377,7 @@
     if (sControl.selectedSegmentIndex==1)
     {
         [self queryForAllGroups:YES];
-//        [self checkCurrentUser];
+        [self checkCurrentUser];
     }
     else
     {
