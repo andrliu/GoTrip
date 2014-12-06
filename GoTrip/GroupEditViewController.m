@@ -143,8 +143,8 @@
 
 
                                                     }];
-    UIAlertAction *cancell = [UIAlertAction actionWithTitle:@"NO!"
-                                                     style:UIAlertActionStyleDestructive
+    UIAlertAction *cancell = [UIAlertAction actionWithTitle:@"No"
+                                                     style:UIAlertActionStyleCancel
                                                    handler:nil];
     [alert addAction:confirm];
     [alert addAction:cancell];
