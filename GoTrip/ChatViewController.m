@@ -351,9 +351,9 @@
         
         PFPush *push = [[PFPush alloc] init];
         [push setQuery:queryInstallation];
-        NSDictionary *dict = @{@"hi":@"hi"};
+        NSDictionary *dict = @{@"aps":@{@"alert":@"hi"}};
         [push setData:dict];
-        [push setMessage:text];
+//        [push setMessage:text];
 
         [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
          {
