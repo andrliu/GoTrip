@@ -292,13 +292,13 @@
             
             for(Message *message in objects)
             {
-                if([tempArray containsObject:message.userName])
+                if([tempArray containsObject:message.sender.objectId])
                 {
                     
                 }
                 else
                 {
-                    [tempArray addObject: message.userName];
+                    [tempArray addObject: message.sender.objectId];
                 }
                 
             }
@@ -319,7 +319,6 @@
 
                 PFPush *push = [[PFPush alloc] init];
                 [push setQuery:queryInstallation];
-//                [push setValue:self.currentUserProfile.objectId forKey:@"profileId"];
                 [push setMessage:text];
                 [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
                  {
@@ -328,7 +327,6 @@
                          NSLog(@"SendPushNotification send error.");
                      }
                  }];
-          
             }];
             
 
