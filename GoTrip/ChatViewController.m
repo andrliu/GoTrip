@@ -351,7 +351,7 @@
         
         PFPush *push = [[PFPush alloc] init];
         [push setQuery:queryInstallation];
-        NSDictionary *dict = @{@"aps":@{@"alert":@"hi"}};
+        NSDictionary *dict = @{@"aps":@{@"alert":@"hi"},@"objectId":self.currentUserProfile.objectId};
         [push setData:dict];
 //        [push setMessage:text];
 
