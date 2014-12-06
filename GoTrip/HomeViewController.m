@@ -24,6 +24,7 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segmentedComtrol;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *addGroupButton;
 @property Profile *currentProfile;
+@property NSIndexPath *selectedIndexPath;
 
 @end
 
@@ -36,6 +37,19 @@
     [super viewDidLoad];
     
     self.tableViewArray = [NSMutableArray array];
+//        if (self.segmentedComtrol.selectedSegmentIndex == 1)
+//        {
+//            [self queryForAllGroups:YES];
+//        }
+//        else
+//        {
+//            [self queryForFeaturedGroups:YES];
+//        }
+
+    [self refreshDisplay:nil];
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(refreshDisplay:) forControlEvents:UIControlEventValueChanged];
+    [self.tableView addSubview:refreshControl];
 
 //TODO: remove example group from here
 //    PFQuery *query = [Group query];
@@ -58,22 +72,27 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self checkCurrentUser];
 
-     if (self.segmentedComtrol.selectedSegmentIndex == 1)
-     {
-         [self queryForAllGroups:NO];
-     }
-    else
+//    [self refreshDisplay:nil];
+//    if (self.segmentedComtrol.selectedSegmentIndex == 1)
+//    {
+//        [self queryForAllGroups:NO];
+//    }
+//    else
+//    {
+//        [self queryForFeaturedGroups:NO];
+//    }
+    if (self.selectedIndexPath)
     {
-        [self queryForFeaturedGroups:NO];
+        [self.tableView reloadRowsAtIndexPaths:@[self.selectedIndexPath] withRowAnimation:UITableViewRowAnimationRight];
+        self.selectedIndexPath = nil;
     }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-//    [self checkCurrentUser];
+    [self checkCurrentUser];
 }
 
 - (void)checkCurrentUser
@@ -85,7 +104,15 @@
     else
     {
         [self checkUserProfileAccountExisted];
+        [self updateInstallationWith:[PFUser currentUser]];
     }
+}
+
+- (void)updateInstallationWith:(PFUser *)user
+{
+    PFInstallation *installation = [PFInstallation currentInstallation];
+    installation[@"user"] = user;
+    [installation saveInBackground];
 }
 
 - (void)checkUserProfileAccountExisted
@@ -98,18 +125,6 @@
             {
                 self.currentProfile = profile;
                 NSLog(@"user has profile existed");
-                
-//                PFQuery *queryInstallation = [PFInstallation query];
-//                [queryInstallation whereKey:@"user" equalTo:[PFUser currentUser]];
-//                [queryInstallation countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-//                    if(number == 0)
-//                    {
-                        PFInstallation *installation = [PFInstallation currentInstallation];
-                        installation[@"user"] = [PFUser currentUser];
-                        [installation saveInBackground];
-//                    }
-//                }];
-
             }
             else
             {
@@ -211,6 +226,9 @@
 
 - (void)logInViewController:(LoginViewController *)logInController didLogInUser:(PFUser *)user
 {
+    [self updateInstallationWith:user];
+    self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
+    self.segmentedComtrol.selectedSegmentIndex = 0;
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
@@ -221,9 +239,9 @@
 
 - (void)logInViewControllerDidCancelLogIn:(PFLogInViewController *)logInController
 {
+    self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
+    self.segmentedComtrol.selectedSegmentIndex = 0;
     [self.navigationController popViewControllerAnimated:YES];
-//    self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
-//    self.segmentedComtrol.selectedSegmentIndex = 0;
 }
 
 - (void)presentLoginView
@@ -373,6 +391,7 @@
      {
     Group *selectedGroup = self.tableViewArray[indexPath.row];
     [self performSegueWithIdentifier:@"groupDetailSegue" sender:selectedGroup];
+         self.selectedIndexPath = indexPath;
      }
 }
 
@@ -381,7 +400,7 @@
     if (sControl.selectedSegmentIndex==1)
     {
         [self queryForAllGroups:YES];
-//        [self checkCurrentUser];
+        [self checkCurrentUser];
     }
     else
     {
@@ -472,6 +491,40 @@
     self.addGroupButton.tintColor = nil;
 }
 
+//refresh tableview on down slode
+-(void)refreshDisplay:(UIRefreshControl *)refreshControl
+{
+
+    if (self.segmentedComtrol.selectedSegmentIndex == 1)
+    {
+        [self queryForAllGroups:YES];
+    }
+    else
+    {
+        [self queryForFeaturedGroups:NO];
+    }
+    [refreshControl endRefreshing];
+//    PFQuery *query = [PFQuery queryWithClassName:@"Person"];
+//    [query orderByAscending:@"name"]; //sort query
+//    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+//     {
+//         if (error)
+//         {
+//         }
+//         else
+//         {
+//             self.people = objects;
+//             [self.tableView reloadData];
+//         }
+//
+//         [refreshControl endRefreshing];
+//         
+//     }];
+
+    
+}
+
+
 //MARK: UIAlert
 - (void)error:(NSError *)error
 {
@@ -490,6 +543,7 @@
     GroupDetailViewController *detailVC = [segue destinationViewController];
 //    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
 //    Group *group = self.tableViewArray[indexPath.row];
+        detailVC.indexPath = self.selectedIndexPath;
         detailVC.group = sender;
         detailVC.currentProfile = self.currentProfile;
 }

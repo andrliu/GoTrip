@@ -65,6 +65,13 @@
 //MARK: user logout
 - (IBAction)logOutOnButtonPressed:(UIBarButtonItem *)sender
 {
+    self.listArray = @[];
+    UIImage *image = [UIImage imageNamed:@"avatar"];
+    NSData *data = UIImageJPEGRepresentation(image, 0.1);
+    [self setImageView:self.imageView withData:data withLayerRadius:15.0f withBorderColor:[UIColor blackColor].CGColor];
+    self.firstNameLabel.text = @"First";
+    self.lastNameLabel.text = @"Last";
+    self.memoLabel.text = @"Memo";
     self.isImagePickerCalled = NO;
     self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
     [PFUser logOut];

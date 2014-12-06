@@ -14,5 +14,6 @@
 
 @property Group *group;
 @property Profile *currentProfile;
+@property NSIndexPath *indexPath;
 
 @end
