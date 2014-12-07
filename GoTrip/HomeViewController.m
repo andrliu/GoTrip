@@ -17,7 +17,9 @@
 #import "User.h"
 #import "CustomTableViewCell.h"
 
-@interface HomeViewController () <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UITableViewDataSource, UITableViewDelegate, UITabBarControllerDelegate>
+#import "SINavigationMenuView.h"
+
+@interface HomeViewController () <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UITableViewDataSource, UITableViewDelegate, UITabBarControllerDelegate, SINavigationMenuDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property NSMutableArray *tableViewArray;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segmentedComtrol;
@@ -44,6 +46,18 @@
 //        {
 //            [self queryForFeaturedGroups:YES];
 //        }
+    if (self.navigationItem) {
+        CGRect frame = CGRectMake(-8.0, 0.0, 30.0, self.navigationController.navigationBar.bounds.size.height);
+        SINavigationMenuView *menu = [[SINavigationMenuView alloc] initWithFrame:frame title:@""];
+        //Set in which view we will display a menu
+        [menu displayMenuInView:self.view];
+        //Create array of items
+        menu.items = @[@"Group Name", @"Destination", @"Departure Date"];
+        menu.delegate = self;
+        UIBarButtonItem *leftLabelBarButton = [[UIBarButtonItem alloc] initWithCustomView:menu];
+        self.navigationItem.leftBarButtonItems = @[leftLabelBarButton];
+    }
+
 
     [self refreshDisplay:nil];
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
@@ -423,11 +437,12 @@
 
 }
 
--(void)queryForFeaturedGroups:(BOOL)animated
+-(void)queryForFeaturedGroups:(BOOL)animated //orderBy:(NSString *)attribute
 {
     PFQuery *groupListQuery = [Group query];
     [groupListQuery whereKey:@"isFeatured" equalTo:[NSNumber numberWithBool:YES]];
     [groupListQuery orderByAscending:@"startDate"];
+//    [groupListQuery orderByAscending:attribute];
     [groupListQuery selectKeys:@[@"name", @"destination", @"startDate", @"endDate", @"profiles", @"creator"]]; //inlcudes specific fields, need to requery later
     [groupListQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
@@ -565,6 +580,76 @@
 
     
 }
+
+//navigation delegate method
+- (void)didSelectItemAtIndex:(NSUInteger)index
+{
+    if (self.segmentedComtrol.selectedSegmentIndex == 1)
+    {
+        switch (index)
+        {
+            case 0:
+            {
+                NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+                self.tableViewArray = [[self.tableViewArray sortedArrayUsingDescriptors:@[sort]] mutableCopy];
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationBottom];
+                break;
+            }
+            case 1:
+            {
+                NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"destination" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+                self.tableViewArray = [[self.tableViewArray sortedArrayUsingDescriptors:@[sort]] mutableCopy];
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationBottom];
+                break;
+            }
+            case 2:
+            {
+                NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"startDate" ascending:YES];
+                self.tableViewArray = [[self.tableViewArray sortedArrayUsingDescriptors:@[sort]] mutableCopy];
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationBottom];
+                break;
+            }
+            default:
+                break;
+        }
+    }
+    else
+    {
+        switch (index)
+        {
+            case 0:
+            {
+                NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+                self.tableViewArray = [[self.tableViewArray sortedArrayUsingDescriptors:@[sort]] mutableCopy];
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationBottom];
+                break;
+            }
+            case 1:
+            {
+                NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"destination" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+                self.tableViewArray = [[self.tableViewArray sortedArrayUsingDescriptors:@[sort]] mutableCopy];
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationBottom];
+                break;
+            }
+            case 2:
+            {
+                NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"startDate" ascending:YES];
+                self.tableViewArray = [[self.tableViewArray sortedArrayUsingDescriptors:@[sort]] mutableCopy];
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationBottom];
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+    // same thing, but puts under the nav bar
+    //    [self.tableView setContentOffset:CGPointZero animated:YES];
+    
+    
+}
+
 
 
 //MARK: UIAlert

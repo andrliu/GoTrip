@@ -106,6 +106,25 @@
 		FA1EEE4B1A253FE9009280BA /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1EEE4A1A253FE9009280BA /* Group.m */; };
 		FA519B171A2D864D00FDD295 /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = FA519B161A2D864D00FDD295 /* Photo.m */; };
 		FA519B1D1A2FDF4500FDD295 /* GroupEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA519B1C1A2FDF4500FDD295 /* GroupEditViewController.m */; };
+		FABC43771A34CDE10025CEA9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FABC43571A34CDE10025CEA9 /* Default-568h@2x.png */; };
+		FABC43781A34CDE10025CEA9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = FABC43581A34CDE10025CEA9 /* Default.png */; };
+		FABC43791A34CDE10025CEA9 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FABC43591A34CDE10025CEA9 /* Default@2x.png */; };
+		FABC437A1A34CDE10025CEA9 /* HAViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FABC435A1A34CDE10025CEA9 /* HAViewController.xib */; };
+		FABC437B1A34CDE10025CEA9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FABC435C1A34CDE10025CEA9 /* InfoPlist.strings */; };
+		FABC437C1A34CDE10025CEA9 /* HAAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FABC435F1A34CDE10025CEA9 /* HAAppDelegate.m */; };
+		FABC437D1A34CDE10025CEA9 /* HAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FABC43611A34CDE10025CEA9 /* HAViewController.m */; };
+		FABC437E1A34CDE10025CEA9 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = FABC43621A34CDE10025CEA9 /* logo.png */; };
+		FABC437F1A34CDE10025CEA9 /* arrow_down.png in Resources */ = {isa = PBXBuildFile; fileRef = FABC43651A34CDE10025CEA9 /* arrow_down.png */; };
+		FABC43801A34CDE10025CEA9 /* arrow_down1.png in Resources */ = {isa = PBXBuildFile; fileRef = FABC43661A34CDE10025CEA9 /* arrow_down1.png */; };
+		FABC43811A34CDE10025CEA9 /* arrow_down1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FABC43671A34CDE10025CEA9 /* arrow_down1@2x.png */; };
+		FABC43821A34CDE10025CEA9 /* arrow_down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FABC43681A34CDE10025CEA9 /* arrow_down@2x.png */; };
+		FABC43831A34CDE10025CEA9 /* SICellSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = FABC436A1A34CDE10025CEA9 /* SICellSelection.m */; };
+		FABC43841A34CDE10025CEA9 /* SIMenuButton.m in Sources */ = {isa = PBXBuildFile; fileRef = FABC436C1A34CDE10025CEA9 /* SIMenuButton.m */; };
+		FABC43851A34CDE10025CEA9 /* SIMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FABC436E1A34CDE10025CEA9 /* SIMenuCell.m */; };
+		FABC43861A34CDE10025CEA9 /* SIMenuConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = FABC43701A34CDE10025CEA9 /* SIMenuConfiguration.m */; };
+		FABC43871A34CDE10025CEA9 /* SIMenuTable.m in Sources */ = {isa = PBXBuildFile; fileRef = FABC43721A34CDE10025CEA9 /* SIMenuTable.m */; };
+		FABC43881A34CDE10025CEA9 /* SINavigationMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = FABC43741A34CDE10025CEA9 /* SINavigationMenuView.m */; };
+		FABC43891A34CDE10025CEA9 /* UIColor+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = FABC43761A34CDE10025CEA9 /* UIColor+Extension.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -304,6 +323,34 @@
 		FA519B161A2D864D00FDD295 /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Photo.m; sourceTree = "<group>"; };
 		FA519B1B1A2FDF4500FDD295 /* GroupEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupEditViewController.h; sourceTree = "<group>"; };
 		FA519B1C1A2FDF4500FDD295 /* GroupEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupEditViewController.m; sourceTree = "<group>"; };
+		FABC43571A34CDE10025CEA9 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		FABC43581A34CDE10025CEA9 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		FABC43591A34CDE10025CEA9 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		FABC435B1A34CDE10025CEA9 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/HAViewController.xib; sourceTree = "<group>"; };
+		FABC435D1A34CDE10025CEA9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		FABC435E1A34CDE10025CEA9 /* HAAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HAAppDelegate.h; sourceTree = "<group>"; };
+		FABC435F1A34CDE10025CEA9 /* HAAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HAAppDelegate.m; sourceTree = "<group>"; };
+		FABC43601A34CDE10025CEA9 /* HAViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HAViewController.h; sourceTree = "<group>"; };
+		FABC43611A34CDE10025CEA9 /* HAViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HAViewController.m; sourceTree = "<group>"; };
+		FABC43621A34CDE10025CEA9 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		FABC43651A34CDE10025CEA9 /* arrow_down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_down.png; sourceTree = "<group>"; };
+		FABC43661A34CDE10025CEA9 /* arrow_down1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_down1.png; sourceTree = "<group>"; };
+		FABC43671A34CDE10025CEA9 /* arrow_down1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow_down1@2x.png"; sourceTree = "<group>"; };
+		FABC43681A34CDE10025CEA9 /* arrow_down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow_down@2x.png"; sourceTree = "<group>"; };
+		FABC43691A34CDE10025CEA9 /* SICellSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SICellSelection.h; sourceTree = "<group>"; };
+		FABC436A1A34CDE10025CEA9 /* SICellSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SICellSelection.m; sourceTree = "<group>"; };
+		FABC436B1A34CDE10025CEA9 /* SIMenuButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIMenuButton.h; sourceTree = "<group>"; };
+		FABC436C1A34CDE10025CEA9 /* SIMenuButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIMenuButton.m; sourceTree = "<group>"; };
+		FABC436D1A34CDE10025CEA9 /* SIMenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIMenuCell.h; sourceTree = "<group>"; };
+		FABC436E1A34CDE10025CEA9 /* SIMenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIMenuCell.m; sourceTree = "<group>"; };
+		FABC436F1A34CDE10025CEA9 /* SIMenuConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIMenuConfiguration.h; sourceTree = "<group>"; };
+		FABC43701A34CDE10025CEA9 /* SIMenuConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIMenuConfiguration.m; sourceTree = "<group>"; };
+		FABC43711A34CDE10025CEA9 /* SIMenuTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIMenuTable.h; sourceTree = "<group>"; };
+		FABC43721A34CDE10025CEA9 /* SIMenuTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIMenuTable.m; sourceTree = "<group>"; };
+		FABC43731A34CDE10025CEA9 /* SINavigationMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SINavigationMenuView.h; sourceTree = "<group>"; };
+		FABC43741A34CDE10025CEA9 /* SINavigationMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SINavigationMenuView.m; sourceTree = "<group>"; };
+		FABC43751A34CDE10025CEA9 /* UIColor+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Extension.h"; sourceTree = "<group>"; };
+		FABC43761A34CDE10025CEA9 /* UIColor+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Extension.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -634,6 +681,7 @@
 		7B4341321A2D707200977158 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				FABC43561A34CDE10025CEA9 /* NavigationMenu */,
 				7B4340951A2D706C00977158 /* JSQMessagesViewController */,
 				7B4341021A2D706C00977158 /* JSQSystemSoundPlayer */,
 			);
@@ -685,6 +733,58 @@
 				FA519B161A2D864D00FDD295 /* Photo.m */,
 			);
 			name = "Model Data";
+			sourceTree = "<group>";
+		};
+		FABC43561A34CDE10025CEA9 /* NavigationMenu */ = {
+			isa = PBXGroup;
+			children = (
+				FABC43571A34CDE10025CEA9 /* Default-568h@2x.png */,
+				FABC43581A34CDE10025CEA9 /* Default.png */,
+				FABC43591A34CDE10025CEA9 /* Default@2x.png */,
+				FABC435A1A34CDE10025CEA9 /* HAViewController.xib */,
+				FABC435C1A34CDE10025CEA9 /* InfoPlist.strings */,
+				FABC435E1A34CDE10025CEA9 /* HAAppDelegate.h */,
+				FABC435F1A34CDE10025CEA9 /* HAAppDelegate.m */,
+				FABC43601A34CDE10025CEA9 /* HAViewController.h */,
+				FABC43611A34CDE10025CEA9 /* HAViewController.m */,
+				FABC43621A34CDE10025CEA9 /* logo.png */,
+				FABC43631A34CDE10025CEA9 /* NavigationMenuView */,
+			);
+			name = NavigationMenu;
+			path = ../NavigationMenu;
+			sourceTree = "<group>";
+		};
+		FABC43631A34CDE10025CEA9 /* NavigationMenuView */ = {
+			isa = PBXGroup;
+			children = (
+				FABC43641A34CDE10025CEA9 /* images */,
+				FABC43691A34CDE10025CEA9 /* SICellSelection.h */,
+				FABC436A1A34CDE10025CEA9 /* SICellSelection.m */,
+				FABC436B1A34CDE10025CEA9 /* SIMenuButton.h */,
+				FABC436C1A34CDE10025CEA9 /* SIMenuButton.m */,
+				FABC436D1A34CDE10025CEA9 /* SIMenuCell.h */,
+				FABC436E1A34CDE10025CEA9 /* SIMenuCell.m */,
+				FABC436F1A34CDE10025CEA9 /* SIMenuConfiguration.h */,
+				FABC43701A34CDE10025CEA9 /* SIMenuConfiguration.m */,
+				FABC43711A34CDE10025CEA9 /* SIMenuTable.h */,
+				FABC43721A34CDE10025CEA9 /* SIMenuTable.m */,
+				FABC43731A34CDE10025CEA9 /* SINavigationMenuView.h */,
+				FABC43741A34CDE10025CEA9 /* SINavigationMenuView.m */,
+				FABC43751A34CDE10025CEA9 /* UIColor+Extension.h */,
+				FABC43761A34CDE10025CEA9 /* UIColor+Extension.m */,
+			);
+			path = NavigationMenuView;
+			sourceTree = "<group>";
+		};
+		FABC43641A34CDE10025CEA9 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				FABC43651A34CDE10025CEA9 /* arrow_down.png */,
+				FABC43661A34CDE10025CEA9 /* arrow_down1.png */,
+				FABC43671A34CDE10025CEA9 /* arrow_down1@2x.png */,
+				FABC43681A34CDE10025CEA9 /* arrow_down@2x.png */,
+			);
+			path = images;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -782,19 +882,29 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FABC43801A34CDE10025CEA9 /* arrow_down1.png in Resources */,
 				7BD4B66C1A2EAF52001EF2F6 /* tab_private@2x.png in Resources */,
+				FABC437E1A34CDE10025CEA9 /* logo.png in Resources */,
 				7BD4B6691A2EAF52001EF2F6 /* blank_profile@2x.png in Resources */,
 				7BD4B66D1A2EAF52001EF2F6 /* tab_profile@2x.png in Resources */,
 				4937C3591A22B4DA0087E8CF /* Main.storyboard in Resources */,
+				FABC437A1A34CDE10025CEA9 /* HAViewController.xib in Resources */,
 				7BD4B66A1A2EAF52001EF2F6 /* tab_group@2x.png in Resources */,
 				7B4341241A2D706C00977158 /* JSQMessagesCollectionViewCellIncoming.xib in Resources */,
 				7B4341061A2D706C00977158 /* JSQMessagesAssets.bundle in Resources */,
 				7B4341261A2D706C00977158 /* JSQMessagesCollectionViewCellOutgoing.xib in Resources */,
+				FABC437B1A34CDE10025CEA9 /* InfoPlist.strings in Resources */,
 				4937C35E1A22B4DA0087E8CF /* LaunchScreen.xib in Resources */,
+				FABC43821A34CDE10025CEA9 /* arrow_down@2x.png in Resources */,
 				4937C35B1A22B4DA0087E8CF /* Images.xcassets in Resources */,
 				7B4341301A2D706C00977158 /* JSQMessagesTypingIndicatorFooterView.xib in Resources */,
+				FABC43781A34CDE10025CEA9 /* Default.png in Resources */,
+				FABC43791A34CDE10025CEA9 /* Default@2x.png in Resources */,
+				FABC43771A34CDE10025CEA9 /* Default-568h@2x.png in Resources */,
 				7B4341071A2D706C00977158 /* JSQMessages.strings in Resources */,
 				7B43412E1A2D706C00977158 /* JSQMessagesToolbarContentView.xib in Resources */,
+				FABC43811A34CDE10025CEA9 /* arrow_down1@2x.png in Resources */,
+				FABC437F1A34CDE10025CEA9 /* arrow_down.png in Resources */,
 				7B4341101A2D706C00977158 /* JSQMessagesViewController.xib in Resources */,
 				7BD4B6681A2EAF52001EF2F6 /* blank_avatar@2x.png in Resources */,
 				7B43412B1A2D706C00977158 /* JSQMessagesLoadEarlierHeaderView.xib in Resources */,
@@ -820,6 +930,7 @@
 				4937C3C11A23F7600087E8CF /* User.m in Sources */,
 				7B4341291A2D706C00977158 /* JSQMessagesLabel.m in Sources */,
 				FA14B90B1A2D3AE300950C27 /* ImageTableViewCell.m in Sources */,
+				FABC43841A34CDE10025CEA9 /* SIMenuButton.m in Sources */,
 				7B16E0631A2510C6006899E6 /* MessagesViewController.m in Sources */,
 				7B4341211A2D706C00977158 /* JSQMessagesCollectionView.m in Sources */,
 				FA519B1D1A2FDF4500FDD295 /* GroupEditViewController.m in Sources */,
@@ -827,6 +938,7 @@
 				7B4341151A2D706C00977158 /* JSQMessagesToolbarButtonFactory.m in Sources */,
 				7B4341081A2D706C00977158 /* JSQSystemSoundPlayer+JSQMessages.m in Sources */,
 				7B43410F1A2D706C00977158 /* JSQMessagesViewController.m in Sources */,
+				FABC43881A34CDE10025CEA9 /* SINavigationMenuView.m in Sources */,
 				7B43411F1A2D706C00977158 /* JSQVideoMediaItem.m in Sources */,
 				FA14B9071A2D3AC000950C27 /* TextTableViewCell.m in Sources */,
 				4937C3501A22B4DA0087E8CF /* AppDelegate.m in Sources */,
@@ -835,6 +947,7 @@
 				7B4341091A2D706C00977158 /* NSString+JSQMessages.m in Sources */,
 				7B4341251A2D706C00977158 /* JSQMessagesCollectionViewCellOutgoing.m in Sources */,
 				7B4341271A2D706C00977158 /* JSQMessagesComposerTextView.m in Sources */,
+				FABC43851A34CDE10025CEA9 /* SIMenuCell.m in Sources */,
 				7B4341201A2D706C00977158 /* JSQMessagesCellTextView.m in Sources */,
 				4937C38D1A22B7B60087E8CF /* CustomCollectionViewCell.m in Sources */,
 				7B0A12651A23C4E8000B5BA1 /* Message.m in Sources */,
@@ -846,6 +959,7 @@
 				FA1EEE4B1A253FE9009280BA /* Group.m in Sources */,
 				7B4341141A2D706C00977158 /* JSQMessagesTimestampFormatter.m in Sources */,
 				FA519B171A2D864D00FDD295 /* Photo.m in Sources */,
+				FABC437D1A34CDE10025CEA9 /* HAViewController.m in Sources */,
 				7B43411D1A2D706C00977158 /* JSQMessagesBubbleImage.m in Sources */,
 				49BFC5CF1A2F6DC10039E046 /* SignupViewController.m in Sources */,
 				7B4341131A2D706C00977158 /* JSQMessagesMediaViewBubbleImageMasker.m in Sources */,
@@ -860,9 +974,11 @@
 				7B4341221A2D706C00977158 /* JSQMessagesCollectionViewCell.m in Sources */,
 				4937C3531A22B4DA0087E8CF /* GoTrip.xcdatamodeld in Sources */,
 				FA14B90E1A2D3AF900950C27 /* ButtonTableViewCell.m in Sources */,
+				FABC43861A34CDE10025CEA9 /* SIMenuConfiguration.m in Sources */,
 				4937C3841A22B7690087E8CF /* UserDetailViewController.m in Sources */,
 				7B43410C1A2D706C00977158 /* UIImage+JSQMessages.m in Sources */,
 				7B4341311A2D706C00977158 /* JSQSystemSoundPlayer.m in Sources */,
+				FABC437C1A34CDE10025CEA9 /* HAAppDelegate.m in Sources */,
 				FA14B9111A2D3B5100950C27 /* GroupCollectionViewCell.m in Sources */,
 				7B4341171A2D706C00977158 /* JSQMessagesCollectionViewFlowLayoutInvalidationContext.m in Sources */,
 				7B43412F1A2D706C00977158 /* JSQMessagesTypingIndicatorFooterView.m in Sources */,
@@ -874,7 +990,10 @@
 				7B43411E1A2D706C00977158 /* JSQPhotoMediaItem.m in Sources */,
 				4937C37B1A22B73B0087E8CF /* ChatViewController.m in Sources */,
 				7B4341351A2D76A600977158 /* TestViewController.m in Sources */,
+				FABC43871A34CDE10025CEA9 /* SIMenuTable.m in Sources */,
+				FABC43831A34CDE10025CEA9 /* SICellSelection.m in Sources */,
 				7B43411A1A2D706C00977158 /* JSQMediaItem.m in Sources */,
+				FABC43891A34CDE10025CEA9 /* UIColor+Extension.m in Sources */,
 				7B4341231A2D706C00977158 /* JSQMessagesCollectionViewCellIncoming.m in Sources */,
 				4937C3901A22B7EA0087E8CF /* CustomTableViewCell.m in Sources */,
 				7B43412D1A2D706C00977158 /* JSQMessagesToolbarContentView.m in Sources */,
@@ -937,6 +1056,22 @@
 				7B4340A81A2D706C00977158 /* zh-Hant */,
 			);
 			name = JSQMessages.strings;
+			sourceTree = "<group>";
+		};
+		FABC435A1A34CDE10025CEA9 /* HAViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FABC435B1A34CDE10025CEA9 /* en */,
+			);
+			name = HAViewController.xib;
+			sourceTree = "<group>";
+		};
+		FABC435C1A34CDE10025CEA9 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FABC435D1A34CDE10025CEA9 /* en */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
