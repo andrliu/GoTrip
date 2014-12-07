@@ -175,7 +175,10 @@
              {
                  [self changeListOnSegmentControl:self.segmentedControl];
              }
-             [self.segmentedControl setTitle:[NSString stringWithFormat:@"Groups (%lu)",(unsigned long)self.arrayOfGroup.count] forSegmentAtIndex:2];
+             if  (self.segmentedControl.numberOfSegments == 3)
+             {
+                 [self.segmentedControl setTitle:[NSString stringWithFormat:@"Groups (%lu)",(unsigned long)self.arrayOfGroup.count] forSegmentAtIndex:2];
+             }
          }
          else
          {
@@ -217,10 +220,18 @@
     {
         if (self.isFriend)
         {
+            if  (self.segmentedControl.numberOfSegments < 3)
+            {
+                [self.segmentedControl insertSegmentWithTitle:@"Groups" atIndex:2 animated:YES];
+            }
             self.relationButton.title = @"Remove";
         }
         else
         {
+            if  (self.segmentedControl.numberOfSegments == 3)
+            {
+                [self.segmentedControl removeSegmentAtIndex:2 animated:YES];
+            }
             if (self.isPending == YES && self.isRequesting == NO)
             {
                 self.relationButton.title = @"Accept";

@@ -586,6 +586,7 @@
                                     <segment title="Pendings"/>
                                     <segment title="Groups"/>
                                 </segments>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <action selector="segmentedControl:" destination="caB-bt-Glw" eventType="valueChanged" id="hrg-X4-DOn"/>
                                 </connections>
@@ -966,6 +967,7 @@
                             </pageControl>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="IdK-Gu-moa">
                                 <rect key="frame" x="10" y="279" width="300" height="31"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="kpO-cV-QG2"/>
                                 </constraints>
@@ -974,6 +976,7 @@
                                     <segment title="Comments"/>
                                     <segment title="Groups"/>
                                 </segments>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <action selector="changeListOnSegmentControl:" destination="xDp-qw-o4k" eventType="valueChanged" id="9Am-xr-XQE"/>
                                 </connections>
@@ -1191,7 +1194,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="ohF-rU-5c0"/>
+        <segue reference="66I-5x-UXO"/>
         <segue reference="nNS-jj-bNS"/>
     </inferredMetricsTieBreakers>
 </document>
