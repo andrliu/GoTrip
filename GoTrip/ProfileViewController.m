@@ -42,8 +42,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
-    self.collectionView.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
+    self.view.backgroundColor = [UIColor colorWithRed:(243.0/255.0)
+                                                green:(243.0/255.0)
+                                                 blue:(243.0/255.0)
+                                                alpha:1.0f];
+    self.collectionView.backgroundColor = [UIColor colorWithRed:(243.0/255.0)
+                                                          green:(243.0/255.0)
+                                                           blue:(243.0/255.0)
+                                                          alpha:1.0f];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -72,16 +78,23 @@
 //MARK: custom refresh method
 - (void)refreshNumberOfPageControl
 {
-    if (self.listArray.count <= 2)
+    if (self.listArray.count == 0)
     {
+        [self.pageControl setHidden:YES];
+    }
+    else if (0 < self.listArray.count && self.listArray.count <= 2)
+    {
+        [self.pageControl setHidden:NO];
         self.pageControl.numberOfPages = 1;
     }
     else if (2 < self.listArray.count && self.listArray.count <= 3)
     {
+        [self.pageControl setHidden:NO];
         self.pageControl.numberOfPages = 2;
     }
     else
     {
+        [self.pageControl setHidden:NO];
         self.pageControl.numberOfPages = 3;
     }
     [self refreshCurrentPageControl];
@@ -95,7 +108,7 @@
     {
         self.pageControl.currentPage = 0;
     }
-    else if (index.item == self.listArray.count - 2)
+    else if (index.item == self.listArray.count - 2 && self.pageControl.numberOfPages == 3)
     {
         self.pageControl.currentPage = 2;
     }
@@ -125,6 +138,8 @@
             {
                 [self segmentedControl:self.segmentedControl];
             }
+            [self.segmentedControl setTitle:[NSString stringWithFormat:@"Friends (%lu)",(unsigned long)self.profile.friends.count] forSegmentAtIndex:0];
+            [self.segmentedControl setTitle:[NSString stringWithFormat:@"Pendings (%lu)",(unsigned long)self.profile.pendingFriends.count] forSegmentAtIndex:1];
             [Group getCurrentGroupsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error)
             {
                 if (!error)
@@ -134,10 +149,7 @@
                     {
                         [self segmentedControl:self.segmentedControl];
                     }
-                    [self.segmentedControl setTitle:[NSString stringWithFormat:@"Friends (%d)",self.profile.friends.count] forSegmentAtIndex:0];
-                    [self.segmentedControl setTitle:[NSString stringWithFormat:@"Pendings (%d)",self.profile.pendingFriends.count] forSegmentAtIndex:1];
-                    [self.segmentedControl setTitle:[NSString stringWithFormat:@"Groups (%d)",self.groupListArray.count] forSegmentAtIndex:2];
-                    [self refreshNumberOfPageControl];
+                    [self.segmentedControl setTitle:[NSString stringWithFormat:@"Groups (%lu)",(unsigned long)self.groupListArray.count] forSegmentAtIndex:2];
                 }
                 else
                 {
@@ -228,6 +240,13 @@
         self.listArray = self.groupListArray;
     }
     [self.collectionView reloadData];
+    if (self.listArray.count > 0)
+    {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
+        [self.collectionView scrollToItemAtIndexPath:indexPath
+                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                            animated:YES];
+    }
     [self refreshNumberOfPageControl];
 }
 
@@ -322,6 +341,7 @@
     {
         UserDetailViewController *udvc = segue.destinationViewController;
         udvc.profile = sender;
+        udvc.currentProfile = self.profile;
     }
 }
 

@@ -19,6 +19,10 @@
 {
     [super viewDidLoad];
     [self.logInView setLogo:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo.png"]]];
+    self.logInView.backgroundColor = [UIColor colorWithRed:(243.0/255.0)
+                                                     green:(243.0/255.0)
+                                                      blue:(243.0/255.0)
+                                                     alpha:1.0f];
 }
 
 - (void)viewDidLayoutSubviews

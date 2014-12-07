@@ -13,6 +13,7 @@
 @class Profile;
 
 typedef void(^searchCurrentProfileBlock)(Profile *profile, NSError *error);
+typedef void(^searchProfileBlock)(Profile *profile, NSError *error);
 
 @interface Profile : PFObject <PFSubclassing>
 
@@ -33,7 +34,7 @@ typedef void(^searchCurrentProfileBlock)(Profile *profile, NSError *error);
 @property (nonatomic, strong) NSArray *isMessaging;
 @property (nonatomic, strong) NSArray *isGroupMessaging;
 
-
 + (void) getCurrentProfileWithCompletion:(searchCurrentProfileBlock)complete;
++ (void) getProfileWithProfileId:(NSString *)profileId withCompletion:(searchProfileBlock)complete;
 
 @end

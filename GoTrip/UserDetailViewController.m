@@ -9,6 +9,7 @@
 #import "UserDetailViewController.h"
 #import "CustomCollectionViewCell.h"
 #import "ChatViewController.h"
+#import "GroupDetailViewController.h"
 #import "Comment.h"
 
 @interface UserDetailViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate>
@@ -19,7 +20,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *memoLabel;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *relationButton;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
-@property Profile *currentProfile;
 @property BOOL isFriend;
 @property BOOL isPending;
 @property BOOL isRequesting;
@@ -37,8 +37,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
-    self.collectionView.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
+    self.view.backgroundColor = [UIColor colorWithRed:(243.0/255.0)
+                                                green:(243.0/255.0)
+                                                 blue:(243.0/255.0)
+                                                alpha:1.0f];
+    self.collectionView.backgroundColor = [UIColor colorWithRed:(243.0/255.0)
+                                                          green:(243.0/255.0)
+                                                           blue:(243.0/255.0)
+                                                          alpha:1.0f];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -49,13 +55,41 @@
 
 - (void)refreshNumberOfPageControl
 {
-    if (self.arrayOfComment.count < 3)
+    if (self.segmentedControl.selectedSegmentIndex == 1)
     {
-        self.pageControl.numberOfPages = self.arrayOfComment.count;
+        if (self.listArray.count == 0)
+        {
+            [self.pageControl setHidden:YES];
+        }
+        else if (0 < self.listArray.count && self.listArray.count < 3)
+        {
+            [self.pageControl setHidden:NO];
+            self.pageControl.numberOfPages = self.listArray.count;
+        }
+        else
+        {
+            [self.pageControl setHidden:NO];
+            self.pageControl.numberOfPages = 3;
+        }
     }
     else
     {
-        self.pageControl.numberOfPages = 3;
+        if (self.listArray.count == 0)
+        {
+            [self.pageControl setHidden:YES];
+        }
+        else if (0 < self.listArray.count && self.listArray.count <= 2)
+        {
+            self.pageControl.numberOfPages = 1;
+        }
+        else if (2 < self.listArray.count && self.listArray.count <= 3)
+        {
+            self.pageControl.numberOfPages = 2;
+        }
+        else
+        {
+            self.pageControl.numberOfPages = 3;
+        }
     }
     [self refreshCurrentPageControl];
 }
@@ -64,54 +98,92 @@
 {
     NSArray *array = [self.collectionView indexPathsForVisibleItems];
     NSIndexPath *index = array.firstObject;
-    if (index.item == 0)
+    if (self.segmentedControl.selectedSegmentIndex == 1)
     {
-        self.pageControl.currentPage = 0;
-    }
-    else if (index.item == self.arrayOfComment.count - 1)
-    {
-        self.pageControl.currentPage = 2;
+        if (index.item == 0)
+        {
+            self.pageControl.currentPage = 0;
+        }
+        else if (index.item == self.listArray.count - 1)
+        {
+            self.pageControl.currentPage = 2;
+        }
+        else
+        {
+            self.pageControl.currentPage = 1;
+        }
     }
     else
     {
-        self.pageControl.currentPage = 1;
+        if (index.item == 0)
+        {
+            self.pageControl.currentPage = 0;
+        }
+        else if (index.item == self.listArray.count - 2 && self.pageControl.numberOfPages == 3)
+        {
+            self.pageControl.currentPage = 2;
+        }
+        else
+        {
+            self.pageControl.currentPage = 1;
+        }
     }
 }
 
 - (void)refreshView
 {
-    [Comment getCurrentCommentsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error) {
+    [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:15.0f withBorderColor:[UIColor blackColor].CGColor];
+    self.nameLabel.text = self.profile.firstName;
+    self.memoLabel.text = self.profile.memo;
+    [Profile getProfileWithProfileId:self.profile.objectId withCompletion:^(Profile *profile, NSError *error) {
         if (!error)
         {
-            self.arrayOfComment = objects;
-            [self.collectionView reloadData];
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
-            [self.collectionView scrollToItemAtIndexPath:indexPath
-                                        atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                                animated:YES];
-            [self refreshNumberOfPageControl];
+            self.arrayOfFriend = profile.friends;
+            if (self.segmentedControl.selectedSegmentIndex == 0)
+            {
+                [self changeListOnSegmentControl:self.segmentedControl];
+            }
+            [self.segmentedControl setTitle:[NSString stringWithFormat:@"Friends (%lu)",(unsigned long)self.profile.friends.count] forSegmentAtIndex:0];
         }
         else
         {
             [self error:error];
         }
     }];
-    [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:15.0f withBorderColor:[UIColor blackColor].CGColor];
-    self.nameLabel.text = self.profile.firstName;
-    self.memoLabel.text = self.profile.memo;
-    [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error)
+
+    [Comment getCurrentCommentsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error) {
+        if (!error)
+        {
+            self.arrayOfComment = objects;
+            if (self.segmentedControl.selectedSegmentIndex == 1)
+            {
+                [self changeListOnSegmentControl:self.segmentedControl];
+            }
+            [self.segmentedControl setTitle:[NSString stringWithFormat:@"Comments (%lu)",(unsigned long)self.arrayOfComment.count] forSegmentAtIndex:1];
+        }
+        else
+        {
+            [self error:error];
+        }
+    }];
+    [Group getCurrentGroupsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error)
      {
          if (!error)
          {
-             self.currentProfile = profile;
-            [self checkRelationStatus];
-            [self switchButtonTitleBasedOnRelationStatus];
+             self.arrayOfGroup = objects;
+             if (self.segmentedControl.selectedSegmentIndex == 2)
+             {
+                 [self changeListOnSegmentControl:self.segmentedControl];
+             }
+             [self.segmentedControl setTitle:[NSString stringWithFormat:@"Groups (%lu)",(unsigned long)self.arrayOfGroup.count] forSegmentAtIndex:2];
          }
          else
          {
              [self error:error];
          }
      }];
+    [self checkRelationStatus];
+    [self switchButtonTitleBasedOnRelationStatus];
 }
 
 //MARK: custom relation status checking method
@@ -271,8 +343,12 @@
                                                  if (!error)
                                                  {
                                                      self.arrayOfComment = objects;
-                                                     [self.collectionView reloadData];
-                                                     [self refreshNumberOfPageControl];
+                                                     if (self.segmentedControl.selectedSegmentIndex == 1)
+                                                     {
+                                                         [self changeListOnSegmentControl:self.segmentedControl];
+                                                     }
+                                                     [self.segmentedControl setTitle:[NSString stringWithFormat:@"Comments (%lu)",(unsigned long)self.arrayOfComment.count] forSegmentAtIndex:1];
+
                                                  }
                                                  else
                                                  {
@@ -288,6 +364,36 @@
                                 }];
     [alert addAction:addAction];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (IBAction)segueToChatOnButtonPressed:(UIButton *)sender
+{
+    [self performSegueWithIdentifier:@"chatSegue" sender:self.profile];
+}
+
+- (IBAction)changeListOnSegmentControl:(UISegmentedControl *)sender
+{
+    if (sender.selectedSegmentIndex == 0)
+    {
+        self.listArray = self.arrayOfFriend;
+    }
+    else if (sender.selectedSegmentIndex == 1)
+    {
+        self.listArray = self.arrayOfComment;
+    }
+    else
+    {
+        self.listArray = self.arrayOfGroup;
+    }
+    [self.collectionView reloadData];
+    if (self.listArray.count > 0)
+    {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
+        [self.collectionView scrollToItemAtIndexPath:indexPath
+                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                            animated:YES];
+    }
+    [self refreshNumberOfPageControl];
 }
 
 //MARK: custom imageView method
@@ -306,23 +412,43 @@
 //MARK: collectionview delegate
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.arrayOfComment.count;
+    return self.listArray.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-    Comment *comment = self.arrayOfComment[indexPath.item];
-    cell.textView.text = comment.text;
-    [self setImageView:cell.backgroundImageView withData:nil withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
-    [self setImageView:cell.imageView withData:comment.sender.avatarData withLayerRadius:cell.imageView.frame.size.width/2 withBorderColor:[UIColor whiteColor].CGColor];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"MM/dd/yyyy"];
-    NSString *stringOfDate = [dateFormatter stringFromDate:comment.createdAt];
-    cell.nameLabel.text = [NSString stringWithFormat:@"by %@ %@", comment.sender.firstName, stringOfDate];
-    return cell;
+    if (self.segmentedControl.selectedSegmentIndex == 0)
+    {
+        CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"listCell" forIndexPath:indexPath];
+        Profile *profile = self.listArray[indexPath.item];
+        [self setImageView:cell.imageView withData:profile.avatarData withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
+        cell.nameLabel.text = profile.firstName;
+        cell.memoLabel.text = profile.memo;
+        return cell;
+    }
+    else if (self.segmentedControl.selectedSegmentIndex == 1)
+    {
+        CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+        Comment *comment = self.arrayOfComment[indexPath.item];
+        cell.textView.text = comment.text;
+        [self setImageView:cell.backgroundImageView withData:nil withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
+        [self setImageView:cell.imageView withData:comment.sender.avatarData withLayerRadius:cell.imageView.frame.size.width/2 withBorderColor:[UIColor whiteColor].CGColor];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+        NSString *stringOfDate = [dateFormatter stringFromDate:comment.createdAt];
+        cell.nameLabel.text = [NSString stringWithFormat:@"by %@ %@", comment.sender.firstName, stringOfDate];
+        return cell;
+    }
+    else
+    {
+        CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"listCell" forIndexPath:indexPath];
+        Group *group = self.listArray[indexPath.item];
+        [self setImageView:cell.imageView withData:group.imageData withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
+        cell.nameLabel.text = [NSString stringWithFormat:@"%@ (%lu☺︎)",group.name,(unsigned long)group.profiles.count];
+        cell.memoLabel.text = group.destination;
+        return cell;
+    }
 }
-
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
@@ -331,14 +457,35 @@
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    Comment *comment = self.arrayOfComment[indexPath.item];
-    self.profile = comment.sender;
-    [self refreshView];
+    if (self.segmentedControl.selectedSegmentIndex == 2)
+    {
+        Group *group = self.listArray[indexPath.item];
+        [self performSegueWithIdentifier:@"groupSegue" sender:group];
+    }
+    else if (self.segmentedControl.selectedSegmentIndex == 1)
+    {
+        Comment *comment = self.listArray[indexPath.item];
+        self.profile = comment.sender;
+        [self refreshView];
+    }
+    else
+    {
+        Profile *profile = self.listArray[indexPath.item];
+        self.profile = profile;
+        [self refreshView];
+    }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(self.collectionView.frame.size.width - 20.0f, self.collectionView.frame.size.height*0.7);
+    if (self.segmentedControl.selectedSegmentIndex == 1)
+    {
+        return CGSizeMake(self.collectionView.frame.size.width - 20.0f, self.collectionView.frame.size.width*0.5 + 10.0f);
+    }
+    else
+    {
+        return CGSizeMake(self.collectionView.frame.size.width*0.5 - 20.0f, self.collectionView.frame.size.width*0.5 + 10.0f);
+    }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
@@ -358,8 +505,17 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    ChatViewController *cvc = segue.destinationViewController;
-    cvc.passedRecipient = self.profile;
+    if ([segue.identifier isEqual:@"chatSegue"])
+    {
+        ChatViewController *cvc = segue.destinationViewController;
+        cvc.passedRecipient = sender;
+    }
+    else
+    {
+        GroupDetailViewController *gdvc = segue.destinationViewController;
+        gdvc.group = sender;
+        gdvc.currentProfile = self.profile;
+    }
 }
 
 //MARK: UIAlert

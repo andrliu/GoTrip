@@ -12,5 +12,6 @@
 @interface UserDetailViewController : UIViewController
 
 @property Profile *profile;
+@property Profile *currentProfile;
 
 @end

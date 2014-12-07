@@ -57,7 +57,25 @@
              complete(nil,error);
          }
      }];
-
 }
+
++ (void) getProfileWithProfileId:(NSString *)profileId withCompletion:(searchProfileBlock)complete
+{
+    PFQuery *profileQuery = [self query];
+    [profileQuery includeKey:@"friends"];
+    [profileQuery getObjectInBackgroundWithId:profileId block:^(PFObject *object, NSError *error)
+     {
+         if (!error)
+         {
+             Profile *profile = (Profile *)object;
+             complete(profile,nil);
+         }
+         else
+         {
+             complete(nil,error);
+         }
+     }];
+}
+
 
 @end
