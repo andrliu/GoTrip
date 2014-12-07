@@ -383,6 +383,8 @@
 {
     GroupCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"collectionCell" forIndexPath:indexPath];
 
+    cell.customImageView.image = [UIImage imageNamed:@"noimage"];
+    
     Photo *photoObj = self.collectionViewArray[indexPath.item];
     PFFile *imageFile = photoObj.imageData;
     [imageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error)
