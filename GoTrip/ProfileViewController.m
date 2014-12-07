@@ -227,12 +227,15 @@
 //MARK: custom segment action
 - (IBAction)segmentedControl:(UISegmentedControl *)sender
 {
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"canonicalFirstName" ascending:YES];
     if (sender.selectedSegmentIndex == 0)
     {
+        self.profile.friends = [[self.profile.friends sortedArrayUsingDescriptors:@[sort]] mutableCopy];
         self.listArray = self.profile.friends;
     }
     else if (sender.selectedSegmentIndex == 1)
     {
+        self.profile.pendingFriends = [[self.profile.pendingFriends sortedArrayUsingDescriptors:@[sort]] mutableCopy];
         self.listArray = self.profile.pendingFriends;
     }
     else
