@@ -36,6 +36,7 @@
 + (void) getCurrentGroupsWithCurrentProfile:(Profile *)profile withCompletion:(searchCurrentGroupsBlock)complete
 {
     PFQuery *query = [self query];
+    [query orderByAscending:@"canonicalName"];
     [query includeKey:@"profiles"];
     [query whereKey:@"profiles" equalTo:profile];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
