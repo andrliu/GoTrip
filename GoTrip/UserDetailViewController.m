@@ -138,6 +138,8 @@
     [Profile getProfileWithProfileId:self.profile.objectId withCompletion:^(Profile *profile, NSError *error) {
         if (!error)
         {
+            NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"canonicalFirstName" ascending:YES];
+            profile.friends = [[profile.friends sortedArrayUsingDescriptors:@[sort]] mutableCopy];
             self.arrayOfFriend = profile.friends;
             if (self.segmentedControl.selectedSegmentIndex == 0)
             {
