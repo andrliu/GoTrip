@@ -69,7 +69,7 @@
         //    UIImage *image4 = [UIImage imageNamed:@"chicago"];
         //    self.collectionViewArray = @[image1,image2,image3,image4];
 
-        self.navigationItem.title = self.group.name;
+
     }
     else
     {
@@ -300,6 +300,7 @@
 //            cell.backgroundImageView.image = [UIImage imageWithData:self.group.imageData];
             cell.backgroundImageView.image = [UIImage imageWithData:self.group.imageData];
             [cell.backgroundImageView setClipsToBounds:YES];
+            self.navigationItem.title = self.group.name;
             return cell;
         }
             break;
@@ -524,6 +525,7 @@
     UINavigationController *navVC = [segue destinationViewController];
     GroupEditViewController *editVC = (GroupEditViewController *)navVC.topViewController;
     editVC.group = group;
+    editVC.currentProfile = self.currentProfile;
 }
 
 
