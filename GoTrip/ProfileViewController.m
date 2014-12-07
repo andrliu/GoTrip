@@ -14,7 +14,7 @@
 #import "Profile.h"
 #import "User.h"
 
-@interface ProfileViewController () <UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+@interface ProfileViewController () <UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *firstNameLabel;
@@ -32,6 +32,7 @@
 @property NSArray *friendListArray;
 @property NSArray *pendingFriendListArray;
 @property NSArray *listArray;
+@property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 
 @end
 
@@ -69,6 +70,41 @@
 }
 
 //MARK: custom refresh method
+- (void)refreshNumberOfPageControl
+{
+    if (self.listArray.count <= 2)
+    {
+        self.pageControl.numberOfPages = 1;
+    }
+    else if (2 < self.listArray.count && self.listArray.count <= 3)
+    {
+        self.pageControl.numberOfPages = 2;
+    }
+    else
+    {
+        self.pageControl.numberOfPages = 3;
+    }
+    [self refreshCurrentPageControl];
+}
+
+- (void)refreshCurrentPageControl
+{
+    NSArray *array = [self.collectionView indexPathsForVisibleItems];
+    NSIndexPath *index = array.firstObject;
+    if (index.item == 0)
+    {
+        self.pageControl.currentPage = 0;
+    }
+    else if (index.item == self.listArray.count - 2)
+    {
+        self.pageControl.currentPage = 2;
+    }
+    else
+    {
+        self.pageControl.currentPage = 1;
+    }
+}
+
 - (void)refreshPersonalProfile
 {
     [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error)
@@ -101,6 +137,7 @@
                     [self.segmentedControl setTitle:[NSString stringWithFormat:@"Friends (%d)",self.profile.friends.count] forSegmentAtIndex:0];
                     [self.segmentedControl setTitle:[NSString stringWithFormat:@"Pendings (%d)",self.profile.pendingFriends.count] forSegmentAtIndex:1];
                     [self.segmentedControl setTitle:[NSString stringWithFormat:@"Groups (%d)",self.groupListArray.count] forSegmentAtIndex:2];
+                    [self refreshNumberOfPageControl];
                 }
                 else
                 {
@@ -191,6 +228,7 @@
         self.listArray = self.groupListArray;
     }
     [self.collectionView reloadData];
+    [self refreshNumberOfPageControl];
 }
 
 //MARK: custom imageView method
@@ -234,7 +272,7 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(self.collectionView.frame.size.width*0.4, self.collectionView.frame.size.width*0.4 + 30.0f);
+    return CGSizeMake(self.collectionView.frame.size.width*0.5 - 20.0f, self.collectionView.frame.size.width*0.5 + 10.0f);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
@@ -245,6 +283,11 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
 {
     return CGSizeMake(10.0f, self.collectionView.frame.size.height);
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    return 20.0f;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -259,6 +302,11 @@
         Profile *profile = self.listArray[indexPath.item];
         [self performSegueWithIdentifier:@"friendSegue" sender:profile];
     }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self refreshCurrentPageControl];
 }
 
 //MARK: segue

@@ -18,11 +18,15 @@
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *memoLabel;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *relationButton;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property Profile *currentProfile;
 @property BOOL isFriend;
 @property BOOL isPending;
 @property BOOL isRequesting;
 @property NSArray *arrayOfComment;
+@property NSArray *arrayOfGroup;
+@property NSArray *arrayOfFriend;
+@property NSArray *listArray;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 
 @end
