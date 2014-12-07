@@ -18,6 +18,7 @@ typedef void(^searchCurrentGroupsBlock)(NSArray *objects, NSError *error);
 @property (nonatomic, strong) NSString *canonicalName;
 @property (nonatomic, strong) NSString *destination;
 @property (nonatomic, strong) NSData *imageData;
+@property (nonatomic, strong) PFFile *imageFile;
 @property (nonatomic, strong) NSString *memo;
 @property (nonatomic, strong) Profile *creator;
 @property (nonatomic, strong) NSArray *profiles;

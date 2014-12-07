@@ -15,6 +15,7 @@
 @dynamic canonicalName;
 @dynamic destination;
 @dynamic imageData;
+@dynamic imageFile;
 @dynamic memo;
 @dynamic profiles;
 @dynamic creator;

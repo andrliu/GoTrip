@@ -434,6 +434,7 @@
          else
          {
              self.tableViewArray = [objects mutableCopy];
+
              switch ([[NSNumber numberWithBool:animated]intValue])
              {
                  case 0:
@@ -487,6 +488,45 @@
      }];
     self.addGroupButton.enabled = YES;
     self.addGroupButton.tintColor = nil;
+}
+
+//MARK: helper method converts type File to bytes
+-(void)fileToBytes
+{
+    for (Group *group in self.tableViewArray)
+    {
+//        PFQuery *query = [Group query];
+//        [query whereKey:@"objectId" equalTo:group.objectId];
+
+        PFFile *imageFile = group.imageFile;
+    [imageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error)
+     {
+         if (error)
+         {
+             [self error:error];
+         }
+         else
+         {
+             group.imageData = data;
+             [group saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+             {
+                    if (error)
+                    {
+                        [self error:error];
+                    }
+                     else
+                     {
+                         NSLog(@"file is on the server");
+                     }
+
+            }];
+//             cell.customImageView.image = [UIImage imageWithData:data];
+//             cell.backgroundColor = [UIColor blackColor];
+
+         }
+         
+     }];
+    }
 }
 
 //refresh tableview on down slode
