@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 @class Group;
+@class Profile;
 
 @interface GroupEditViewController : UIViewController
 
 @property Group *group;
+@property Profile *currentProfile;
 
 @end
