@@ -81,9 +81,14 @@
             self.lastNameLabel.text = self.profile.lastName;
             self.memoLabel.text = self.profile.memo;
             self.isImagePickerCalled = NO;
-            self.listArray = self.profile.friends;
-            self.segmentedControl.selectedSegmentIndex = 0;
-            [self.collectionView reloadData];
+            if (self.segmentedControl.selectedSegmentIndex == 0)
+            {
+                [self segmentedControl:self.segmentedControl];
+            }
+            else if (self.segmentedControl.selectedSegmentIndex == 1)
+            {
+                [self segmentedControl:self.segmentedControl];
+            }
             [Group getCurrentGroupsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error)
             {
                 if (!error)
@@ -93,6 +98,9 @@
                     {
                         [self segmentedControl:self.segmentedControl];
                     }
+                    [self.segmentedControl setTitle:[NSString stringWithFormat:@"Friends (%d)",self.profile.friends.count] forSegmentAtIndex:0];
+                    [self.segmentedControl setTitle:[NSString stringWithFormat:@"Pendings (%d)",self.profile.pendingFriends.count] forSegmentAtIndex:1];
+                    [self.segmentedControl setTitle:[NSString stringWithFormat:@"Groups (%d)",self.groupListArray.count] forSegmentAtIndex:2];
                 }
                 else
                 {
@@ -152,7 +160,12 @@
             {
                 [self editMode:NO];
                 sender.title = @"Edit";
-                [self refreshPersonalProfile];
+                [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:15.0f withBorderColor:[UIColor blackColor].CGColor];
+                self.firstNameLabel.text = self.profile.firstName;
+                self.lastNameLabel.text = self.profile.lastName;
+                self.memoLabel.text = self.profile.memo;
+                self.isImagePickerCalled = NO;
+                [self.view endEditing:YES];
             }
             else
             {
