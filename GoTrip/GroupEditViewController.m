@@ -8,6 +8,7 @@
 
 #import "GroupEditViewController.h"
 #import "Group.h"
+#import "Profile.h"
 
 @interface GroupEditViewController ()
 
@@ -58,16 +59,93 @@
         self.group.destination = @"undecided";
     }
 
+//    self.group.creator;
+    //for new group creation
     [self.group saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
     {
         if (error)
         {
             [self errorAlertWindow:error.localizedDescription];
         }
+        else
+        {
+            Group *group = [Group objectWithoutDataWithClassName:@"Group" objectId:self.group.objectId];
+
+//check is the group is in isGroupMessagin array and add if not
+            NSInteger groupIndex = [self isInGroupMessaging:group profile:self.currentProfile];
+            if (groupIndex == -1)
+            {
+                self.currentProfile.isGroupMessaging = [self addObjectId:group inArray:self.currentProfile.isGroupMessaging];
+
+                [self.currentProfile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                {
+                    if (error)
+                    {
+                        [self errorAlertWindow:error.localizedDescription];
+                    }
+                    else
+                    {
+                        [self dismissViewControllerAnimated:YES completion:nil];
+                        NSLog(@"profile save complete");
+                    }
+                }];
+
+            }
+//            [self dismissViewControllerAnimated:YES completion:nil];
+            else
+            {
+            NSLog(@"group is already in isGroupMessaging");
+            [self dismissViewControllerAnimated:YES completion:nil];
+            }
+
+        }
+
     }];
 
-    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
+-(NSInteger)isInGroupMessaging:(Group *)group profile:(Profile *)profile
+{
+
+    NSInteger i=0;
+    NSInteger objectIndex = -1;
+    for (Group *groupForProfile in profile.isGroupMessaging)
+    {
+        if ([groupForProfile.objectId isEqualToString:group.objectId])
+        {
+            objectIndex = i;
+
+            break;
+        }
+        else
+        {
+            if (i>profile.isGroupMessaging.count)
+            {
+                break;
+            }
+            else
+            {
+                i++;
+            }
+        }
+
+    }
+    return objectIndex;
+}
+
+
+- (NSArray *)addObjectId:(PFObject *)Object inArray:(NSArray *)array
+{
+    if (array.count == 0)
+    {
+        return @[Object];
+    }
+    else
+    {
+        NSMutableArray *groupArray = [array mutableCopy];
+        [groupArray addObject:Object];
+        return groupArray;
+    }
 }
 
 
@@ -129,6 +207,22 @@
                                                       style:UIAlertActionStyleDefault
                                                     handler:^(UIAlertAction *action)
                                                     {
+                                                        NSMutableArray *groupArray = [self.currentProfile.isGroupMessaging mutableCopy];
+                                                        NSInteger profileIndex = [self isInGroupMessaging:self.group profile:self.currentProfile];
+                                                        if (profileIndex != -1)
+                                                        {
+                                                            [groupArray removeObjectAtIndex:profileIndex];
+                                                            self.currentProfile.isGroupMessaging = groupArray;
+                                                            [self.currentProfile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                                                             {
+                                                                 if (error)
+                                                                 {
+                                                                     [self errorAlertWindow:error.localizedDescription];
+                                                                 }
+                                                             }];
+
+                                                        }
+
                                                         [self.group deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
                                                         {
                                                             if (error)
@@ -139,8 +233,8 @@
                                                             {
                                                                 [self performSegueWithIdentifier:@"goHomeSegue" sender:nil];
                                                             }
+                                                            
                                                         }];
-
 
                                                     }];
     UIAlertAction *cancell = [UIAlertAction actionWithTitle:@"No"
