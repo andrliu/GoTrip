@@ -24,6 +24,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *lastNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *memoTextField;
 @property (weak, nonatomic) IBOutlet UIButton *imageButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property Profile *profile;
@@ -58,7 +60,8 @@
     if (!self.isImagePickerCalled)
     {
         [self editMode:NO];
-        self.navigationItem.rightBarButtonItem.title = @"Edit";
+        self.editButton.title = @"Edit";
+        self.cancelButton.title = @"Logout";
         [self refreshPersonalProfile];
     }
     else
@@ -70,9 +73,20 @@
 //MARK: user logout
 - (IBAction)logOutOnButtonPressed:(UIBarButtonItem *)sender
 {
-    self.isImagePickerCalled = NO;
-    self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:0];
-    [PFUser logOut];
+    if ([sender.title isEqual: @"Logout"])
+    {
+        self.isImagePickerCalled = NO;
+        self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:0];
+        [PFUser logOut];
+    }
+    else
+    {
+        [self editMode:NO];
+        sender.title = @"Logout";
+        self.editButton.title = @"Edit";
+        self.isImagePickerCalled = NO;
+        [self.view endEditing:YES];
+    }
 }
 
 //MARK: custom refresh method
@@ -195,6 +209,7 @@
         self.memoTextField.text = self.profile.memo;
         [self editMode:YES];
         sender.title = @"Save";
+        self.cancelButton.title = @"Cancel";
     }
     else
     {
@@ -209,6 +224,7 @@
             {
                 [self editMode:NO];
                 sender.title = @"Edit";
+                self.cancelButton.title = @"Logout";
                 [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:15.0f withBorderColor:[UIColor blackColor].CGColor];
                 self.firstNameLabel.text = self.profile.firstName;
                 self.lastNameLabel.text = self.profile.lastName;
