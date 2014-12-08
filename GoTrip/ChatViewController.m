@@ -100,7 +100,7 @@
             [group findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                 
                 self.passedGroup = objects.firstObject;
-                self.navigationItem.title = self.passedGroup.canonicalName;
+                self.navigationItem.title = self.passedGroup.name;
                 
                 [self loadLocalChat];
                 

@@ -161,12 +161,13 @@
     {
         
         Group *linkedGroup = self.arrayOfGroupMessages[indexPath.row];
+        
         //        PFQuery *group = [Group query];
         //        [group whereKey:@"objectId" equalTo:linkedGroup.objectId];
         //        [group findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         //            Group *tempGroup = objects.firstObject;
         //            if (tempGroup != nil) {
-        cell.textLabel.text = [NSString stringWithFormat:@"%@",linkedGroup.name ];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ : %@",linkedGroup.name, linkedGroup.destination ];
         //            }
         //            else{
         //                cell.textLabel.text = @"Deleted group";
