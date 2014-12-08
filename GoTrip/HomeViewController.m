@@ -66,7 +66,7 @@
     }
 
 
-    [self refreshDisplay:nil];
+//    [self refreshDisplay:nil];
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refreshDisplay:) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:refreshControl];
@@ -97,6 +97,7 @@
         [self checkUserProfileAccountExisted];
         [self updateInstallationWith:[PFUser currentUser]];
     }
+    [self refreshDisplay:nil];
 //    [self refreshDisplay:nil];
 //    if (self.segmentedComtrol.selectedSegmentIndex == 1)
 //    {
@@ -145,6 +146,7 @@
 - (void)checkUserProfileAccountExisted
 {
     [Profile checkForProfile:^(Profile *profile, NSError *error)
+//[Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error)
     {
         if (!error || error.code == kPFErrorObjectNotFound)
         {

@@ -44,7 +44,7 @@
     {
     PFQuery *profileQuery = [self query];
     [profileQuery whereKey:@"user" equalTo:[User currentUser]];
-    [profileQuery selectKeys:@[]];
+//    [profileQuery selectKeys:@[]];
     [profileQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error)
      {
          if (!error)
