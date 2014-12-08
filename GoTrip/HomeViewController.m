@@ -66,7 +66,7 @@
     }
 
 
-//    [self refreshDisplay:nil];
+    [self refreshDisplay:nil];
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refreshDisplay:) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:refreshControl];
@@ -85,6 +85,8 @@
         [self checkUserProfileAccountExisted];
         [self updateInstallationWith:[PFUser currentUser]];
     }
+
+//    [self refreshDisplay:nil];
 
     if (self.selectedIndexPath)
     {

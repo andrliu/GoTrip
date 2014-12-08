@@ -32,6 +32,38 @@
 {
     [super viewDidLoad];
 
+    [self checkForGroupAccess];
+
+    PFQuery *query = [Group query];
+    [query getObjectInBackgroundWithId:self.group.objectId block:^(PFObject *object, NSError *error)
+    {
+        if (error)
+        {
+            [self errorAlertWindow:error.localizedDescription];
+        }
+        else
+        {
+            Group *group = (Group *)object;
+            if (self.group.profiles.count != group.profiles.count)
+            {
+            self.group = (Group *)object;
+            [self checkForGroupAccess];
+            }
+        }
+    }];
+
+
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+
+
+}
+
+-(void)checkForGroupAccess
+{
     //TODO: CHECK FOR THE GROUP != nil !!
     if ([self.group.creator.objectId isEqualToString:self.currentProfile.objectId])
     {
@@ -76,6 +108,7 @@
     {
         [self performSegueWithIdentifier:@"editSegue" sender:self.group];
     }
+
 }
 
 -(void)showJoinButtonIfNotInGroup
