@@ -26,6 +26,7 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *addGroupButton;
 @property Profile *currentProfile;
 @property NSIndexPath *selectedIndexPath;
+@property Group *testGroup;
 
 @end
 
@@ -680,23 +681,27 @@
 //    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
 //    Group *group = self.tableViewArray[indexPath.row];
         detailVC.indexPath = self.selectedIndexPath;
-        detailVC.group = sender;
+        self.testGroup = sender;
+        detailVC.group = self.testGroup;
         detailVC.currentProfile = self.currentProfile;
 }
 
 - (IBAction)unwindToThisViewController:(UIStoryboardSegue *)unwindSegue
 {
    //groupEditViewController jumps here is the group has been deleted
-    switch (self.segmentedComtrol.selectedSegmentIndex)
+    if (self.testGroup.objectId)
     {
-        case 0:
-            [self queryForFeaturedGroups:NO];
-            break;
-        case 1:
-            [self queryForAllGroups:NO];
-            break;
-        default:
-            break;
+        switch (self.segmentedComtrol.selectedSegmentIndex)
+        {
+            case 0:
+                [self queryForFeaturedGroups:NO];
+                break;
+            case 1:
+                [self queryForAllGroups:NO];
+                break;
+            default:
+                break;
+        }
     }
 //    self.segmentedComtrol.selectedSegmentIndex = 1;
 //    [self queryForAllGroups:NO];
