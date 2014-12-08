@@ -54,7 +54,7 @@
 
     if (self.navigationItem)
     {
-        CGRect frame = CGRectMake(-22.0, 0.0, 30.0, self.navigationController.navigationBar.bounds.size.height);
+        CGRect frame = CGRectMake(-20.0, 0.0, 40.0, self.navigationController.navigationBar.bounds.size.height);
         SINavigationMenuView *menu = [[SINavigationMenuView alloc] initWithFrame:frame title:@""];
         //Set in which view we will display a menu
         [menu displayMenuInView:self.view];
