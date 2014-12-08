@@ -254,8 +254,11 @@
 
 - (void)logInViewController:(LoginViewController *)logInController didLogInUser:(PFUser *)user
 {
-    [self updateInstallationWith:user];
     [self dismissViewControllerAnimated:YES completion:NULL];
+    self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
+    self.segmentedComtrol.selectedSegmentIndex = 0;
+    [self segmentedControlValueChanged:self.segmentedComtrol];
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 - (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error
@@ -327,8 +330,11 @@
     {
         if (!error)
         {
-            [self updateInstallationWith:user];
             [self dismissViewControllerAnimated:YES completion:NULL];
+            self.tabBarController.selectedViewController=[self.tabBarController.viewControllers objectAtIndex:0];
+            self.segmentedComtrol.selectedSegmentIndex = 0;
+            [self segmentedControlValueChanged:self.segmentedComtrol];
+            [self.navigationController popViewControllerAnimated:NO];
         }
         else
         {
