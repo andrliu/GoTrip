@@ -71,18 +71,6 @@
     [refreshControl addTarget:self action:@selector(refreshDisplay:) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:refreshControl];
 
-//TODO: remove example group from here
-//    PFQuery *query = [Group query];
-//    [query getObjectInBackgroundWithId:@"Zs30vE5wdx" block:^(PFObject *object, NSError *error)
-//    {
-//        Group *testGroup = (Group *)object;
-//
-//        self.tableViewArray = @[testGroup];
-//        [self.tableView reloadData];
-//        
-//    }];
-
-//    [self queryForFeaturedGroups:YES];
 //    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:(247.0/255.0) green:(247/255.0) blue:(247/255.0) alpha:1.0f];
 //    self.tabBarController.tabBar.barTintColor = [UIColor colorWithRed:(100.0/255.0) green:(100.0/255.0) blue:(100.0/255.0) alpha:1.0f];
     self.tableView.tableFooterView = [[UIView alloc] init] ;
@@ -97,15 +85,7 @@
         [self checkUserProfileAccountExisted];
         [self updateInstallationWith:[PFUser currentUser]];
     }
-//    [self refreshDisplay:nil];
-//    if (self.segmentedComtrol.selectedSegmentIndex == 1)
-//    {
-//        [self queryForAllGroups:NO];
-//    }
-//    else
-//    {
-//        [self queryForFeaturedGroups:NO];
-//    }
+
     if (self.selectedIndexPath)
     {
         [self.tableView reloadRowsAtIndexPaths:@[self.selectedIndexPath] withRowAnimation:UITableViewRowAnimationRight];
