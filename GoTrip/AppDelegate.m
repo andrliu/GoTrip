@@ -126,8 +126,8 @@
             
             UINavigationController *navigationController = tabBarVC.childViewControllers[1];
 //            [navigationController popToViewController:messageVC animated:YES];
-            [navigationController popToRootViewControllerAnimated:YES];
-            [navigationController pushViewController:chatVC animated:YES];
+            [navigationController popToRootViewControllerAnimated:NO];
+            [navigationController pushViewController:chatVC animated:NO];
             
             self.groupId = nil;
         }];
@@ -154,8 +154,8 @@
 
             UINavigationController *navigationController = tabBarVC.childViewControllers[1];
             //            [navigationController popToViewController:messageVC animated:YES];
-            [navigationController popToRootViewControllerAnimated:YES];
-            [navigationController pushViewController:chatVC animated:YES];
+            [navigationController popToRootViewControllerAnimated:NO];
+            [navigationController pushViewController:chatVC animated:NO];
             
             
             self.profileId = nil;
