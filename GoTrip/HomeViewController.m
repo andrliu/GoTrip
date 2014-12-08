@@ -38,23 +38,23 @@
     [super viewDidLoad];
 
     //quick check for the profile for access privileges
-    [Profile checkForProfile:^(Profile *profile, NSError *error)
-    {
-        if (error)
-        {
-            NSLog(@"no profile found for the user");
-        }
-        else
-        {
-            self.currentProfile = profile;
-        }
-    }];
+//    [Profile checkForProfile:^(Profile *profile, NSError *error)
+//    {
+//        if (error)
+//        {
+//            NSLog(@"no profile found for the user");
+//        }
+//        else
+//        {
+//            self.currentProfile = profile;
+//        }
+//    }];
 
     self.tableViewArray = [NSMutableArray array];
 
     if (self.navigationItem)
     {
-        CGRect frame = CGRectMake(-8.0, 0.0, 30.0, self.navigationController.navigationBar.bounds.size.height);
+        CGRect frame = CGRectMake(-22.0, 0.0, 30.0, self.navigationController.navigationBar.bounds.size.height);
         SINavigationMenuView *menu = [[SINavigationMenuView alloc] initWithFrame:frame title:@""];
         //Set in which view we will display a menu
         [menu displayMenuInView:self.view];
@@ -92,7 +92,11 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
+    if ([PFUser currentUser])
+    {
+        [self checkUserProfileAccountExisted];
+        [self updateInstallationWith:[PFUser currentUser]];
+    }
 //    [self refreshDisplay:nil];
 //    if (self.segmentedComtrol.selectedSegmentIndex == 1)
 //    {
@@ -112,21 +116,24 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self checkCurrentUser];
-}
-
-- (void)checkCurrentUser
-{
     if (![PFUser currentUser])
     {
         [self presentLoginView];
     }
-    else
-    {
-        [self checkUserProfileAccountExisted];
-        [self updateInstallationWith:[PFUser currentUser]];
-    }
 }
+
+//- (void)checkCurrentUser
+//{
+//    if (![PFUser currentUser])
+//    {
+//        [self presentLoginView];
+//    }
+//    else
+//    {
+//        [self checkUserProfileAccountExisted];
+//        [self updateInstallationWith:[PFUser currentUser]];
+//    }
+//}
 
 - (void)updateInstallationWith:(PFUser *)user
 {
@@ -137,7 +144,7 @@
 
 - (void)checkUserProfileAccountExisted
 {
-    [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error)
+    [Profile checkForProfile:^(Profile *profile, NSError *error)
     {
         if (!error || error.code == kPFErrorObjectNotFound)
         {
@@ -149,6 +156,7 @@
             else
             {
                 [self loadFacebookData];
+                NSLog(@"no profile found for the user");
             }
         }
         else
@@ -319,6 +327,7 @@
     {
         if (!error)
         {
+            [self updateInstallationWith:user];
             [self dismissViewControllerAnimated:YES completion:NULL];
         }
         else
@@ -423,7 +432,10 @@
 {
     if (sControl.selectedSegmentIndex==1)
     {
-        [self checkCurrentUser];
+        if (![PFUser currentUser])
+        {
+            [self presentLoginView];
+        }
         [self queryForAllGroups:YES];
     }
     else

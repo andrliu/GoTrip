@@ -77,6 +77,9 @@
     {
         self.isImagePickerCalled = NO;
         self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:0];
+        PFInstallation *installation = [PFInstallation currentInstallation];
+        [installation removeObjectForKey:@"user"];
+        [installation saveInBackground];
         [PFUser logOut];
     }
     else
