@@ -48,14 +48,14 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellId];
     }
     
-    cell.textLabel.text = [NSString stringWithFormat:@"Cell %d",indexPath.row];
+    cell.textLabel.text = [NSString stringWithFormat:@"Cell %ld",(long)indexPath.row];
     
     return cell;
 }
 
 - (void)didSelectItemAtIndex:(NSUInteger)index
 {
-    NSLog(@"did selected item at index %d", index);
+    NSLog(@"did selected item at index %lu", (unsigned long)index);
 }
 
 - (void)didReceiveMemoryWarning

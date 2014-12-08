@@ -36,17 +36,24 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
+    //quick check for the profile for access privileges
+    [Profile checkForProfile:^(Profile *profile, NSError *error)
+    {
+        if (error)
+        {
+            NSLog(@"no profile found for the user");
+        }
+        else
+        {
+            self.currentProfile = profile;
+        }
+    }];
+
     self.tableViewArray = [NSMutableArray array];
-//        if (self.segmentedComtrol.selectedSegmentIndex == 1)
-//        {
-//            [self queryForAllGroups:YES];
-//        }
-//        else
-//        {
-//            [self queryForFeaturedGroups:YES];
-//        }
-    if (self.navigationItem) {
+
+    if (self.navigationItem)
+    {
         CGRect frame = CGRectMake(-8.0, 0.0, 30.0, self.navigationController.navigationBar.bounds.size.height);
         SINavigationMenuView *menu = [[SINavigationMenuView alloc] initWithFrame:frame title:@""];
         //Set in which view we will display a menu
@@ -55,7 +62,7 @@
         menu.items = @[@"Group Name", @"Destination", @"Departure Date"];
         menu.delegate = self;
         UIBarButtonItem *leftLabelBarButton = [[UIBarButtonItem alloc] initWithCustomView:menu];
-        self.navigationItem.leftBarButtonItems = @[leftLabelBarButton];
+        self.navigationItem.leftBarButtonItem = leftLabelBarButton;
     }
 
 
@@ -401,12 +408,13 @@
 }
 
 
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
      if ([[self.tableViewArray[indexPath.row] allKeys] containsObject:@"imageData"])
      {
-    Group *selectedGroup = self.tableViewArray[indexPath.row];
-    [self performSegueWithIdentifier:@"groupDetailSegue" sender:selectedGroup];
+        Group *selectedGroup = self.tableViewArray[indexPath.row];
+        [self performSegueWithIdentifier:@"groupDetailSegue" sender:selectedGroup];
          self.selectedIndexPath = indexPath;
      }
 }

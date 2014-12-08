@@ -38,6 +38,29 @@
     return @"Profile";
 }
 
++ (void) checkForProfile:(searchCurrentProfileBlock)complete
+{
+    if ([User currentUser])
+    {
+    PFQuery *profileQuery = [self query];
+    [profileQuery whereKey:@"user" equalTo:[User currentUser]];
+    [profileQuery selectKeys:@[]];
+    [profileQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error)
+     {
+         if (!error)
+         {
+             Profile *profile = (Profile *)object;
+             complete(profile,nil);
+         }
+         else
+         {
+             complete(nil,error);
+         }
+     }];
+    }
+}
+
+
 + (void) getCurrentProfileWithCompletion:(searchCurrentProfileBlock)complete
 {
     PFQuery *profileQuery = [self query];
