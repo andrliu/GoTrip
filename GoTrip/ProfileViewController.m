@@ -137,48 +137,59 @@
 
 - (void)refreshPersonalProfile
 {
-    [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error)
+    [Profile checkForProfile:^(Profile *profile, NSError *error)
     {
-        if (!error)
-        {
-            self.profile = profile;
-            [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:15.0f withBorderColor:[UIColor blackColor].CGColor];
-            self.firstNameLabel.text = self.profile.firstName;
-            self.lastNameLabel.text = self.profile.lastName;
-            self.memoLabel.text = self.profile.memo;
-            self.isImagePickerCalled = NO;
-            if (self.segmentedControl.selectedSegmentIndex == 0)
-            {
-                [self segmentedControl:self.segmentedControl];
-            }
-            else if (self.segmentedControl.selectedSegmentIndex == 1)
-            {
-                [self segmentedControl:self.segmentedControl];
-            }
-            [self.segmentedControl setTitle:[NSString stringWithFormat:@"Friends (%lu)",(unsigned long)self.profile.friends.count] forSegmentAtIndex:0];
-            [self.segmentedControl setTitle:[NSString stringWithFormat:@"Pendings (%lu)",(unsigned long)self.profile.pendingFriends.count] forSegmentAtIndex:1];
-            [Group getCurrentGroupsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error)
+         if (!error)
+         {
+             self.profile = profile;
+             [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:15.0f withBorderColor:[UIColor blackColor].CGColor];
+             self.firstNameLabel.text = self.profile.firstName;
+             self.lastNameLabel.text = self.profile.lastName;
+             self.memoLabel.text = self.profile.memo;
+             self.isImagePickerCalled = NO;
+            [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error)
             {
                 if (!error)
                 {
-                    self.groupListArray = objects;
-                    if (self.segmentedControl.selectedSegmentIndex == 2)
+                    self.profile = profile;
+                    if (self.segmentedControl.selectedSegmentIndex == 0)
                     {
                         [self segmentedControl:self.segmentedControl];
                     }
-                    [self.segmentedControl setTitle:[NSString stringWithFormat:@"Groups (%lu)",(unsigned long)self.groupListArray.count] forSegmentAtIndex:2];
+                    else if (self.segmentedControl.selectedSegmentIndex == 1)
+                    {
+                        [self segmentedControl:self.segmentedControl];
+                    }
+                    [self.segmentedControl setTitle:[NSString stringWithFormat:@"Friends (%lu)",(unsigned long)self.profile.friends.count] forSegmentAtIndex:0];
+                    [self.segmentedControl setTitle:[NSString stringWithFormat:@"Pendings (%lu)",(unsigned long)self.profile.pendingFriends.count] forSegmentAtIndex:1];
+                    [Group getCurrentGroupsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error)
+                    {
+                        if (!error)
+                        {
+                            self.groupListArray = objects;
+                            if (self.segmentedControl.selectedSegmentIndex == 2)
+                            {
+                                [self segmentedControl:self.segmentedControl];
+                            }
+                            [self.segmentedControl setTitle:[NSString stringWithFormat:@"Groups (%lu)",(unsigned long)self.groupListArray.count] forSegmentAtIndex:2];
+                        }
+                        else
+                        {
+                            [self error:error];
+                        }
+                    }];
                 }
                 else
                 {
                     [self error:error];
                 }
             }];
-        }
-        else
-        {
-            [self error:error];
-        }
-    }];
+         }
+         else
+         {
+             [self error:error];
+         }
+     }];
 }
 
 //MARK: dismiss keyboard
