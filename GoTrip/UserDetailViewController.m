@@ -82,7 +82,7 @@
         {
             self.pageControl.numberOfPages = 1;
         }
-        else if (2 < self.listArray.count && self.listArray.count <= 3)
+        else if (2 < self.listArray.count && self.listArray.count <= 4)
         {
             self.pageControl.numberOfPages = 2;
         }
@@ -361,7 +361,6 @@
                                                          [self changeListOnSegmentControl:self.segmentedControl];
                                                      }
                                                      [self.segmentedControl setTitle:[NSString stringWithFormat:@"Comments (%lu)",(unsigned long)self.arrayOfComment.count] forSegmentAtIndex:1];
-
                                                  }
                                                  else
                                                  {
@@ -393,11 +392,19 @@
     else if (sender.selectedSegmentIndex == 1 && self.arrayOfComment)
     {
         self.listArray = self.arrayOfComment;
+        if (self.listArray.count > 0)
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
+            [self.collectionView scrollToItemAtIndexPath:indexPath
+                                        atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                                animated:YES];
+        }
     }
     else if (sender.selectedSegmentIndex == 2 && self.arrayOfGroup)
     {
         self.listArray = self.arrayOfGroup;
     }
+    [self refreshNumberOfPageControl];
     [self.collectionView reloadData];
 //    if (self.listArray.count > 0)
 //    {
@@ -406,7 +413,7 @@
 //                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
 //                                            animated:YES];
 //    }
-    [self refreshNumberOfPageControl];
+
 }
 
 //MARK: custom imageView method
