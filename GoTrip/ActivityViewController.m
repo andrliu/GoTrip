@@ -33,11 +33,16 @@
     {
         [self reverseGeocodeWithLatitude:geoPoint.latitude andLongitude:geoPoint.longitude withProfileName:self.currentProfileName];
     }
+    [self reverseGeocodeWithLatitude:self.currentProfile.currentLocation.latitude andLongitude:self.currentProfile.currentLocation.longitude withProfileName:[NSString stringWithFormat:@"%@'s location", self.currentProfileName]];
     for (Profile *profile in self.userProfiles)
     {
         for (PFGeoPoint *geoPoint in profile.locations)
         {
-            [self reverseGeocodeWithLatitude:geoPoint.latitude andLongitude:geoPoint.longitude withProfileName:[NSString stringWithFormat:@"%@ %@", profile.firstName, profile.lastName]];
+            [self reverseGeocodeWithLatitude:geoPoint.latitude andLongitude:geoPoint.longitude withProfileName:profile.firstName];
+        }
+        if (profile.currentLocation)
+        {
+            [self reverseGeocodeWithLatitude:profile.currentLocation.latitude andLongitude:profile.currentLocation.longitude withProfileName:[NSString stringWithFormat:@"%@'s location", profile.firstName]];
         }
     }
 }
@@ -180,14 +185,18 @@
     MKPinAnnotationView *pin = [[MKPinAnnotationView alloc]initWithAnnotation:annotation
                                                               reuseIdentifier:nil];
     pin.canShowCallout = YES;
-    if ([annotation.subtitle isEqual:self.currentProfileName])
+    if ([annotation.subtitle containsString:@"location"])
+    {
+        pin.pinColor = MKPinAnnotationColorGreen;
+    }
+    else if ([annotation.subtitle isEqual:self.currentProfileName])
     {
         pin.pinColor = MKPinAnnotationColorRed;
         pin.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     }
     else
     {
-        pin.pinColor = MKPinAnnotationColorGreen;
+        pin.pinColor = MKPinAnnotationColorPurple;
     }
     return pin;
 }

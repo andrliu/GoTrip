@@ -34,6 +34,7 @@ typedef void(^searchProfileBlock)(Profile *profile, NSError *error);
 @property (nonatomic, strong) NSArray *isMessaging;
 @property (nonatomic, strong) NSArray *isGroupMessaging;
 @property (nonatomic, strong) NSArray *locations;
+@property PFGeoPoint *currentLocation;
 
 + (void) checkForProfile:(searchCurrentProfileBlock)complete;
 + (void) getCurrentProfileWithCompletion:(searchCurrentProfileBlock)complete;

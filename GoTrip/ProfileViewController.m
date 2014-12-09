@@ -21,9 +21,13 @@
 @property (weak, nonatomic) IBOutlet UILabel *firstNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *lastNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *memoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *locationLabel;
+
 @property (weak, nonatomic) IBOutlet UITextField *firstNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *lastNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *memoTextField;
+@property (weak, nonatomic) IBOutlet UITextField *locationTextField;
+
 @property (weak, nonatomic) IBOutlet UIButton *imageButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
@@ -79,7 +83,6 @@
 {
     if ([sender.title isEqual: @"Logout"])
     {
-//        self.isImagePickerCalled = NO;
         self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:0];
         PFInstallation *installation = [PFInstallation currentInstallation];
         [installation removeObjectForKey:@"user"];
@@ -91,7 +94,6 @@
         [self editMode:NO];
         sender.title = @"Logout";
         self.editButton.title = @"Edit";
-//        self.isImagePickerCalled = NO;
         [self refreshPersonalProfile];
         [self.view endEditing:YES];
     }
@@ -144,7 +146,6 @@
 {
     self.isLoadingFriends = YES;
     self.isLoadingGroups = YES;
-//    self.isImagePickerCalled = NO;
     [Profile checkForProfile:^(Profile *profile, NSError *error)
     {
          if (!error)
@@ -154,6 +155,14 @@
              self.firstNameLabel.text = self.profile.firstName;
              self.lastNameLabel.text = self.profile.lastName;
              self.memoLabel.text = self.profile.memo;
+             if ([self.profile.locationName isEqual:@""] || !self.profile.locationName)
+             {
+                self.locationLabel.text = @"Location";
+             }
+             else
+             {
+                 self.locationLabel.text = self.profile.locationName;
+             }
              [Group getCurrentGroupsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error)
               {
                   if (!error)
@@ -203,7 +212,6 @@
         }
 
     }];
-
 }
 
 //MARK: dismiss keyboard
@@ -219,12 +227,14 @@
     [self.firstNameLabel setHidden:yes];
     [self.lastNameLabel setHidden:yes];
     [self.memoLabel setHidden:yes];
+    [self.locationLabel setHidden:yes];
     [self.segmentedControl setHidden:yes];
     [self.mapButton setHidden:yes];
     [self.collectionView setHidden:yes];
     [self.firstNameTextField setHidden:!yes];
     [self.lastNameTextField setHidden:!yes];
     [self.memoTextField setHidden:!yes];
+    [self.locationTextField setHidden:!yes];
     [self.imageButton setHidden:!yes];
 }
 
@@ -236,6 +246,14 @@
         self.firstNameTextField.text = self.profile.firstName;
         self.lastNameTextField.text = self.profile.lastName;
         self.memoTextField.text = self.profile.memo;
+        if ([self.profile.locationName isEqual:@""] || !self.profile.locationName)
+        {
+            self.locationTextField.text = @"";
+        }
+        else
+        {
+            self.locationTextField.text = self.profile.locationName;
+        }
         [self editMode:YES];
         sender.title = @"Save";
         self.cancelButton.title = @"Cancel";
@@ -247,6 +265,54 @@
         self.profile.lastName = self.lastNameTextField.text;
         self.profile.canonicalLastName = [self.lastNameTextField.text lowercaseString];
         self.profile.memo = self.memoTextField.text;
+        self.profile.locationName = self.locationTextField.text;
+        if (![self.locationTextField.text isEqual:@""])
+        {
+            NSString *address = self.locationTextField.text;
+            CLGeocoder *geocoder = [[CLGeocoder alloc]init];
+            [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error)
+             {
+                 if (!error)
+                 {
+                     for (CLPlacemark *placemark in placemarks)
+                     {
+                         CLLocationCoordinate2D center = placemark.location.coordinate;
+                         PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:center.latitude longitude:center.longitude];
+                         self.profile.currentLocation = geoPoint;
+                         [self.profile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                          {
+                              if (!error)
+                              {
+                                  [self editMode:NO];
+                                  sender.title = @"Edit";
+                                  self.cancelButton.title = @"Logout";
+                                  [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:15.0f withBorderColor:[UIColor blackColor].CGColor];
+                                  self.firstNameLabel.text = self.profile.firstName;
+                                  self.lastNameLabel.text = self.profile.lastName;
+                                  self.memoLabel.text = self.profile.memo;
+                                  if ([self.profile.locationName isEqual:@""] || !self.profile.locationName)
+                                  {
+                                      self.locationLabel.text = @"";
+                                  }
+                                  else
+                                  {
+                                      self.locationLabel.text = self.profile.locationName;
+                                  }
+                                  [self.view endEditing:YES];
+                              }
+                              else
+                              {
+                                  [self error:error];
+                              }
+                          }];
+                     }
+                 }
+                 else
+                 {
+                     [self error:error];
+                 }
+             }];
+        }
         [self.profile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
         {
             if (!error)
@@ -258,7 +324,14 @@
                 self.firstNameLabel.text = self.profile.firstName;
                 self.lastNameLabel.text = self.profile.lastName;
                 self.memoLabel.text = self.profile.memo;
-//                self.isImagePickerCalled = NO;
+                if ([self.profile.locationName isEqual:@""] || !self.profile.locationName)
+                {
+                    self.locationLabel.text = @"";
+                }
+                else
+                {
+                    self.locationLabel.text = self.profile.locationName;
+                }
                 [self.view endEditing:YES];
             }
             else
