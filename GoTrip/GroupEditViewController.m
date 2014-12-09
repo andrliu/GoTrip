@@ -147,6 +147,12 @@
     NSArray *indexPaths = @[[NSIndexPath indexPathForRow:indexPath.row + 1 inSection:2]];
     [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
 
+    if (indexPath.section == 3)
+    {
+//       [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+//        [self.tableView scrollToNearestSelectedRowAtScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }
+
 }
 
 - (CGFloat)heightForString:(NSString *)theString
@@ -339,21 +345,50 @@
             }
             
             cell = [tableView dequeueReusableCellWithIdentifier:cellID];
-            
-            if (indexPath.row == 0)
-            {
-                cell.nameLabel.text = @"Start Date";
-                NSString *startDateString = [self.dateFormat stringFromDate:self.editGroup.startDate];
-                cell.startLabel.text = startDateString;
-            }
-            else if (indexPath.row == 2)
-            {
-                cell.nameLabel.text = @"End Date";
-                NSString *endDateString = [self.dateFormat stringFromDate:self.editGroup.endDate];
-                cell.startLabel.text = endDateString;
-            }
 
-            cell.backgroundColor = [UIColor clearColor];
+
+            switch (indexPath.row)
+            {
+                case 0:
+                    {
+                        cell.nameLabel.text = @"Start Date";
+                        NSString *startDateString = [self.dateFormat stringFromDate:self.editGroup.startDate];
+                        cell.startLabel.text = startDateString;
+                        cell.backgroundColor = [UIColor clearColor];
+                        break;
+                    }
+                case 1:
+                    cell.backgroundColor = [UIColor whiteColor];
+                    break;
+                case 2:
+                    {
+                        cell.nameLabel.text = @"End Date";
+                        NSString *endDateString = [self.dateFormat stringFromDate:self.editGroup.endDate];
+                        cell.startLabel.text = endDateString;
+                        cell.backgroundColor = [UIColor clearColor];
+                         break;
+                    }
+                case 3:
+                    cell.backgroundColor = [UIColor whiteColor];
+                    break;
+
+                default:
+                    cell.backgroundColor = [UIColor clearColor];
+                    break;
+            }
+//            if (indexPath.row == 0)
+//            {
+//                cell.nameLabel.text = @"Start Date";
+//                NSString *startDateString = [self.dateFormat stringFromDate:self.editGroup.startDate];
+//                cell.startLabel.text = startDateString;
+//            }
+//            else if (indexPath.row == 2)
+//            {
+//                cell.nameLabel.text = @"End Date";
+//                NSString *endDateString = [self.dateFormat stringFromDate:self.editGroup.endDate];
+//                cell.startLabel.text = endDateString;
+//            }
+
             return cell;
         }
             break;
