@@ -884,6 +884,7 @@
                         <outlet property="imageView" destination="6aF-to-AeI" id="gJR-SV-mpK"/>
                         <outlet property="lastNameLabel" destination="pOs-zK-QYe" id="R05-qW-Oyv"/>
                         <outlet property="lastNameTextField" destination="9Cv-OF-do7" id="km7-7g-7Fr"/>
+                        <outlet property="mapButton" destination="W3H-6n-Yof" id="hkD-yN-lHP"/>
                         <outlet property="memoLabel" destination="Sha-Es-mAb" id="zes-fk-Lvw"/>
                         <outlet property="memoTextField" destination="e2o-dp-BNK" id="QgG-qw-gdA"/>
                         <outlet property="pageControl" destination="R6r-gT-VBt" id="EXv-lj-TS0"/>
