@@ -26,7 +26,7 @@
 @dynamic user;
 @dynamic isMessaging;
 @dynamic isGroupMessaging;
-
+@dynamic locations;
 
 + (void)load
 {

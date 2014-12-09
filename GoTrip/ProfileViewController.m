@@ -9,6 +9,7 @@
 #import "ProfileViewController.h"
 #import "UserDetailViewController.h"
 #import "GroupDetailViewController.h"
+#import "ActivityViewController.h"
 #import "CustomCollectionViewCell.h"
 #import "Group.h"
 #import "Profile.h"
@@ -380,6 +381,11 @@
         UserDetailViewController *udvc = segue.destinationViewController;
         udvc.profile = sender;
         udvc.currentProfile = self.profile;
+    }
+    else
+    {
+        ActivityViewController *avc = segue.destinationViewController;
+        avc.currentProfile = self.profile;
     }
 }
 

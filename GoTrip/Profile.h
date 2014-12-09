@@ -33,6 +33,7 @@ typedef void(^searchProfileBlock)(Profile *profile, NSError *error);
 @property (nonatomic, strong) User *user;
 @property (nonatomic, strong) NSArray *isMessaging;
 @property (nonatomic, strong) NSArray *isGroupMessaging;
+@property (nonatomic, strong) NSArray *locations;
 
 + (void) checkForProfile:(searchCurrentProfileBlock)complete;
 + (void) getCurrentProfileWithCompletion:(searchCurrentProfileBlock)complete;
