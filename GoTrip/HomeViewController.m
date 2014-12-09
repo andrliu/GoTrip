@@ -27,6 +27,7 @@
 @property Profile *currentProfile;
 @property NSIndexPath *selectedIndexPath;
 @property Group *testGroup;
+@property NSDateFormatter *dateFormat;
 
 @end
 
@@ -38,6 +39,10 @@
 {
     [super viewDidLoad];
 
+
+    self.dateFormat = [[NSDateFormatter alloc] init];
+    //    [self.dateFormat setDateFormat:@"MM/dd/yyyy"];
+    [self.dateFormat setDateStyle:NSDateFormatterLongStyle];
     //quick check for the profile for access privileges
 //    [Profile checkForProfile:^(Profile *profile, NSError *error)
 //    {
@@ -74,7 +79,7 @@
 
 //    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:(247.0/255.0) green:(247/255.0) blue:(247/255.0) alpha:1.0f];
 //    self.tabBarController.tabBar.barTintColor = [UIColor colorWithRed:(100.0/255.0) green:(100.0/255.0) blue:(100.0/255.0) alpha:1.0f];
-    self.tableView.tableFooterView = [[UIView alloc] init] ;
+    self.tableView.tableFooterView = [[UIView alloc] init];
 
 }
 
@@ -385,12 +390,12 @@
     cell.nameLabel.text = group.name;
     cell.destinationLabel.text = group.destination;
 
-    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-//    [dateFormat setDateFormat:@"MM/dd/yyyy"];
-    [dateFormat setDateStyle:NSDateFormatterLongStyle];
-    NSString *startDateString = [dateFormat stringFromDate:group.startDate];
+//    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+////    [dateFormat setDateFormat:@"MM/dd/yyyy"];
+//    [dateFormat setDateStyle:NSDateFormatterLongStyle];
+    NSString *startDateString = [self.dateFormat stringFromDate:group.startDate];
     cell.startLabel.text = startDateString;
-    NSString *endDateString = [dateFormat stringFromDate:group.endDate];
+    NSString *endDateString = [self.dateFormat stringFromDate:group.endDate];
     cell.endLabel.text = endDateString;
 
     NSString *countText;

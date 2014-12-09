@@ -106,6 +106,7 @@
 		FA1EEE4B1A253FE9009280BA /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1EEE4A1A253FE9009280BA /* Group.m */; };
 		FA519B171A2D864D00FDD295 /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = FA519B161A2D864D00FDD295 /* Photo.m */; };
 		FA519B1D1A2FDF4500FDD295 /* GroupEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA519B1C1A2FDF4500FDD295 /* GroupEditViewController.m */; };
+		FA9541571A365E2F00C46D95 /* EditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9541561A365E2F00C46D95 /* EditTableViewCell.m */; };
 		FABC43771A34CDE10025CEA9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FABC43571A34CDE10025CEA9 /* Default-568h@2x.png */; };
 		FABC43781A34CDE10025CEA9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = FABC43581A34CDE10025CEA9 /* Default.png */; };
 		FABC43791A34CDE10025CEA9 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FABC43591A34CDE10025CEA9 /* Default@2x.png */; };
@@ -323,6 +324,8 @@
 		FA519B161A2D864D00FDD295 /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Photo.m; sourceTree = "<group>"; };
 		FA519B1B1A2FDF4500FDD295 /* GroupEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupEditViewController.h; sourceTree = "<group>"; };
 		FA519B1C1A2FDF4500FDD295 /* GroupEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupEditViewController.m; sourceTree = "<group>"; };
+		FA9541551A365E2F00C46D95 /* EditTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditTableViewCell.h; sourceTree = "<group>"; };
+		FA9541561A365E2F00C46D95 /* EditTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditTableViewCell.m; sourceTree = "<group>"; };
 		FABC43571A34CDE10025CEA9 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		FABC43581A34CDE10025CEA9 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		FABC43591A34CDE10025CEA9 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -443,6 +446,8 @@
 				4937C38C1A22B7B60087E8CF /* CustomCollectionViewCell.m */,
 				4937C38E1A22B7EA0087E8CF /* CustomTableViewCell.h */,
 				4937C38F1A22B7EA0087E8CF /* CustomTableViewCell.m */,
+				FA9541551A365E2F00C46D95 /* EditTableViewCell.h */,
+				FA9541561A365E2F00C46D95 /* EditTableViewCell.m */,
 				FA14B9081A2D3AC400950C27 /* Custom Cells */,
 				FA1EEE481A253F80009280BA /* Model Data */,
 				4937C3571A22B4DA0087E8CF /* Main.storyboard */,
@@ -952,6 +957,7 @@
 				4937C38D1A22B7B60087E8CF /* CustomCollectionViewCell.m in Sources */,
 				7B0A12651A23C4E8000B5BA1 /* Message.m in Sources */,
 				7B4341161A2D706C00977158 /* JSQMessagesCollectionViewFlowLayout.m in Sources */,
+				FA9541571A365E2F00C46D95 /* EditTableViewCell.m in Sources */,
 				4937C37E1A22B7480087E8CF /* ProfileViewController.m in Sources */,
 				7B4341121A2D706C00977158 /* JSQMessagesBubbleImageFactory.m in Sources */,
 				7B43410D1A2D706C00977158 /* UIView+JSQMessages.m in Sources */,
@@ -1159,8 +1165,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jonathan Chou (RY5MDGEG5K)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jonathan Chou (RY5MDGEG5K)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Alex Emelyanov (KFJT2N4T78)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Alex Emelyanov (KFJT2N4T78)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1176,8 +1182,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Andrew Liu (4569Z5KKMP)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Andrew Liu (4569Z5KKMP)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Alex Emelyanov (KFJT2N4T78)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Alex Emelyanov (KFJT2N4T78)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

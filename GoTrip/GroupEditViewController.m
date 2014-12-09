@@ -9,8 +9,18 @@
 #import "GroupEditViewController.h"
 #import "Group.h"
 #import "Profile.h"
+#import "CustomTableViewCell.h"
+#import "EditTableViewCell.h"
+#import "TextTableViewCell.h"
 
-@interface GroupEditViewController ()
+
+
+@interface GroupEditViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UITextFieldDelegate>
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic, assign) BOOL isDateOpen;
+@property BOOL showStartDate;
+@property BOOL showEndDate;
+@property NSDateFormatter *dateFormat;
 
 @end
 
@@ -19,7 +29,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+
+    self.dateFormat = [[NSDateFormatter alloc] init];
+    //    [self.dateFormat setDateFormat:@"MM/dd/yyyy"];
+    [self.dateFormat setDateStyle:NSDateFormatterLongStyle];
+
+    self.showStartDate = NO;
+    self.showEndDate = NO;
+
+    self.tableView.tableFooterView = [[UIView alloc] init];
 }
 
 - (void)didReceiveMemoryWarning
@@ -28,6 +46,317 @@
     // Dispose of any resources that can be recreated.
 }
 
+//MARK: delegation methods
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat theFloat = 0;
+
+
+    CGFloat height = [self heightForString:self.group.memo];
+
+
+    switch (indexPath.section)
+    {
+        case 0:
+            theFloat = self.view.frame.size.width/2.5;
+            break;
+        case 1:
+            theFloat = 44.0;
+            break;
+        case 2:
+
+            if ((indexPath.row % 2) == 0)
+            {
+                theFloat =  44.0;
+            }
+            else
+            {
+                // This is the index path of the date picker cell in the static table
+                if ((indexPath.row == 1 && self.showStartDate) || (indexPath.row == 3 && self.showEndDate))
+                {
+                    theFloat = 162; //expands only one datePicker at a time
+                }
+                else
+                {
+                    theFloat = 0;
+                }
+            }
+            break;
+        case 3:
+            theFloat =  height*1.03 + 20;
+//            theFloat = 200.0;
+            break;
+
+        default:
+            theFloat =  0;
+            break;
+    }
+
+    //    NSLog(@"section: %li row: %li height: %f",(long)indexPath.section, (long)indexPath.row, theFloat);
+
+    return theFloat;
+
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 2)
+    {
+        if (indexPath.row == 0)
+        {
+            self.showStartDate = !self.showStartDate;
+            if (self.showEndDate)
+            {
+                self.showEndDate = NO;
+            }
+        }
+        else if (indexPath.row == 2)
+        {
+            self.showEndDate = !self.showEndDate;
+            if (self.showStartDate)
+            {
+                self.showStartDate = NO;
+            }
+        }
+
+    }
+    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    NSArray *indexPaths = @[[NSIndexPath indexPathForRow:indexPath.row + 1 inSection:2]];
+    [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+    if (indexPath.section != 1)
+    {
+        [self.view endEditing:YES];
+    }
+
+}
+
+- (CGFloat)heightForString:(NSString *)theString
+{
+    CGRect textViewSize = [theString boundingRectWithSize:CGSizeMake(self.view.frame.size.width - 16, CGFLOAT_MAX)
+                                                  options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                                               attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]}
+                                                  context:nil];
+
+    return textViewSize.size.height;
+}
+
+
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 30)];
+    //   [headerView setBackgroundColor:[UIColor grayColor]];
+//    [headerView setBackgroundColor:[UIColor colorWithRed:(33.0/255.0) green:(33.0/255.0) blue:(33.0/255.0) alpha:1.0f]];
+    [headerView setBackgroundColor:[UIColor clearColor]];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, tableView.bounds.size.width - 10, 20)];
+
+    switch (section)
+    {
+        case 0:
+            label.text = @"";
+            break;
+        case 1:
+            label.text = @"Info";
+            break;
+        case 2:
+            label.text = @"";
+            break;
+        case 3:
+            label.text = @"Description";
+            break;
+
+        default:
+            label.text = @"";
+            break;
+    }
+
+    label.textColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.75];
+    label.backgroundColor = [UIColor clearColor];
+    [headerView addSubview:label];
+    return headerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    switch (section)
+    {
+        case 0:
+            return 0;
+            break;
+        case 1:
+            return 30.0;
+            break;
+        case 2:
+            return 0;
+            break;
+        case 3:
+            return 30.0;
+            break;
+
+        default:
+            return 0;
+            break;
+    }
+}
+
+
+
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+
+    return 4;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    switch (section)
+    {
+        case 0:
+            return 1;
+            break;
+        case 1:
+            return 2; //name + destination
+            break;
+        case 2:
+            return 4; //dateCell + datePicker
+            break;
+        case 3:
+            return 1;
+            break;
+
+        default:
+            return 0;
+            break;
+    }
+}
+
+////using header VIEW method instead
+//-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+//{
+//    switch (section)
+//    {
+//        case 0:
+//            return @"Group description";
+//            break;
+//        case 1:
+//            return @"User uploaded pictures";
+//            break;
+//            //        case 2:
+//            //            return @"Control";
+//            //            break;
+//
+//        default:
+//            return nil;
+//            break;
+//    }
+//}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    switch (indexPath.section)
+    {
+        case 0:
+        {
+            CustomTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"logoEditCell"];
+            //            cell.backgroundImageView.image = [UIImage imageWithData:self.group.imageData];
+            cell.backgroundImageView.image = [UIImage imageWithData:self.group.imageData];
+            [cell.backgroundImageView setClipsToBounds:YES];
+
+            cell.backgroundColor = [UIColor clearColor];
+            return cell;
+        }
+            break;
+        case 1:
+        {
+            EditTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"detailsCell" forIndexPath:indexPath];
+            cell.textField.delegate = self;
+
+            if (indexPath.row == 0)
+            {
+                cell.textField.placeholder = @"Group Name";
+                cell.textField.text = self.group.name;
+            }
+            else
+            {
+                cell.textField.placeholder = @"Group Destination";
+                cell.textField.text = self.group.destination;
+            }
+//            cell.textView.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
+
+//            cell.textView.scrollEnabled = NO;
+            cell.backgroundColor = [UIColor clearColor];
+            return cell;
+        }
+            break;
+
+        case 2:
+        {
+
+            CustomTableViewCell *cell = nil;
+
+            NSString *cellID;
+
+            if ((indexPath.row % 2) == 0)
+            {
+                // the indexPath is the one containing the inline date picker
+                cellID = @"dateCell";     // the current/opened date picker cell
+            }
+            else if ((indexPath.row % 2) == 1)
+            {
+                // the indexPath is one that contains the date information
+                cellID = @"datePicker";       // the start/end date cells
+            }
+            
+            cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+            
+            if (indexPath.row == 0)
+            {
+                cell.nameLabel.text = @"Start Date";
+                NSString *startDateString = [self.dateFormat stringFromDate:self.group.startDate];
+                cell.startLabel.text = startDateString;
+            }
+            else if (indexPath.row == 2)
+            {
+                cell.nameLabel.text = @"End Date";
+                NSString *endDateString = [self.dateFormat stringFromDate:self.group.endDate];
+                cell.startLabel.text = endDateString;
+            }
+
+            cell.backgroundColor = [UIColor clearColor];
+            return cell;
+        }
+            break;
+
+        case 3:
+        {
+            TextTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"textEditCell" forIndexPath:indexPath];
+            //            cell.label.numberOfLines = 0;
+            //            cell.label.text = self.aString;
+            cell.textView.text = self.group.memo;
+            cell.textView.backgroundColor = [UIColor colorWithRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0f];
+
+            cell.textView.scrollEnabled = YES;
+
+//            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            //            cell.backgroundColor = [UIColor colorWithRed:230.0/250.0 green:230.0/250.0 blue:230.0/250.0 alpha:0.5f];
+            cell.backgroundColor = [UIColor clearColor];
+            return cell;
+        }
+            break;
+            
+        default:
+            return nil;
+            break;
+    }
+    
+}
+
+
+
+
+//MARK: cutom methods
 //both Cancel and Save are tide to the unwindSegue and dismiss the view smart based on the group object
 - (IBAction)onCancellButtonPressed:(UIBarButtonItem *)sender
 {
