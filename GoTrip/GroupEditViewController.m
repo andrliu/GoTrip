@@ -21,6 +21,9 @@
 @property BOOL showStartDate;
 @property BOOL showEndDate;
 @property NSDateFormatter *dateFormat;
+@property Group *editGroup;
+@property NSIndexPath *textFieldIndexPath;
+@property NSIndexPath *datePickerIndexPath;
 
 @end
 
@@ -29,6 +32,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    self.editGroup = self.group;
 
     self.dateFormat = [[NSDateFormatter alloc] init];
     //    [self.dateFormat setDateFormat:@"MM/dd/yyyy"];
@@ -53,7 +58,11 @@
     CGFloat theFloat = 0;
 
 
-    CGFloat height = [self heightForString:self.group.memo];
+    CGFloat height = [self heightForString:self.editGroup.memo];
+    if (height == 0)
+    {
+        height = 300;
+    }
 
 
     switch (indexPath.section)
@@ -101,6 +110,17 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.section == 0)
+    {
+        //TODO: imagepicker
+        NSLog(@"image tapped");
+    }
+
+    if (indexPath.section != 1)
+    {
+        [self.view endEditing:YES];
+    }
+
     if (indexPath.section == 2)
     {
         if (indexPath.row == 0)
@@ -110,6 +130,7 @@
             {
                 self.showEndDate = NO;
             }
+            self.datePickerIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:2];
         }
         else if (indexPath.row == 2)
         {
@@ -118,16 +139,13 @@
             {
                 self.showStartDate = NO;
             }
+            self.datePickerIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:2];
         }
 
     }
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
     NSArray *indexPaths = @[[NSIndexPath indexPathForRow:indexPath.row + 1 inSection:2]];
     [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
-    if (indexPath.section != 1)
-    {
-        [self.view endEditing:YES];
-    }
 
 }
 
@@ -147,7 +165,8 @@
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 30)];
     //   [headerView setBackgroundColor:[UIColor grayColor]];
 //    [headerView setBackgroundColor:[UIColor colorWithRed:(33.0/255.0) green:(33.0/255.0) blue:(33.0/255.0) alpha:1.0f]];
-    [headerView setBackgroundColor:[UIColor clearColor]];
+    [headerView setBackgroundColor:[UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f]];
+//    [headerView setBackgroundColor:[UIColor clearColor]];
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, tableView.bounds.size.width - 10, 20)];
 
     switch (section)
@@ -172,6 +191,7 @@
 
     label.textColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.75];
     label.backgroundColor = [UIColor clearColor];
+//    label.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
     [headerView addSubview:label];
     return headerView;
 }
@@ -260,8 +280,14 @@
         case 0:
         {
             CustomTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"logoEditCell"];
-            //            cell.backgroundImageView.image = [UIImage imageWithData:self.group.imageData];
-            cell.backgroundImageView.image = [UIImage imageWithData:self.group.imageData];
+            if (self.editGroup.imageData)
+            {
+                cell.backgroundImageView.image = [UIImage imageWithData:self.editGroup.imageData];
+            }
+            else
+            {
+                cell.backgroundImageView.image = [UIImage imageNamed:@"750x300"];
+            }
             [cell.backgroundImageView setClipsToBounds:YES];
 
             cell.backgroundColor = [UIColor clearColor];
@@ -276,16 +302,19 @@
             if (indexPath.row == 0)
             {
                 cell.textField.placeholder = @"Group Name";
-                cell.textField.text = self.group.name;
+                cell.textField.text = self.editGroup.name;
+                cell.textField.tag = 0;
             }
             else
             {
                 cell.textField.placeholder = @"Group Destination";
-                cell.textField.text = self.group.destination;
+                cell.textField.text = self.editGroup.destination;
+                cell.textField.tag = 1;
             }
 //            cell.textView.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
 
 //            cell.textView.scrollEnabled = NO;
+            cell.textField.delegate = self;
             cell.backgroundColor = [UIColor clearColor];
             return cell;
         }
@@ -314,13 +343,13 @@
             if (indexPath.row == 0)
             {
                 cell.nameLabel.text = @"Start Date";
-                NSString *startDateString = [self.dateFormat stringFromDate:self.group.startDate];
+                NSString *startDateString = [self.dateFormat stringFromDate:self.editGroup.startDate];
                 cell.startLabel.text = startDateString;
             }
             else if (indexPath.row == 2)
             {
                 cell.nameLabel.text = @"End Date";
-                NSString *endDateString = [self.dateFormat stringFromDate:self.group.endDate];
+                NSString *endDateString = [self.dateFormat stringFromDate:self.editGroup.endDate];
                 cell.startLabel.text = endDateString;
             }
 
@@ -334,7 +363,7 @@
             TextTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"textEditCell" forIndexPath:indexPath];
             //            cell.label.numberOfLines = 0;
             //            cell.label.text = self.aString;
-            cell.textView.text = self.group.memo;
+            cell.textView.text = self.editGroup.memo;
             cell.textView.backgroundColor = [UIColor colorWithRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0f];
 
             cell.textView.scrollEnabled = YES;
@@ -366,30 +395,32 @@
 }
 - (IBAction)onSaveButtonPressed:(UIButton *)sender
 {
-    if (!self.group.imageData)
+    if (!self.editGroup.imageData)
     {
         [self defaultImagePicker];
     }
 
-    if (!self.group.memo)
+    if (!self.editGroup.memo)
     {
-        self.group.memo = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris et auctor nulla. Pellentesque non odio vel nibh sagittis pulvinar. Proin sed dolor ut nisi scelerisque maximus. Cras gravida accumsan leo ut facilisis. Aenean rhoncus hendrerit orci, at fermentum ante venenatis et. Mauris vitae aliquam arcu, eget ultricies nisi. Praesent gravida dictum eros sed ultricies. Suspendisse dignissim vehicula purus, sollicitudin pretium ante lacinia non. Pellentesque blandit finibus ligula, eu viverra elit rhoncus sed. Ut mattis, felis ut lobortis luctus, neque augue aliquet mi, eget ullamcorper ex nisi a risus. Pellentesque a metus ac tellus tincidunt aliquam eu id velit. Phasellus rhoncus quis magna sed hendrerit. Donec urna justo, egestas id imperdiet sit amet, hendrerit a ligula. Fusce ultricies nibh a velit fringilla, at tempor nunc volutpat. Fusce laoreet tristique tellus, eget auctor metus.\n\nSuspendisse sit amet neque at leo ullamcorper elementum eu in metus. Proin at purus vel felis molestie tristique at eget augue. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean varius risus vel imperdiet interdum. Suspendisse nec diam nec dui aliquam convallis vel id ex. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut imperdiet ante tellus, quis finibus diam posuere quis.";
+        self.editGroup.memo = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris et auctor nulla. Pellentesque non odio vel nibh sagittis pulvinar. Proin sed dolor ut nisi scelerisque maximus. Cras gravida accumsan leo ut facilisis. Aenean rhoncus hendrerit orci, at fermentum ante venenatis et. Mauris vitae aliquam arcu, eget ultricies nisi. Praesent gravida dictum eros sed ultricies. Suspendisse dignissim vehicula purus, sollicitudin pretium ante lacinia non. Pellentesque blandit finibus ligula, eu viverra elit rhoncus sed. Ut mattis, felis ut lobortis luctus, neque augue aliquet mi, eget ullamcorper ex nisi a risus. Pellentesque a metus ac tellus tincidunt aliquam eu id velit. Phasellus rhoncus quis magna sed hendrerit. Donec urna justo, egestas id imperdiet sit amet, hendrerit a ligula. Fusce ultricies nibh a velit fringilla, at tempor nunc volutpat. Fusce laoreet tristique tellus, eget auctor metus.\n\nSuspendisse sit amet neque at leo ullamcorper elementum eu in metus. Proin at purus vel felis molestie tristique at eget augue. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean varius risus vel imperdiet interdum. Suspendisse nec diam nec dui aliquam convallis vel id ex. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut imperdiet ante tellus, quis finibus diam posuere quis.";
     }
 
-    if (!self.group.name)
+    if (!self.editGroup.name)
     {
         NSString *name = [NSString stringWithFormat:@"New Group %@",[self randomStringWithLength:3]];
-        self.group.name = name;
-        self.group.canonicalName = [name lowercaseString];
+        self.editGroup.name = name;
+        self.editGroup.canonicalName = [name lowercaseString];
     }
 
-    if (!self.group.destination)
+    if (!self.editGroup.destination)
     {
-        self.group.destination = @"undecided";
+        self.editGroup.destination = @"undecided";
     }
 
-    //    self.group.creator;
+//TODO: doublecheck this logic
     //for new group creation
+    self.group = self.editGroup;
+
     [self.group saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
          if (error)
@@ -430,6 +461,61 @@
          }
 
      }];
+
+}
+
+- (IBAction)textFieldAction:(UITextField *)textField
+{
+    if (textField.tag == 0)
+    {
+        self.editGroup.name = textField.text;
+        self.editGroup.canonicalName = [textField.text lowercaseString];
+    }
+    else if (textField.tag == 1)
+    {
+        self.editGroup.destination = textField.text;
+    }
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
+
+- (IBAction)datePickerAction:(UIDatePicker *)sender
+{
+    NSIndexPath *targetedCellIndexPath = nil;
+
+//    if ([self hasInlineDatePicker])
+//    {
+//        // inline date picker: update the cell's date "above" the date picker cell
+//        //
+        targetedCellIndexPath = [NSIndexPath indexPathForRow:self.datePickerIndexPath.row - 1 inSection:2];
+//    }
+//    else
+//    {
+//        // external date picker: update the current "selected" cell's date
+//        targetedCellIndexPath = [self.tableView indexPathForSelectedRow];
+//    }
+    CustomTableViewCell *cell = (CustomTableViewCell *)[self.tableView cellForRowAtIndexPath:targetedCellIndexPath];
+    UIDatePicker *targetedDatePicker = sender;
+
+    // update our data model
+//    NSMutableDictionary *itemData = self.dataArray[targetedCellIndexPath.row];
+//    [itemData setValue:targetedDatePicker.date forKey:kDateKey];
+
+    // update the cell's date string
+    cell.startLabel.text = [self.dateFormat stringFromDate:targetedDatePicker.date];
+    if (self.datePickerIndexPath.row == 1)
+    {
+        self.editGroup.startDate = targetedDatePicker.date;
+    }
+    else if (self.datePickerIndexPath.row == 3)
+    {
+        self.editGroup.endDate = targetedDatePicker.date;
+
+    }
 
 }
 
@@ -505,7 +591,7 @@
     }
     UIImage *image = [UIImage imageNamed:imageName];
     NSData *data = UIImageJPEGRepresentation(image, 0.5f);
-    self.group.imageData = data;
+    self.editGroup.imageData = data;
 }
 
 -(NSString *)randomStringWithLength:(int)len

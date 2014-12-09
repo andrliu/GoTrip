@@ -34,24 +34,48 @@
 
     [self checkForGroupAccess];
 
+//    PFQuery *query = [Group query];
+//    [query getObjectInBackgroundWithId:self.group.objectId block:^(PFObject *object, NSError *error)
+//    {
+//        if (error)
+//        {
+//            [self errorAlertWindow:error.localizedDescription];
+//        }
+//        else
+//        {
+//            Group *group = (Group *)object;
+//            if (self.group.profiles.count != group.profiles.count)
+//            {
+//            self.group = (Group *)object;
+//            [self checkForGroupAccess];
+//            }
+//        }
+//    }];
+
+
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
     PFQuery *query = [Group query];
     [query getObjectInBackgroundWithId:self.group.objectId block:^(PFObject *object, NSError *error)
-    {
-        if (error)
-        {
-            [self errorAlertWindow:error.localizedDescription];
-        }
-        else
-        {
-            Group *group = (Group *)object;
-            if (self.group.profiles.count != group.profiles.count)
-            {
-            self.group = (Group *)object;
-            [self checkForGroupAccess];
-            }
-        }
-    }];
-
+     {
+         if (error)
+         {
+             [self errorAlertWindow:error.localizedDescription];
+         }
+         else
+         {
+             Group *group = (Group *)object;
+             if (self.group.profiles.count != group.profiles.count)
+             {
+                 self.group = (Group *)object;
+                 [self checkForGroupAccess];
+             }
+         }
+     }];
 
 }
 
