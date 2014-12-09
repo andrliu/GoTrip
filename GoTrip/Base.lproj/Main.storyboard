@@ -226,7 +226,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="2Ku-1M-imB">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="2Ku-1M-imB">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" red="0.95294117647058818" green="0.95294117647058818" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
@@ -239,23 +239,10 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ANc-8h-lyr">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to change the image" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zEj-DG-TQ6">
-                                                    <rect key="frame" x="60" y="15" width="200" height="21"/>
-                                                    <color key="backgroundColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="200" id="qXA-1G-USe"/>
-                                                        <constraint firstAttribute="height" constant="21" id="tH0-Mq-XXa"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="bottomMargin" secondItem="ANc-8h-lyr" secondAttribute="bottom" constant="-8" id="6n8-NI-DVs"/>
                                                 <constraint firstItem="ANc-8h-lyr" firstAttribute="leading" secondItem="g1D-sq-nlA" secondAttribute="leadingMargin" constant="-8" id="Hon-fV-Hgz"/>
-                                                <constraint firstItem="zEj-DG-TQ6" firstAttribute="bottom" secondItem="g1D-sq-nlA" secondAttribute="bottomMargin" id="Q7v-Ap-S6Q"/>
-                                                <constraint firstAttribute="centerX" secondItem="zEj-DG-TQ6" secondAttribute="centerX" id="blA-0V-T56"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="ANc-8h-lyr" secondAttribute="trailing" constant="-8" id="fOE-TG-lFw"/>
                                                 <constraint firstItem="ANc-8h-lyr" firstAttribute="top" secondItem="g1D-sq-nlA" secondAttribute="topMargin" constant="-8" id="hNB-Om-9fd"/>
                                             </constraints>
@@ -275,9 +262,6 @@
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
-                                                    <connections>
-                                                        <action selector="textFieldAction:" destination="vac-ZB-aAC" eventType="editingDidEnd" id="F9b-DV-hxE"/>
-                                                    </connections>
                                                 </textField>
                                             </subviews>
                                             <constraints>
@@ -366,9 +350,6 @@
                                                     <date key="minimumDate" timeIntervalSinceReferenceDate="-978267600">
                                                         <!--1970-01-01 11:00:00 +0000-->
                                                     </date>
-                                                    <connections>
-                                                        <action selector="datePickerAction:" destination="vac-ZB-aAC" eventType="valueChanged" id="FbR-AT-XS3"/>
-                                                    </connections>
                                                 </datePicker>
                                             </subviews>
                                             <constraints>
@@ -903,7 +884,6 @@
                         <outlet property="imageView" destination="6aF-to-AeI" id="gJR-SV-mpK"/>
                         <outlet property="lastNameLabel" destination="pOs-zK-QYe" id="R05-qW-Oyv"/>
                         <outlet property="lastNameTextField" destination="9Cv-OF-do7" id="km7-7g-7Fr"/>
-                        <outlet property="mapButton" destination="W3H-6n-Yof" id="fIq-Hq-Aga"/>
                         <outlet property="memoLabel" destination="Sha-Es-mAb" id="zes-fk-Lvw"/>
                         <outlet property="memoTextField" destination="e2o-dp-BNK" id="QgG-qw-gdA"/>
                         <outlet property="pageControl" destination="R6r-gT-VBt" id="EXv-lj-TS0"/>
