@@ -1017,7 +1017,12 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6iu-gf-u8H" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="5Cf-3b-aGL"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="5Cf-3b-aGL">
+                    <connections>
+                        <action selector="longPress:" destination="JBZ-Ol-jcR" id="6Iq-wD-Bx9"/>
+                        <outlet property="delegate" destination="JBZ-Ol-jcR" id="CHZ-Vu-qq6"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1008" y="1734"/>
         </scene>

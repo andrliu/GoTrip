@@ -29,24 +29,22 @@
     [super viewWillAppear:animated];
     for (PFGeoPoint *geoPoint in self.currentProfile.locations)
     {
-
-        CLLocation *location = [[CLLocation alloc]initWithLatitude:geoPoint.latitude longitude:geoPoint.longitude];
-        [self reverseGeocode:location];
+        [self reverseGeocodeWithLatitude:geoPoint.latitude andLongitude:geoPoint.longitude];
     }
 }
 
-- (void)reverseGeocode:(CLLocation *)location
+- (void)reverseGeocodeWithLatitude:(double)latitude andLongitude:(double)longitude
 {
     CLGeocoder *geocoder = [CLGeocoder new];
+    CLLocation *location = [[CLLocation alloc]initWithLatitude:latitude longitude:longitude];
     [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, id error)
      {
          CLPlacemark *placemark = placemarks.firstObject;
          NSString *address = [NSString stringWithFormat:@"%@:%@", placemark.subAdministrativeArea, placemark.administrativeArea];
          MKPointAnnotation *annotation = [MKPointAnnotation new];
-
          annotation.coordinate =  location.coordinate;
          annotation.title = address;
-         annotation.subtitle = [NSString stringWithFormat:@"%@:%@", self.currentProfile.firstName, self.currentProfile.lastName];
+         annotation.subtitle = [NSString stringWithFormat:@"%@ %@", self.currentProfile.firstName, self.currentProfile.lastName];
          [self.mapView addAnnotation:annotation];
      }];
 }
@@ -57,22 +55,37 @@
     {
         CGPoint point = [sender locationInView:self.mapView];
         CLLocationCoordinate2D tapPoint = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
-        MKPointAnnotation *annotation = [MKPointAnnotation new];
-        annotation.coordinate = tapPoint;
-        annotation.title = self.currentProfile.firstName;
-        PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:tapPoint.latitude longitude:tapPoint.longitude];
-        self.currentProfile.locations = [self addObjectId:geoPoint inArray:self.currentProfile.locations];
-        [self.currentProfile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+        CLGeocoder *geocoder = [CLGeocoder new];
+        CLLocation *location = [[CLLocation alloc]initWithLatitude:tapPoint.latitude longitude:tapPoint.longitude];
+        [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, id error)
          {
              if (!error)
              {
-                 [self.mapView addAnnotation:annotation];
+                 CLPlacemark *placemark = placemarks.firstObject;
+                 NSString *address = [NSString stringWithFormat:@"%@:%@", placemark.subAdministrativeArea, placemark.administrativeArea];
+                 PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:tapPoint.latitude longitude:tapPoint.longitude];
+                 self.currentProfile.locations = [self addObjectId:geoPoint inArray:self.currentProfile.locations];
+                 [self.currentProfile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                  {
+                     if (!error)
+                     {
+                         MKPointAnnotation *annotation = [MKPointAnnotation new];
+                         annotation.coordinate = tapPoint;
+                         annotation.title = address;
+                         annotation.subtitle = [NSString stringWithFormat:@"%@ %@", self.currentProfile.firstName, self.currentProfile.lastName];
+                         [self.mapView addAnnotation:annotation];
+                     }
+                     else
+                     {
+                         [self error:error];
+                     }
+                 }];
              }
-             else
-             {
-                 [self error:error];
-             }
-         }];
+            else
+            {
+                [self error:error];
+            }
+        }];
     }
 }
 
@@ -125,7 +138,6 @@
 
 -(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
-
     MKPinAnnotationView *pin = [[MKPinAnnotationView alloc]initWithAnnotation:annotation
                                                               reuseIdentifier:nil];
     pin.canShowCallout = YES;
@@ -133,11 +145,11 @@
     NSString *name = [NSString stringWithFormat:@"%@ %@", self.currentProfile.firstName, self.currentProfile.lastName];
     if ([annotation.subtitle isEqual:name])
     {
-        pin.pinColor = MKPinAnnotationColorGreen;
+        pin.pinColor = MKPinAnnotationColorRed;
     }
     else
     {
-        pin.pinColor = MKPinAnnotationColorPurple;
+        pin.pinColor = MKPinAnnotationColorGreen;
     }
     return pin;
 }
@@ -158,6 +170,8 @@
                  coordinateSpan.longitudeDelta = 1;
                  MKCoordinateRegion region = MKCoordinateRegionMake(center, coordinateSpan);
                  [self.mapView setRegion:region animated:YES];
+                 [self.view endEditing:YES];
+                 searchBar.text = @"";
              }
          }
          else
