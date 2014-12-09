@@ -890,7 +890,7 @@
                         <outlet property="segmentedControl" destination="BIn-VE-cz4" id="yem-cA-Xpo"/>
                         <segue destination="xDp-qw-o4k" kind="push" identifier="friendSegue" id="PZW-Xt-7sq"/>
                         <segue destination="zvt-cb-nWk" kind="push" identifier="groupSegue" id="ohF-rU-5c0"/>
-                        <segue destination="JBZ-Ol-jcR" kind="push" id="f00-2h-GJa"/>
+                        <segue destination="JBZ-Ol-jcR" kind="push" identifier="mapSegue" id="f00-2h-GJa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Svb-Dq-xvf" userLabel="First Responder" sceneMemberID="firstResponder"/>

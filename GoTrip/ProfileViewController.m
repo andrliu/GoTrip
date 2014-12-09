@@ -366,7 +366,13 @@
 {
     [self refreshCurrentPageControl];
 }
-- (IBAction)mapOnButtonPressed:(UIButton *)sender {
+
+- (IBAction)mapOnButtonPressed:(UIButton *)sender
+{
+    if (self.listArray)
+    {
+        [self performSegueWithIdentifier:@"mapSegue" sender:self];
+    }
 }
 
 //MARK: segue
@@ -384,7 +390,7 @@
         udvc.profile = sender;
         udvc.currentProfile = self.profile;
     }
-    else if ([segue.identifier isEqual:@"mapSegue"] && self.friendListArray)
+    else
     {
         ActivityViewController *avc = segue.destinationViewController;
         avc.currentProfile = self.profile;
