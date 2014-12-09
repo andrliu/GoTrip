@@ -12,5 +12,6 @@
 @interface ActivityViewController : UIViewController
 
 @property Profile *currentProfile;
+@property NSArray *userProfiles;
 
 @end

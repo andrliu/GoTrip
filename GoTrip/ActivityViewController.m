@@ -14,6 +14,7 @@
 @interface ActivityViewController () <MKMapViewDelegate, UISearchBarDelegate>
 
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property NSString *currentProfileName;
 
 @end
 
@@ -22,6 +23,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.currentProfileName = [NSString stringWithFormat:@"%@ %@", self.currentProfile.firstName, self.currentProfile.lastName];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -29,22 +31,29 @@
     [super viewWillAppear:animated];
     for (PFGeoPoint *geoPoint in self.currentProfile.locations)
     {
-        [self reverseGeocodeWithLatitude:geoPoint.latitude andLongitude:geoPoint.longitude];
+        [self reverseGeocodeWithLatitude:geoPoint.latitude andLongitude:geoPoint.longitude withProfileName:self.currentProfileName];
+    }
+    for (Profile *profile in self.userProfiles)
+    {
+        for (PFGeoPoint *geoPoint in profile.locations)
+        {
+            [self reverseGeocodeWithLatitude:geoPoint.latitude andLongitude:geoPoint.longitude withProfileName:[NSString stringWithFormat:@"%@ %@", profile.firstName, profile.lastName]];
+        }
     }
 }
 
-- (void)reverseGeocodeWithLatitude:(double)latitude andLongitude:(double)longitude
+- (void)reverseGeocodeWithLatitude:(double)latitude andLongitude:(double)longitude withProfileName:(NSString *)name
 {
     CLGeocoder *geocoder = [CLGeocoder new];
     CLLocation *location = [[CLLocation alloc]initWithLatitude:latitude longitude:longitude];
     [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, id error)
      {
          CLPlacemark *placemark = placemarks.firstObject;
-         NSString *address = [NSString stringWithFormat:@"%@:%@", placemark.subAdministrativeArea, placemark.administrativeArea];
+         NSString *address = [NSString stringWithFormat:@"%@:%@", placemark.administrativeArea, placemark.country];
          MKPointAnnotation *annotation = [MKPointAnnotation new];
          annotation.coordinate =  location.coordinate;
          annotation.title = address;
-         annotation.subtitle = [NSString stringWithFormat:@"%@ %@", self.currentProfile.firstName, self.currentProfile.lastName];
+         annotation.subtitle = name;
          [self.mapView addAnnotation:annotation];
      }];
 }
@@ -72,7 +81,7 @@
                          MKPointAnnotation *annotation = [MKPointAnnotation new];
                          annotation.coordinate = tapPoint;
                          annotation.title = address;
-                         annotation.subtitle = [NSString stringWithFormat:@"%@ %@", self.currentProfile.firstName, self.currentProfile.lastName];
+                         annotation.subtitle = self.currentProfileName;
                          [self.mapView addAnnotation:annotation];
                      }
                      else
@@ -91,20 +100,37 @@
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
-    CLLocationCoordinate2D coord = [view.annotation coordinate];
-    PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:coord.latitude longitude:coord.longitude];
-    self.currentProfile.locations = [self removeObjectId:geoPoint inArray:self.currentProfile.locations];
-    [self.currentProfile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
-     {
-         if (!error)
-         {
-             [self.mapView removeAnnotation:view.annotation];
-         }
-         else
-         {
-             [self error:error];
-         }
-     }];
+    if ([view.annotation.subtitle isEqual:self.currentProfileName])
+    {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Delete Spot"
+                                                                       message:nil
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:nil];
+        [alert addAction:cancelAction];
+        UIAlertAction *addAction = [UIAlertAction actionWithTitle:@"Delete"
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction *action)
+                                    {
+                                            CLLocationCoordinate2D coord = [view.annotation coordinate];
+                                            PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:coord.latitude longitude:coord.longitude];
+                                            self.currentProfile.locations = [self removeObjectId:geoPoint inArray:self.currentProfile.locations];
+                                            [self.currentProfile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                                             {
+                                                 if (!error)
+                                                 {
+                                                     [self.mapView removeAnnotation:view.annotation];
+                                                 }
+                                                 else
+                                                 {
+                                                     [self error:error];
+                                                 }
+                                             }];
+                                    }];
+        [alert addAction:addAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
 
 - (NSArray *)addObjectId:(PFGeoPoint *)Object inArray:(NSArray *)array
@@ -141,11 +167,10 @@
     MKPinAnnotationView *pin = [[MKPinAnnotationView alloc]initWithAnnotation:annotation
                                                               reuseIdentifier:nil];
     pin.canShowCallout = YES;
-    pin.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    NSString *name = [NSString stringWithFormat:@"%@ %@", self.currentProfile.firstName, self.currentProfile.lastName];
-    if ([annotation.subtitle isEqual:name])
+    if ([annotation.subtitle isEqual:self.currentProfileName])
     {
         pin.pinColor = MKPinAnnotationColorRed;
+        pin.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     }
     else
     {

@@ -382,10 +382,11 @@
         udvc.profile = sender;
         udvc.currentProfile = self.profile;
     }
-    else
+    else if ([segue.identifier isEqual:@"mapSegue"])
     {
         ActivityViewController *avc = segue.destinationViewController;
         avc.currentProfile = self.profile;
+        avc.userProfiles = self.profile.friends;
     }
 }
 
