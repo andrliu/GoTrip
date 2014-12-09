@@ -29,6 +29,8 @@
  */
 @interface JSQMessage : NSObject <JSQMessageData, NSCoding, NSCopying>
 
+//@property (strong, nonatomic) NSString *profileId;
+
 /**
  *  Returns the string identifier that uniquely identifies the user who sent the message. 
  */
@@ -56,6 +58,7 @@
  *  That is, if `isMediaMessage` is equal to `YES` then this value will be `nil`.
  */
 @property (copy, nonatomic, readonly) NSString *text;
+
 
 /**
  *  Returns the media item attachment of the message, or `nil` if the message is not a media message.

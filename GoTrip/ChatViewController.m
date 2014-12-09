@@ -1,4 +1,4 @@
- //
+//
 //  MessageViewController.m
 //  GoTrip
 //
@@ -22,7 +22,7 @@
 #import "JSQMessagesViewController.h"
 
 #import "JSQMessagesKeyboardController.h"
-
+#import "GTMessage.h"
 
 
 #import "JSQMessagesCollectionViewFlowLayoutInvalidationContext.h"
@@ -49,6 +49,7 @@
 #define MAX_ENTRIES_LOADED 10
 
 @interface ChatViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, JSQMessagesCollectionViewDelegateFlowLayout, JSQMessagesCollectionViewDataSource>
+@property NSMutableDictionary *avatars;
 @property (weak, nonatomic) IBOutlet UITableView *messageTableView;
 @property (weak, nonatomic) IBOutlet UITextField *recipientTextField;
 @property NSString *userName;
@@ -74,6 +75,7 @@
     
     //basic setup
     [super viewDidLoad];
+    self.inputToolbar.contentView.leftBarButtonItem = nil;
     
     if(self.passedGroup != nil)
         self.isGroupChat = YES;
@@ -91,7 +93,7 @@
         [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error) {
             self.currentUserProfile = profile;
             NSString *nameString = [NSString stringWithFormat:@"%@ %@",self.currentUserProfile.firstName, self.currentUserProfile.lastName];
-//            self.userName = self.currentUserProfile.objectId;
+            //            self.userName = self.currentUserProfile.objectId;
             self.userName = nameString;
             self.senderId = nameString;
             self.currentGroupProfile = self.passedGroup;
@@ -317,7 +319,7 @@
                 }
                 
                 [queryInstallation whereKey:@"user" containedIn:tempArray2];
-
+                
                 PFPush *push = [[PFPush alloc] init];
                 [push setQuery:queryInstallation];
                 NSDictionary *dict = @{@"aps":@{@"alert":text},@"groupId":self.currentGroupProfile.objectId};
@@ -331,7 +333,7 @@
                  }];
             }];
             
-
+            
             
         }];
         
@@ -355,8 +357,8 @@
         [push setQuery:queryInstallation];
         NSDictionary *dict = @{@"aps":@{@"alert":text},@"objectId":self.currentUserProfile.objectId};
         [push setData:dict];
-//        [push setMessage:text];
-
+        //        [push setMessage:text];
+        
         [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
          {
              if (error != nil)
@@ -497,6 +499,11 @@
                 
                 //                     JSQMessage *message = [[JSQMessage alloc] initWithSenderId:@"Jon" senderDisplayName:@"Jon" date:[NSDate date] text:@"hihihihihi"];
                 JSQMessage *message = [[JSQMessage alloc] initWithSenderId: originalMessage.userName senderDisplayName: originalMessage.userName  date:originalMessage.createdAt text:originalMessage.text];
+                
+                
+//                GTMessage *gtMessage = [[GTMessage alloc] init];
+//                gtMessage = (GTMessage *)message;
+//                message.profileId = originalMessage.sender.objectId;
                 
                 [self.messageData addObject:message];
                 
@@ -670,6 +677,20 @@
     [self textFieldShouldReturn:self.messageTextField];
 }
 
+//
+///**
+// *  Asks the data source for the current sender's unique identifier, that is, the current user who is sending messages.
+// *
+// *  @return An initialized string identifier that uniquely identifies the current sender.
+// *
+// *  @warning You must not return `nil` from this method. This value must be unique.
+// */
+- (NSString *)senderId
+{
+    return self.userName;
+}
+
+
 /**
  *  Asks the data source for the current sender's display name, that is, the current user who is sending messages.
  *
@@ -679,7 +700,7 @@
  */
 - (NSString *)senderDisplayName
 {
-    return @"Jon";
+    return self.userName;
 }
 
 
@@ -687,26 +708,26 @@
 {
     if(self.isGroupChat) //group converstaion logic
     {
-    JSQMessage *message = [self.messageData objectAtIndex:indexPath.item];
-    
-    /**
-     *  iOS7-style sender name labels
-     */
-    if ([message.senderId isEqualToString:self.senderId]) {
-        return nil;
-    }
-    
-    if (indexPath.item - 1 > 0) {
-        JSQMessage *previousMessage = [self.messageData objectAtIndex:indexPath.item - 1];
-        if ([[previousMessage senderId] isEqualToString:message.senderId]) {
+        JSQMessage *message = [self.messageData objectAtIndex:indexPath.item];
+        
+        /**
+         *  iOS7-style sender name labels
+         */
+        if ([message.senderId isEqualToString:self.senderId]) {
             return nil;
         }
-    }
-    
-    /**
-     *  Don't specify attributes to use the defaults.
-     */
-    return [[NSAttributedString alloc] initWithString:message.senderDisplayName];
+        
+        if (indexPath.item - 1 > 0) {
+            JSQMessage *previousMessage = [self.messageData objectAtIndex:indexPath.item - 1];
+            if ([[previousMessage senderId] isEqualToString:message.senderId]) {
+                return nil;
+            }
+        }
+        
+        /**
+         *  Don't specify attributes to use the defaults.
+         */
+        return [[NSAttributedString alloc] initWithString:message.senderDisplayName];
     }
     else
         return nil;
@@ -735,18 +756,6 @@
 
 
 
-//
-///**
-// *  Asks the data source for the current sender's unique identifier, that is, the current user who is sending messages.
-// *
-// *  @return An initialized string identifier that uniquely identifies the current sender.
-// *
-// *  @warning You must not return `nil` from this method. This value must be unique.
-// */
-- (NSString *)senderId
-{
-    return self.userName;
-}
 
 /**
  *  Asks the data source for the message data that corresponds to the specified item at indexPath in the collectionView.
@@ -826,7 +835,57 @@
 
 {
     JSQMessagesAvatarImage *placeholderImageData = [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageNamed:@"blank_avatar"] diameter:30.0];
-    
+
+    if(self.isGroupChat) //group converstaion logic
+    {
+                self.avatars = [NSMutableDictionary dictionary];
+        JSQMessage *message = self.messageData[indexPath.item];
+        
+        PFQuery *query = [Profile query];
+        NSString *yourString = message.senderDisplayName;
+        yourString = [yourString lowercaseString];
+
+        NSArray *values = [yourString componentsSeparatedByCharactersInSet:
+                           [NSCharacterSet whitespaceCharacterSet]];
+        
+        // Remove the empty strings.
+        values = [values filteredArrayUsingPredicate:
+                  [NSPredicate predicateWithFormat:@"SELF != ''"]];
+        
+//        yourString = [yourString stringByReplacingOccurrencesOfString:@" " withString:@""];
+        [query whereKey:@"canonicalFirstName" equalTo:values[0]];
+//        [query whereKey:@"canonicalLastName" equalTo:values[1]];
+
+        
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            Profile *profile = [[Profile alloc] init];
+            if(profile.avatarData == nil)
+            {
+                self.avatars[profile.objectId] = [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageWithData:profile.avatarData] diameter:30.0];
+                [self.collectionView reloadData];
+            }
+            
+            
+        }];
+        return placeholderImageData;
+    }
+    else
+        return placeholderImageData;
+    //    PFUser *user = users[indexPath.item];
+    //    if (avatars[user.objectId] == nil)
+    //    {
+    //        PFFile *fileThumbnail = user[PF_USER_THUMBNAIL];
+    //        [fileThumbnail getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error)
+    //         {
+    //             if (error == nil)
+    //             {
+    //                 avatars[user.objectId] = [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageWithData:imageData] diameter:30.0];
+    //                 [self.collectionView reloadData];
+    //             }
+    //         }];
+    //        return placeholderImageData;
+    //    }
+    //    else return avatars[user.objectId];
     
     return placeholderImageData;
     //    return nil;
@@ -898,23 +957,23 @@
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
     if(self.isGroupChat) //group converstaion logic
-
+        
     {
-    JSQMessage *message = self.messageData[indexPath.item];
-    if ([message.senderId isEqualToString:self.userName])
-    {
-        return 0.0f;
-    }
-    
-    if (indexPath.item - 1 > 0)
-    {
-        JSQMessage *previousMessage = self.messageData[indexPath.item-1];
-        if ([previousMessage.senderId isEqualToString:message.senderId])
+        JSQMessage *message = self.messageData[indexPath.item];
+        if ([message.senderId isEqualToString:self.userName])
         {
             return 0.0f;
         }
-    }
-    return kJSQMessagesCollectionViewCellLabelHeightDefault;
+        
+        if (indexPath.item - 1 > 0)
+        {
+            JSQMessage *previousMessage = self.messageData[indexPath.item-1];
+            if ([previousMessage.senderId isEqualToString:message.senderId])
+            {
+                return 0.0f;
+            }
+        }
+        return kJSQMessagesCollectionViewCellLabelHeightDefault;
     }
     else
         return 0.0f;
