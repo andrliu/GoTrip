@@ -100,8 +100,6 @@
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
-    if ([view.annotation.subtitle isEqual:self.currentProfileName])
-    {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Delete Spot"
                                                                        message:nil
                                                                 preferredStyle:UIAlertControllerStyleAlert];
@@ -130,7 +128,6 @@
                                     }];
         [alert addAction:addAction];
         [self presentViewController:alert animated:YES completion:nil];
-    }
 }
 
 - (NSArray *)addObjectId:(PFGeoPoint *)Object inArray:(NSArray *)array

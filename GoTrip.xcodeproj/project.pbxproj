@@ -99,7 +99,6 @@
 		7BD4B66B1A2EAF52001EF2F6 /* tab_messages@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BD4B6651A2EAF52001EF2F6 /* tab_messages@2x.png */; };
 		7BD4B66C1A2EAF52001EF2F6 /* tab_private@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BD4B6661A2EAF52001EF2F6 /* tab_private@2x.png */; };
 		7BD4B66D1A2EAF52001EF2F6 /* tab_profile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BD4B6671A2EAF52001EF2F6 /* tab_profile@2x.png */; };
-		7BDEA59D1A3766790001B3E6 /* GTMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEA59C1A3766790001B3E6 /* GTMessage.m */; };
 		FA14B9071A2D3AC000950C27 /* TextTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA14B9061A2D3AC000950C27 /* TextTableViewCell.m */; };
 		FA14B90B1A2D3AE300950C27 /* ImageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA14B90A1A2D3AE300950C27 /* ImageTableViewCell.m */; };
 		FA14B90E1A2D3AF900950C27 /* ButtonTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA14B90D1A2D3AF900950C27 /* ButtonTableViewCell.m */; };
@@ -1171,8 +1170,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jonathan Chou (RY5MDGEG5K)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jonathan Chou (RY5MDGEG5K)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Andrew Liu (4569Z5KKMP)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Andrew Liu (4569Z5KKMP)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1188,8 +1187,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Alex Emelyanov (KFJT2N4T78)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Alex Emelyanov (KFJT2N4T78)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

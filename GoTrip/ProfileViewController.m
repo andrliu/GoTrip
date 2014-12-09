@@ -27,6 +27,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *imageButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
+@property (weak, nonatomic) IBOutlet UIButton *mapButton;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property Profile *profile;
@@ -36,6 +37,8 @@
 @property NSArray *pendingFriendListArray;
 @property NSArray *listArray;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
+@property BOOL isLoadingGroups;
+@property BOOL isLoadingFriends;
 
 @end
 
@@ -76,7 +79,7 @@
 {
     if ([sender.title isEqual: @"Logout"])
     {
-        self.isImagePickerCalled = NO;
+//        self.isImagePickerCalled = NO;
         self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:0];
         PFInstallation *installation = [PFInstallation currentInstallation];
         [installation removeObjectForKey:@"user"];
@@ -88,7 +91,8 @@
         [self editMode:NO];
         sender.title = @"Logout";
         self.editButton.title = @"Edit";
-        self.isImagePickerCalled = NO;
+//        self.isImagePickerCalled = NO;
+        [self refreshPersonalProfile];
         [self.view endEditing:YES];
     }
 }
@@ -105,7 +109,7 @@
         [self.pageControl setHidden:NO];
         self.pageControl.numberOfPages = 1;
     }
-    else if (2 < self.listArray.count && self.listArray.count <= 3)
+    else if (2 < self.listArray.count && self.listArray.count <= 4)
     {
         [self.pageControl setHidden:NO];
         self.pageControl.numberOfPages = 2;
@@ -138,6 +142,9 @@
 
 - (void)refreshPersonalProfile
 {
+    self.isLoadingFriends = YES;
+    self.isLoadingGroups = YES;
+//    self.isImagePickerCalled = NO;
     [Profile checkForProfile:^(Profile *profile, NSError *error)
     {
          if (!error)
@@ -147,52 +154,56 @@
              self.firstNameLabel.text = self.profile.firstName;
              self.lastNameLabel.text = self.profile.lastName;
              self.memoLabel.text = self.profile.memo;
-             self.isImagePickerCalled = NO;
-            [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error)
-            {
-                if (!error)
-                {
-                    self.profile = profile;
-                    self.friendListArray = self.profile.friends;
-                    self.pendingFriendListArray = self.profile.pendingFriends;
-                    if (self.segmentedControl.selectedSegmentIndex == 0)
-                    {
-                        [self segmentedControl:self.segmentedControl];
-                    }
-                    else if (self.segmentedControl.selectedSegmentIndex == 1)
-                    {
-                        [self segmentedControl:self.segmentedControl];
-                    }
-                    [self.segmentedControl setTitle:[NSString stringWithFormat:@"Friends (%lu)",(unsigned long)self.profile.friends.count] forSegmentAtIndex:0];
-                    [self.segmentedControl setTitle:[NSString stringWithFormat:@"Pendings (%lu)",(unsigned long)self.profile.pendingFriends.count] forSegmentAtIndex:1];
-                    [Group getCurrentGroupsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error)
-                    {
-                        if (!error)
-                        {
-                            self.groupListArray = objects;
-                            if (self.segmentedControl.selectedSegmentIndex == 2)
-                            {
-                                [self segmentedControl:self.segmentedControl];
-                            }
-                            [self.segmentedControl setTitle:[NSString stringWithFormat:@"Groups (%lu)",(unsigned long)self.groupListArray.count] forSegmentAtIndex:2];
-                        }
-                        else
-                        {
-                            [self error:error];
-                        }
-                    }];
-                }
-                else
-                {
-                    [self error:error];
-                }
-            }];
+             [Group getCurrentGroupsWithCurrentProfile:self.profile withCompletion:^(NSArray *objects, NSError *error)
+              {
+                  if (!error)
+                  {
+                    self.isLoadingGroups = NO;
+                      self.groupListArray = objects;
+                      if (self.segmentedControl.selectedSegmentIndex == 2)
+                      {
+                          [self segmentedControl:self.segmentedControl];
+                      }
+                      [self.segmentedControl setTitle:[NSString stringWithFormat:@"Groups (%lu)",(unsigned long)self.groupListArray.count] forSegmentAtIndex:2];
+                  }
+                  else
+                  {
+                      [self error:error];
+                  }
+              }];
          }
          else
          {
              [self error:error];
          }
-     }];
+    }];
+    [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error)
+    {
+        if (!error)
+        {
+            self.isLoadingFriends = NO;
+            self.profile = profile;
+            self.friendListArray = self.profile.friends;
+            self.pendingFriendListArray = self.profile.pendingFriends;
+            if (self.segmentedControl.selectedSegmentIndex == 0)
+            {
+                [self segmentedControl:self.segmentedControl];
+            }
+            else if (self.segmentedControl.selectedSegmentIndex == 1)
+            {
+                [self segmentedControl:self.segmentedControl];
+            }
+            [self.segmentedControl setTitle:[NSString stringWithFormat:@"Friends (%lu)",(unsigned long)self.profile.friends.count] forSegmentAtIndex:0];
+            [self.segmentedControl setTitle:[NSString stringWithFormat:@"Pendings (%lu)",(unsigned long)self.profile.pendingFriends.count] forSegmentAtIndex:1];
+
+        }
+        else
+        {
+            [self error:error];
+        }
+
+    }];
+
 }
 
 //MARK: dismiss keyboard
@@ -209,6 +220,7 @@
     [self.lastNameLabel setHidden:yes];
     [self.memoLabel setHidden:yes];
     [self.segmentedControl setHidden:yes];
+    [self.mapButton setHidden:yes];
     [self.collectionView setHidden:yes];
     [self.firstNameTextField setHidden:!yes];
     [self.lastNameTextField setHidden:!yes];
@@ -219,7 +231,7 @@
 //MARK: custom bar button action
 - (IBAction)editProfileOnButtonPressed:(UIBarButtonItem *)sender
 {
-    if ([sender.title isEqual: @"Edit"])
+    if ([sender.title isEqual: @"Edit"] && self.profile)
     {
         self.firstNameTextField.text = self.profile.firstName;
         self.lastNameTextField.text = self.profile.lastName;
@@ -228,7 +240,7 @@
         sender.title = @"Save";
         self.cancelButton.title = @"Cancel";
     }
-    else
+    else if (self.profile)
     {
         self.profile.firstName = self.firstNameTextField.text;
         self.profile.canonicalFirstName = [self.firstNameTextField.text lowercaseString];
@@ -246,7 +258,7 @@
                 self.firstNameLabel.text = self.profile.firstName;
                 self.lastNameLabel.text = self.profile.lastName;
                 self.memoLabel.text = self.profile.memo;
-                self.isImagePickerCalled = NO;
+//                self.isImagePickerCalled = NO;
                 [self.view endEditing:YES];
             }
             else
@@ -260,22 +272,23 @@
 //MARK: custom segment action
 - (IBAction)segmentedControl:(UISegmentedControl *)sender
 {
-    if (sender.selectedSegmentIndex == 0 && self.friendListArray)
+    if (sender.selectedSegmentIndex == 0 && !self.isLoadingFriends)
     {
             NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"canonicalFirstName" ascending:YES];
             self.friendListArray = [[self.friendListArray sortedArrayUsingDescriptors:@[sort]] mutableCopy];
             self.listArray = self.friendListArray;
     }
-    else if (sender.selectedSegmentIndex == 1 && self.pendingFriendListArray)
+    else if (sender.selectedSegmentIndex == 1 && !self.isLoadingFriends)
     {
             NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"canonicalFirstName" ascending:YES];
             self.pendingFriendListArray = [[self.pendingFriendListArray sortedArrayUsingDescriptors:@[sort]] mutableCopy];
             self.listArray = self.pendingFriendListArray;
     }
-    else if (sender.selectedSegmentIndex == 2 && self.groupListArray)
+    else if (!self.isLoadingGroups)
     {
             self.listArray = self.groupListArray;
     }
+    [self refreshNumberOfPageControl];
     [self.collectionView reloadData];
 //    if (self.listArray.count > 0)
 //    {
@@ -284,7 +297,6 @@
 //                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
 //                                            animated:YES];
 //    }
-    [self refreshNumberOfPageControl];
 }
 
 //MARK: custom imageView method
@@ -309,7 +321,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-    if (self.segmentedControl.selectedSegmentIndex == 2 && self.groupListArray)
+    if (self.segmentedControl.selectedSegmentIndex == 2 && !self.isLoadingGroups)
     {
         Group *group = self.listArray[indexPath.item];
         [self setImageView:cell.imageView withData:group.imageData withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
@@ -317,7 +329,7 @@
         cell.memoLabel.text = group.destination;
         cell.numberLabel.text = [NSString stringWithFormat:@"%lu ☺︎",(unsigned long)group.profiles.count];
     }
-    else if (self.listArray)
+    else if (!self.isLoadingFriends)
     {
         Profile *profile = self.listArray[indexPath.item];
         [self setImageView:cell.imageView withData:profile.avatarData withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
@@ -350,12 +362,12 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.segmentedControl.selectedSegmentIndex == 2 && self.groupListArray)
+    if (self.segmentedControl.selectedSegmentIndex == 2 && !self.isLoadingGroups)
     {
         Group *group = self.listArray[indexPath.item];
         [self performSegueWithIdentifier:@"groupSegue" sender:group];
     }
-    else if (self.listArray)
+    else if (!self.isLoadingFriends)
     {
         Profile *profile = self.listArray[indexPath.item];
         [self performSegueWithIdentifier:@"friendSegue" sender:profile];
@@ -369,7 +381,7 @@
 
 - (IBAction)mapOnButtonPressed:(UIButton *)sender
 {
-    if (self.listArray)
+    if (!self.isLoadingFriends)
     {
         [self performSegueWithIdentifier:@"mapSegue" sender:self];
     }

@@ -596,7 +596,7 @@
     
 }
 
-//navigation delegate method
+//MARK: navigation delegate method
 - (void)didSelectItemAtIndex:(NSUInteger)index
 {
     if (self.segmentedComtrol.selectedSegmentIndex == 1)
