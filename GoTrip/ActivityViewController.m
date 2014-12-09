@@ -49,7 +49,15 @@
     [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, id error)
      {
          CLPlacemark *placemark = placemarks.firstObject;
-         NSString *address = [NSString stringWithFormat:@"%@:%@", placemark.administrativeArea, placemark.country];
+         NSString *address = [NSString string];
+         if (placemark.subAdministrativeArea)
+         {
+             address = [NSString stringWithFormat:@"%@:%@", placemark.subAdministrativeArea, placemark.ISOcountryCode];
+         }
+         else
+         {
+             address = [NSString stringWithFormat:@"%@:%@", placemark.administrativeArea, placemark.ISOcountryCode];
+         }
          MKPointAnnotation *annotation = [MKPointAnnotation new];
          annotation.coordinate =  location.coordinate;
          annotation.title = address;
@@ -71,7 +79,15 @@
              if (!error)
              {
                  CLPlacemark *placemark = placemarks.firstObject;
-                 NSString *address = [NSString stringWithFormat:@"%@:%@", placemark.subAdministrativeArea, placemark.administrativeArea];
+                 NSString *address = [NSString string];
+                 if (placemark.subAdministrativeArea)
+                 {
+                     address = [NSString stringWithFormat:@"%@:%@", placemark.subAdministrativeArea, placemark.ISOcountryCode];
+                 }
+                 else
+                 {
+                     address = [NSString stringWithFormat:@"%@:%@", placemark.administrativeArea, placemark.ISOcountryCode];
+                 }
                  PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:tapPoint.latitude longitude:tapPoint.longitude];
                  self.currentProfile.locations = [self addObjectId:geoPoint inArray:self.currentProfile.locations];
                  [self.currentProfile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
