@@ -152,6 +152,8 @@
                 if (!error)
                 {
                     self.profile = profile;
+                    self.friendListArray = self.profile.friends;
+                    self.pendingFriendListArray = self.profile.pendingFriends;
                     if (self.segmentedControl.selectedSegmentIndex == 0)
                     {
                         [self segmentedControl:self.segmentedControl];
@@ -257,29 +259,30 @@
 //MARK: custom segment action
 - (IBAction)segmentedControl:(UISegmentedControl *)sender
 {
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"canonicalFirstName" ascending:YES];
-    if (sender.selectedSegmentIndex == 0)
+    if (sender.selectedSegmentIndex == 0 && self.friendListArray)
     {
-        self.profile.friends = [[self.profile.friends sortedArrayUsingDescriptors:@[sort]] mutableCopy];
-        self.listArray = self.profile.friends;
+            NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"canonicalFirstName" ascending:YES];
+            self.friendListArray = [[self.friendListArray sortedArrayUsingDescriptors:@[sort]] mutableCopy];
+            self.listArray = self.friendListArray;
     }
-    else if (sender.selectedSegmentIndex == 1)
+    else if (sender.selectedSegmentIndex == 1 && self.pendingFriendListArray)
     {
-        self.profile.pendingFriends = [[self.profile.pendingFriends sortedArrayUsingDescriptors:@[sort]] mutableCopy];
-        self.listArray = self.profile.pendingFriends;
+            NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"canonicalFirstName" ascending:YES];
+            self.pendingFriendListArray = [[self.pendingFriendListArray sortedArrayUsingDescriptors:@[sort]] mutableCopy];
+            self.listArray = self.pendingFriendListArray;
     }
-    else
+    else if (sender.selectedSegmentIndex == 2 && self.groupListArray)
     {
-        self.listArray = self.groupListArray;
+            self.listArray = self.groupListArray;
     }
     [self.collectionView reloadData];
-    if (self.listArray.count > 0)
-    {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
-        [self.collectionView scrollToItemAtIndexPath:indexPath
-                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                            animated:YES];
-    }
+//    if (self.listArray.count > 0)
+//    {
+//        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
+//        [self.collectionView scrollToItemAtIndexPath:indexPath
+//                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+//                                            animated:YES];
+//    }
     [self refreshNumberOfPageControl];
 }
 
@@ -305,19 +308,21 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-    if (self.segmentedControl.selectedSegmentIndex == 2)
+    if (self.segmentedControl.selectedSegmentIndex == 2 && self.groupListArray)
     {
         Group *group = self.listArray[indexPath.item];
         [self setImageView:cell.imageView withData:group.imageData withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
-        cell.nameLabel.text = [NSString stringWithFormat:@"%@ (%lu☺︎)",group.name,(unsigned long)group.profiles.count];
+        cell.nameLabel.text = group.name;
         cell.memoLabel.text = group.destination;
+        cell.numberLabel.text = [NSString stringWithFormat:@"%lu ☺︎",(unsigned long)group.profiles.count];
     }
-    else
+    else if (self.listArray)
     {
         Profile *profile = self.listArray[indexPath.item];
         [self setImageView:cell.imageView withData:profile.avatarData withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
         cell.nameLabel.text = profile.firstName;
         cell.memoLabel.text = profile.memo;
+        cell.numberLabel.text = @"";
     }
     return cell;
 }
@@ -344,12 +349,12 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.segmentedControl.selectedSegmentIndex == 2)
+    if (self.segmentedControl.selectedSegmentIndex == 2 && self.groupListArray)
     {
         Group *group = self.listArray[indexPath.item];
         [self performSegueWithIdentifier:@"groupSegue" sender:group];
     }
-    else
+    else if (self.listArray)
     {
         Profile *profile = self.listArray[indexPath.item];
         [self performSegueWithIdentifier:@"friendSegue" sender:profile];
@@ -370,7 +375,7 @@
         gdvc.group = sender;
         gdvc.currentProfile = self.profile;
     }
-    else
+    else if ([segue.identifier isEqual:@"friendSegue"])
     {
         UserDetailViewController *udvc = segue.destinationViewController;
         udvc.profile = sender;

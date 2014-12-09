@@ -386,26 +386,26 @@
 
 - (IBAction)changeListOnSegmentControl:(UISegmentedControl *)sender
 {
-    if (sender.selectedSegmentIndex == 0)
+    if (sender.selectedSegmentIndex == 0 && self.arrayOfFriend)
     {
         self.listArray = self.arrayOfFriend;
     }
-    else if (sender.selectedSegmentIndex == 1)
+    else if (sender.selectedSegmentIndex == 1 && self.arrayOfComment)
     {
         self.listArray = self.arrayOfComment;
     }
-    else
+    else if (sender.selectedSegmentIndex == 2 && self.arrayOfGroup)
     {
         self.listArray = self.arrayOfGroup;
     }
     [self.collectionView reloadData];
-    if (self.listArray.count > 0)
-    {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
-        [self.collectionView scrollToItemAtIndexPath:indexPath
-                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                            animated:YES];
-    }
+//    if (self.listArray.count > 0)
+//    {
+//        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
+//        [self.collectionView scrollToItemAtIndexPath:indexPath
+//                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+//                                            animated:YES];
+//    }
     [self refreshNumberOfPageControl];
 }
 
@@ -430,19 +430,20 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.segmentedControl.selectedSegmentIndex == 0)
+    CustomCollectionViewCell *cell = [CustomCollectionViewCell new];
+    if (self.segmentedControl.selectedSegmentIndex == 0 && self.arrayOfFriend)
     {
-        CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"listCell" forIndexPath:indexPath];
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"listCell" forIndexPath:indexPath];
         Profile *profile = self.listArray[indexPath.item];
         [self setImageView:cell.imageView withData:profile.avatarData withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
         cell.nameLabel.text = profile.firstName;
         cell.memoLabel.text = profile.memo;
-        return cell;
+        cell.numberLabel.text = @"";
     }
-    else if (self.segmentedControl.selectedSegmentIndex == 1)
+    else if (self.segmentedControl.selectedSegmentIndex == 1 && self.arrayOfComment)
     {
-        CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-        Comment *comment = self.arrayOfComment[indexPath.item];
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+        Comment *comment = self.listArray[indexPath.item];
         cell.textView.text = comment.text;
         [self setImageView:cell.backgroundImageView withData:nil withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
         [self setImageView:cell.imageView withData:comment.sender.avatarData withLayerRadius:cell.imageView.frame.size.width/2 withBorderColor:[UIColor whiteColor].CGColor];
@@ -450,17 +451,17 @@
         [dateFormatter setDateFormat:@"MM/dd/yyyy"];
         NSString *stringOfDate = [dateFormatter stringFromDate:comment.createdAt];
         cell.nameLabel.text = [NSString stringWithFormat:@"by %@ %@", comment.sender.firstName, stringOfDate];
-        return cell;
     }
-    else
+    else if (self.segmentedControl.selectedSegmentIndex == 2 && self.arrayOfGroup)
     {
-        CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"listCell" forIndexPath:indexPath];
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"listCell" forIndexPath:indexPath];
         Group *group = self.listArray[indexPath.item];
         [self setImageView:cell.imageView withData:group.imageData withLayerRadius:10.0f withBorderColor:[UIColor blackColor].CGColor];
-        cell.nameLabel.text = [NSString stringWithFormat:@"%@ (%lu☺︎)",group.name,(unsigned long)group.profiles.count];
+        cell.nameLabel.text = group.name;
         cell.memoLabel.text = group.destination;
-        return cell;
+        cell.numberLabel.text = [NSString stringWithFormat:@"%lu ☺︎",(unsigned long)group.profiles.count];
     }
+    return cell;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -470,18 +471,18 @@
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.segmentedControl.selectedSegmentIndex == 2)
+    if (self.segmentedControl.selectedSegmentIndex == 2 && self.arrayOfGroup)
     {
         Group *group = self.listArray[indexPath.item];
         [self performSegueWithIdentifier:@"groupSegue" sender:group];
     }
-    else if (self.segmentedControl.selectedSegmentIndex == 1)
+    else if (self.segmentedControl.selectedSegmentIndex == 1 && self.arrayOfComment)
     {
         Comment *comment = self.listArray[indexPath.item];
         self.profile = comment.sender;
         [self refreshView];
     }
-    else
+    else if (self.segmentedControl.selectedSegmentIndex == 0 && self.arrayOfFriend)
     {
         Profile *profile = self.listArray[indexPath.item];
         self.profile = profile;
@@ -523,7 +524,7 @@
         ChatViewController *cvc = segue.destinationViewController;
         cvc.passedRecipient = sender;
     }
-    else
+    else if ([segue.identifier isEqual:@"groupSegue"])
     {
         GroupDetailViewController *gdvc = segue.destinationViewController;
         gdvc.group = sender;
