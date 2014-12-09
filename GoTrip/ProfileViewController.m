@@ -27,6 +27,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *imageButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
+@property (weak, nonatomic) IBOutlet UIButton *mapButton;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property Profile *profile;
@@ -219,8 +220,7 @@
     [self.lastNameLabel setHidden:yes];
     [self.memoLabel setHidden:yes];
     [self.segmentedControl setHidden:yes];
-    //TODO: hide button && change button text to "Wish List"
-//    [self.mapButton setHidden:yes];
+    [self.mapButton setHidden:yes];
     [self.collectionView setHidden:yes];
     [self.firstNameTextField setHidden:!yes];
     [self.lastNameTextField setHidden:!yes];
