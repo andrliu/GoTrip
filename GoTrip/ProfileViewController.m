@@ -366,6 +366,8 @@
 {
     [self refreshCurrentPageControl];
 }
+- (IBAction)mapOnButtonPressed:(UIButton *)sender {
+}
 
 //MARK: segue
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -382,7 +384,7 @@
         udvc.profile = sender;
         udvc.currentProfile = self.profile;
     }
-    else if ([segue.identifier isEqual:@"mapSegue"])
+    else if ([segue.identifier isEqual:@"mapSegue"] && self.friendListArray)
     {
         ActivityViewController *avc = segue.destinationViewController;
         avc.currentProfile = self.profile;
