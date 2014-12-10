@@ -23,7 +23,9 @@
 
 #import "JSQMessagesKeyboardController.h"
 #import "GTMessage.h"
-
+#import "JSQMessageAvatarImageDataSource.h"
+#import "JSQMessagesAvatarImageFactory.h"
+#import "JSQMessagesAvatarImage.h"
 
 #import "JSQMessagesCollectionViewFlowLayoutInvalidationContext.h"
 
@@ -76,6 +78,7 @@
     //basic setup
     [super viewDidLoad];
     self.inputToolbar.contentView.leftBarButtonItem = nil;
+    self.avatars = [NSMutableDictionary dictionary];
     
     if(self.passedGroup != nil)
         self.isGroupChat = YES;
@@ -501,9 +504,9 @@
                 JSQMessage *message = [[JSQMessage alloc] initWithSenderId: originalMessage.userName senderDisplayName: originalMessage.userName  date:originalMessage.createdAt text:originalMessage.text];
                 
                 
-//                GTMessage *gtMessage = [[GTMessage alloc] init];
-//                gtMessage = (GTMessage *)message;
-//                message.profileId = originalMessage.sender.objectId;
+                //                GTMessage *gtMessage = [[GTMessage alloc] init];
+                //                gtMessage = (GTMessage *)message;
+                //                message.profileId = originalMessage.sender.objectId;
                 
                 [self.messageData addObject:message];
                 
@@ -835,39 +838,54 @@
 
 {
     JSQMessagesAvatarImage *placeholderImageData = [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageNamed:@"blank_avatar"] diameter:30.0];
-
+    
+    
     if(self.isGroupChat) //group converstaion logic
     {
-                self.avatars = [NSMutableDictionary dictionary];
+        
         JSQMessage *message = self.messageData[indexPath.item];
         
-        PFQuery *query = [Profile query];
-        NSString *yourString = message.senderDisplayName;
-        yourString = [yourString lowercaseString];
-
-        NSArray *values = [yourString componentsSeparatedByCharactersInSet:
-                           [NSCharacterSet whitespaceCharacterSet]];
-        
-        // Remove the empty strings.
-        values = [values filteredArrayUsingPredicate:
-                  [NSPredicate predicateWithFormat:@"SELF != ''"]];
-        
-//        yourString = [yourString stringByReplacingOccurrencesOfString:@" " withString:@""];
-        [query whereKey:@"canonicalFirstName" equalTo:values[0]];
-//        [query whereKey:@"canonicalLastName" equalTo:values[1]];
-
-        
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            Profile *profile = [[Profile alloc] init];
-            if(profile.avatarData == nil)
-            {
-                self.avatars[profile.objectId] = [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageWithData:profile.avatarData] diameter:30.0];
-                [self.collectionView reloadData];
-            }
+        if(self.avatars[message.senderDisplayName] == nil)
+        {
+            
+            PFQuery *query = [Profile query];
+            NSString *yourString = message.senderDisplayName;
+            yourString = [yourString lowercaseString];
+            
+            NSArray *values = [yourString componentsSeparatedByCharactersInSet:
+                               [NSCharacterSet whitespaceCharacterSet]];
+            
+            // Remove the empty strings.
+            values = [values filteredArrayUsingPredicate:
+                      [NSPredicate predicateWithFormat:@"SELF != ''"]];
+            
+            //        yourString = [yourString stringByReplacingOccurrencesOfString:@" " withString:@""];
+            [query whereKey:@"canonicalFirstName" equalTo:values[0]];
+            [query whereKey:@"canonicalLastName" equalTo:values[1]];
             
             
-        }];
-        return placeholderImageData;
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                NSLog(@"in loop");
+                Profile *profile = objects.firstObject;
+                NSString *nameString = [NSString stringWithFormat:@"%@ %@",profile.firstName, profile.lastName];
+
+                if(profile.avatarData != nil)
+                {
+                    
+                    self.avatars[nameString] = [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageWithData:profile.avatarData] diameter:30.0];
+                    
+                    [self.collectionView reloadData];
+                }
+                
+                else
+                
+                {
+                    self.avatars[nameString] = placeholderImageData;
+                }
+            }];
+        }
+        else
+            return self.avatars[message.senderDisplayName];
     }
     else
         return placeholderImageData;

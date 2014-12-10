@@ -963,7 +963,6 @@
 				7B4341161A2D706C00977158 /* JSQMessagesCollectionViewFlowLayout.m in Sources */,
 				FA9541571A365E2F00C46D95 /* EditTableViewCell.m in Sources */,
 				4937C37E1A22B7480087E8CF /* ProfileViewController.m in Sources */,
-				7BDEA59D1A3766790001B3E6 /* GTMessage.m in Sources */,
 				7B4341121A2D706C00977158 /* JSQMessagesBubbleImageFactory.m in Sources */,
 				7B43410D1A2D706C00977158 /* UIView+JSQMessages.m in Sources */,
 				4937C3BB1A23CB0A0087E8CF /* LoginViewController.m in Sources */,
@@ -1170,8 +1169,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Andrew Liu (4569Z5KKMP)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Andrew Liu (4569Z5KKMP)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jonathan Chou (RY5MDGEG5K)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jonathan Chou (RY5MDGEG5K)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1187,7 +1186,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jonathan Chou (RY5MDGEG5K)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
