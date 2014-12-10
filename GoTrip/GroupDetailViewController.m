@@ -566,10 +566,24 @@
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+//TODO: optimize the logic for performance
     if (collectionView.tag == 0)
     {
         Profile *profile = self.friendArray[indexPath.item];
-        [self performSegueWithIdentifier:@"groupToUserSegue" sender:profile];
+        PFQuery *query = [Profile query];
+        [query includeKey:@"friends"];
+        [query getObjectInBackgroundWithId:profile.objectId block:^(PFObject *object, NSError *error)
+        {
+            if (error)
+            {
+                [self errorAlertWindow:error.localizedDescription];
+            }
+            else
+            {
+                [self performSegueWithIdentifier:@"groupToUserSegue" sender:(Profile *)object];
+            }
+        }];
+
     }
 }
 
