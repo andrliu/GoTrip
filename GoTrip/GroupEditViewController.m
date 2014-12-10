@@ -12,18 +12,24 @@
 #import "CustomTableViewCell.h"
 #import "EditTableViewCell.h"
 #import "TextTableViewCell.h"
+#import "GKImagePicker.h"
+//#import "GKImageCropViewController.h"
 
 
 
-@interface GroupEditViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UITextFieldDelegate>
+@interface GroupEditViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, GKImagePickerDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
-@property (nonatomic, assign) BOOL isDateOpen;
+
 @property BOOL showStartDate;
 @property BOOL showEndDate;
 @property NSDateFormatter *dateFormat;
 @property Group *editGroup;
 @property NSIndexPath *textFieldIndexPath;
 @property NSIndexPath *datePickerIndexPath;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *tableViewBottomConstraint;
+@property BOOL isEditing;
+@property CGFloat kbHeight;
+@property GKImagePicker *imagePicker;
 
 @end
 
@@ -35,6 +41,8 @@
 
     self.editGroup = self.group;
 
+    self.isEditing = NO;
+
     self.dateFormat = [[NSDateFormatter alloc] init];
     //    [self.dateFormat setDateFormat:@"MM/dd/yyyy"];
     [self.dateFormat setDateStyle:NSDateFormatterLongStyle];
@@ -45,11 +53,6 @@
     self.tableView.tableFooterView = [[UIView alloc] init];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 //MARK: delegation methods
 
@@ -59,9 +62,9 @@
 
 
     CGFloat height = [self heightForString:self.editGroup.memo];
-    if (height == 0)
+    if (height < 200)
     {
-        height = 300;
+        height =  200;
     }
 
 
@@ -93,8 +96,15 @@
             }
             break;
         case 3:
-            theFloat =  height*1.03 + 20;
-//            theFloat = 200.0;
+//            if (self.isEditing)
+//            {
+//                theFloat = self.view.frame.size.height - self.kbHeight;
+//            }
+//            else
+//            {
+//                theFloat =  height*1.03 + 20;
+//            }
+            theFloat = height*1.03 + 20;
             break;
 
         default:
@@ -108,11 +118,14 @@
 
 }
 
+
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self.view endEditing:YES];
     if (indexPath.section == 0)
     {
-        //TODO: imagepicker
+        [self changeImageOnImagePressed];
         NSLog(@"image tapped");
     }
 
@@ -174,6 +187,10 @@
     [headerView setBackgroundColor:[UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f]];
 //    [headerView setBackgroundColor:[UIColor clearColor]];
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, tableView.bounds.size.width - 10, 20)];
+    UIButton *button = [[UIButton alloc] initWithFrame:headerView.frame];
+    [button addTarget:self action:@selector(headerButtonAction:) forControlEvents:UIControlEventAllEvents];
+    button.backgroundColor = [UIColor clearColor];
+    button.titleLabel.text = @"";
 
     switch (section)
     {
@@ -199,7 +216,74 @@
     label.backgroundColor = [UIColor clearColor];
 //    label.backgroundColor = [UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f];
     [headerView addSubview:label];
+    [headerView addSubview:button];
     return headerView;
+}
+
+-(void)headerButtonAction:(id)sender
+{
+    [self.view endEditing:YES];
+    self.isEditing = NO;
+//    UIButton *clickedButton = (UIButton*)sender;
+//    NSLog(@"section : %i",clickedButton.tag);
+
+
+}
+
+//MARK: UIImagePickerDelegate Methods
+- (void)changeImageOnImagePressed
+{
+    self.imagePicker = [[GKImagePicker alloc] init];
+    self.imagePicker.cropSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.width/2.5);
+    self.imagePicker.delegate = self;
+    [self presentViewController:self.imagePicker.imagePickerController animated:YES completion:nil];
+}
+
+- (void)imagePicker:(GKImagePicker *)imagePicker pickedImage:(UIImage *)image
+{
+    UIImage *resizedImage = [self compressForUpload:image];
+    self.editGroup.imageData = UIImageJPEGRepresentation(resizedImage, 0.5);
+
+    NSIndexPath *textViewIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self.tableView reloadRowsAtIndexPaths:@[textViewIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+
+    [self hideImagePicker];
+}
+
+- (void)hideImagePicker
+{
+    [self.imagePicker.imagePickerController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo
+{
+//     self.editGroup.imageData = UIImageJPEGRepresentation(image, 0.1);
+    UIImage *resizedImage = [self compressForUpload:image];
+    self.editGroup.imageData = UIImageJPEGRepresentation(resizedImage, 0.5);
+
+    NSIndexPath *imageIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self.tableView reloadRowsAtIndexPaths:@[imageIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+
+    [picker dismissViewControllerAnimated:YES completion:nil];
+
+}
+
+//MARK: image compressor
+- (UIImage *)compressForUpload:(UIImage *)original
+{
+    // Calculate new size given scale factor.
+
+    CGSize originalSize = original.size;
+    CGFloat scale = 750.0 / originalSize.width;
+    CGSize newSize = CGSizeMake(originalSize.width * scale, originalSize.height * scale);
+
+    // Scale the original image to match the new size.
+    UIGraphicsBeginImageContext(newSize);
+    [original drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage* compressedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    return compressedImage;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -398,6 +482,7 @@
             TextTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"textEditCell" forIndexPath:indexPath];
             //            cell.label.numberOfLines = 0;
             //            cell.label.text = self.aString;
+            cell.textView.delegate = self;
             cell.textView.text = self.editGroup.memo;
             cell.textView.backgroundColor = [UIColor colorWithRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0f];
 
@@ -418,6 +503,75 @@
 }
 
 
+-(BOOL)textViewShouldBeginEditing:(UITextView *)textView
+{
+    [self.view endEditing:YES];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
+
+    self.isEditing = YES;
+
+    return YES;
+}
+
+
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView
+{
+    self.editGroup.memo = textView.text;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
+
+    self.isEditing = NO;
+
+    [self.view endEditing:YES];
+    return YES;
+}
+
+- (void)keyboardDidShow:(NSNotification *)notification
+{
+//    self.isEditing = YES;
+    // Assign new frame to your view
+//    [self.view setFrame:CGRectMake(0,-110,320,460)]; //here taken -20 for example i.e. your view will be scrolled to -20. change its value according to your requirement.
+
+    NSDictionary *userInfo = [notification userInfo];
+    CGRect kbFrame = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+
+    self.tableViewBottomConstraint.constant = kbFrame.size.height;
+    [self.view layoutIfNeeded];
+//    [self.tableViewBottomConstraint setConstant:kbFrame.size.height];
+//    self.kbHeight = kbFrame.size.height;
+    if (self.isEditing)
+    {
+        NSIndexPath *textViewIndexPath = [NSIndexPath indexPathForRow:0 inSection:3];
+    //    [self.tableView reloadRowsAtIndexPaths:@[textViewIndexPath] withRowAnimation:UITableViewRowAnimationTop];
+        [self.tableView scrollToRowAtIndexPath:textViewIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }
+
+
+}
+
+-(void)keyboardDidHide:(NSNotification *)notification
+{
+//    self.isEditing = NO;
+//    NSDictionary *userInfo = [notification userInfo];
+//    CGRect kbFrame = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    self.tableViewBottomConstraint.constant = 0;
+    [self.view layoutIfNeeded];
+
+//    NSIndexPath *textViewIndexPath = [NSIndexPath indexPathForRow:0 inSection:3];
+//    [self.tableView reloadRowsAtIndexPaths:@[textViewIndexPath] withRowAnimation:UITableViewRowAnimationTop];
+//    [self.tableView scrollToRowAtIndexPath:textViewIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+}
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+//    [self.view endEditing:YES];
+//    NSLog(@"did tap");
+}
+
+//-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+//{
+////    [self resignFirstResponder];
+//    NSLog(@"did scroll");
+//}
 
 
 //MARK: cutom methods
