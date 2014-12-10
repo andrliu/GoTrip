@@ -547,7 +547,7 @@
     {
         GroupDetailViewController *gdvc = segue.destinationViewController;
         gdvc.group = sender;
-        gdvc.currentProfile = self.profile;
+        gdvc.currentProfile = self.currentProfile;
     }
 }
 
