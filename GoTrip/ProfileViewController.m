@@ -60,6 +60,9 @@
                                                           green:(243.0/255.0)
                                                            blue:(243.0/255.0)
                                                           alpha:1.0f];
+    [self.mapButton.layer setBorderColor:[UIColor blackColor].CGColor];
+    [self.mapButton.layer setBorderWidth:1.0f];
+    [self.mapButton.layer setCornerRadius:4.0f];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -313,32 +316,35 @@
                  }
              }];
         }
-        [self.profile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+        else
         {
-            if (!error)
+            [self.profile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
             {
-                [self editMode:NO];
-                sender.title = @"Edit";
-                self.cancelButton.title = @"Logout";
-                [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:15.0f withBorderColor:[UIColor blackColor].CGColor];
-                self.firstNameLabel.text = self.profile.firstName;
-                self.lastNameLabel.text = self.profile.lastName;
-                self.memoLabel.text = self.profile.memo;
-                if ([self.profile.locationName isEqual:@""] || !self.profile.locationName)
+                if (!error)
                 {
-                    self.locationLabel.text = @"";
+                    [self editMode:NO];
+                    sender.title = @"Edit";
+                    self.cancelButton.title = @"Logout";
+                    [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:15.0f withBorderColor:[UIColor blackColor].CGColor];
+                    self.firstNameLabel.text = self.profile.firstName;
+                    self.lastNameLabel.text = self.profile.lastName;
+                    self.memoLabel.text = self.profile.memo;
+                    if ([self.profile.locationName isEqual:@""] || !self.profile.locationName)
+                    {
+                        self.locationLabel.text = @"";
+                    }
+                    else
+                    {
+                        self.locationLabel.text = self.profile.locationName;
+                    }
+                    [self.view endEditing:YES];
                 }
                 else
                 {
-                    self.locationLabel.text = self.profile.locationName;
+                    [self error:error];
                 }
-                [self.view endEditing:YES];
-            }
-            else
-            {
-                [self error:error];
-            }
-        }];
+            }];
+        }
     }
 }
 
@@ -363,13 +369,6 @@
     }
     [self refreshNumberOfPageControl];
     [self.collectionView reloadData];
-//    if (self.listArray.count > 0)
-//    {
-//        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
-//        [self.collectionView scrollToItemAtIndexPath:indexPath
-//                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-//                                            animated:YES];
-//    }
 }
 
 //MARK: custom imageView method

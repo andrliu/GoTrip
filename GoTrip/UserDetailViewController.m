@@ -19,6 +19,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *memoLabel;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *relationButton;
+@property (weak, nonatomic) IBOutlet UIButton *commentButton;
+@property (weak, nonatomic) IBOutlet UIButton *messageButton;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property BOOL isFriend;
 @property BOOL isPending;
@@ -45,6 +47,12 @@
                                                           green:(243.0/255.0)
                                                            blue:(243.0/255.0)
                                                           alpha:1.0f];
+    [self.commentButton.layer setBorderColor:[UIColor blackColor].CGColor];
+    [self.commentButton.layer setBorderWidth:1.0f];
+    [self.commentButton.layer setCornerRadius:4.0f];
+    [self.messageButton.layer setBorderColor:[UIColor blackColor].CGColor];
+    [self.messageButton.layer setBorderWidth:1.0f];
+    [self.messageButton.layer setCornerRadius:4.0f];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -80,14 +88,17 @@
         }
         else if (0 < self.listArray.count && self.listArray.count <= 2)
         {
+            [self.pageControl setHidden:NO];
             self.pageControl.numberOfPages = 1;
         }
         else if (2 < self.listArray.count && self.listArray.count <= 4)
         {
+            [self.pageControl setHidden:NO];
             self.pageControl.numberOfPages = 2;
         }
         else
         {
+            [self.pageControl setHidden:NO];
             self.pageControl.numberOfPages = 3;
         }
     }
@@ -217,9 +228,13 @@
     if ([self.profile.objectId isEqual: self.currentProfile.objectId])
     {
         self.relationButton.title = @"";
+        [self.commentButton setHidden:YES];
+        [self.messageButton setHidden:YES];
     }
     else
     {
+        [self.commentButton setHidden:NO];
+        [self.messageButton setHidden:NO];
         if (self.isFriend)
         {
             if  (self.segmentedControl.numberOfSegments < 3)
@@ -407,14 +422,6 @@
     }
     [self refreshNumberOfPageControl];
     [self.collectionView reloadData];
-//    if (self.listArray.count > 0)
-//    {
-//        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
-//        [self.collectionView scrollToItemAtIndexPath:indexPath
-//                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-//                                            animated:YES];
-//    }
-
 }
 
 //MARK: custom imageView method
