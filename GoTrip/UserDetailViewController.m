@@ -403,6 +403,8 @@
     if (sender.selectedSegmentIndex == 0 && self.arrayOfFriend)
     {
         self.listArray = self.arrayOfFriend;
+        [self refreshNumberOfPageControl];
+        [self.collectionView reloadData];
     }
     else if (sender.selectedSegmentIndex == 1 && self.arrayOfComment)
     {
@@ -415,13 +417,15 @@
                                                 animated:YES];
         }
         [self.collectionView reloadData];
+        [self refreshNumberOfPageControl];
     }
     else if (sender.selectedSegmentIndex == 2 && self.arrayOfGroup)
     {
         self.listArray = self.arrayOfGroup;
+        [self refreshNumberOfPageControl];
+        [self.collectionView reloadData];
     }
-    [self refreshNumberOfPageControl];
-    [self.collectionView reloadData];
+
 }
 
 //MARK: custom imageView method

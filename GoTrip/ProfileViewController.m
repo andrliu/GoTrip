@@ -22,12 +22,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *lastNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *memoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
-
 @property (weak, nonatomic) IBOutlet UITextField *firstNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *lastNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *memoTextField;
 @property (weak, nonatomic) IBOutlet UITextField *locationTextField;
-
 @property (weak, nonatomic) IBOutlet UIButton *imageButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
@@ -353,22 +351,26 @@
 {
     if (sender.selectedSegmentIndex == 0 && !self.isLoadingFriends)
     {
-            NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"canonicalFirstName" ascending:YES];
-            self.friendListArray = [[self.friendListArray sortedArrayUsingDescriptors:@[sort]] mutableCopy];
-            self.listArray = self.friendListArray;
+        NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"canonicalFirstName" ascending:YES];
+        self.friendListArray = [[self.friendListArray sortedArrayUsingDescriptors:@[sort]] mutableCopy];
+        self.listArray = self.friendListArray;
+        [self refreshNumberOfPageControl];
+        [self.collectionView reloadData];
     }
     else if (sender.selectedSegmentIndex == 1 && !self.isLoadingFriends)
     {
-            NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"canonicalFirstName" ascending:YES];
-            self.pendingFriendListArray = [[self.pendingFriendListArray sortedArrayUsingDescriptors:@[sort]] mutableCopy];
-            self.listArray = self.pendingFriendListArray;
+        NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"canonicalFirstName" ascending:YES];
+        self.pendingFriendListArray = [[self.pendingFriendListArray sortedArrayUsingDescriptors:@[sort]] mutableCopy];
+        self.listArray = self.pendingFriendListArray;
+        [self refreshNumberOfPageControl];
+        [self.collectionView reloadData];
     }
     else if (!self.isLoadingGroups)
     {
-            self.listArray = self.groupListArray;
+        self.listArray = self.groupListArray;
+        [self refreshNumberOfPageControl];
+        [self.collectionView reloadData];
     }
-    [self refreshNumberOfPageControl];
-    [self.collectionView reloadData];
 }
 
 //MARK: custom imageView method
