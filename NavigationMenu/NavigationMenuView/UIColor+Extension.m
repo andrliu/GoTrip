@@ -15,11 +15,12 @@
     CGColorRef colorRef = [uicolor CGColor];
     
     int numComponents = (int)CGColorGetNumberOfComponents(colorRef);
-    
-    CGFloat red = 0.0;
-    CGFloat green = 0.0;
-    CGFloat blue = 0.0;
-    CGFloat alpha = 0.0;
+
+    //TODO: check here for cell color
+    CGFloat red = 0.0f;
+    CGFloat green = 0.0f;
+    CGFloat blue = 0.0f;
+    CGFloat alpha = 1.0;
     if (numComponents == 4)
     {
         const CGFloat *components = CGColorGetComponents(colorRef);

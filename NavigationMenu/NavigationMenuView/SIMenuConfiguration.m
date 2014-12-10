@@ -62,11 +62,13 @@
 + (UIColor *)itemsColor
 {
     return [UIColor blackColor];
+//    return [UIColor whiteColor];
 }
 
 + (UIColor *)mainColor
 {
     return [UIColor blackColor];
+//    return [UIColor whiteColor];
 }
 
 + (float)selectionSpeed
@@ -77,10 +79,12 @@
 + (UIColor *)itemTextColor
 {
     return [UIColor whiteColor];
+//    return [UIColor blackColor];
 }
 
 + (UIColor *)selectionColor
 {
     return [UIColor colorWithRed:45.0/255.0 green:105.0/255.0 blue:166.0/255.0 alpha:1.0];
+//    return [UIColor colorWithRed:45.0/255.0 green:45.0/255.0 blue:45.0/255.0 alpha:1.0];
 }
 @end

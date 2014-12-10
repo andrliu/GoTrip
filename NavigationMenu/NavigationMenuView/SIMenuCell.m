@@ -26,6 +26,7 @@
         self.textLabel.textColor = [SIMenuConfiguration itemTextColor];
         self.textLabel.textAlignment = NSTextAlignmentCenter;
         self.textLabel.shadowColor = [UIColor darkGrayColor];
+//        self.textLabel.shadowColor = [UIColor whiteColor];
         self.textLabel.shadowOffset = CGSizeMake(0.0, -1.0);
         
         self.selectionStyle = UITableViewCellEditingStyleNone;
@@ -45,7 +46,7 @@
     
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSetLineWidth(ctx, 2.0f);
-    
+
     CGContextSetRGBStrokeColor(ctx, 0.0f, 0.0f, 0.0f, 1.0f);
     CGContextMoveToPoint(ctx, 0, self.contentView.bounds.size.height);
     CGContextAddLineToPoint(ctx, self.contentView.bounds.size.width, self.contentView.bounds.size.height);
