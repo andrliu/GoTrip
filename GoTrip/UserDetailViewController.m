@@ -399,6 +399,7 @@
                                         atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
                                                 animated:YES];
         }
+        [self.collectionView reloadData];
     }
     else if (sender.selectedSegmentIndex == 2 && self.arrayOfGroup)
     {

@@ -33,11 +33,16 @@
     {
         [self reverseGeocodeWithLatitude:geoPoint.latitude andLongitude:geoPoint.longitude withProfileName:self.currentProfileName];
     }
+    [self reverseGeocodeWithLatitude:self.currentProfile.currentLocation.latitude andLongitude:self.currentProfile.currentLocation.longitude withProfileName:[NSString stringWithFormat:@"%@'s location", self.currentProfileName]];
     for (Profile *profile in self.userProfiles)
     {
         for (PFGeoPoint *geoPoint in profile.locations)
         {
-            [self reverseGeocodeWithLatitude:geoPoint.latitude andLongitude:geoPoint.longitude withProfileName:[NSString stringWithFormat:@"%@ %@", profile.firstName, profile.lastName]];
+            [self reverseGeocodeWithLatitude:geoPoint.latitude andLongitude:geoPoint.longitude withProfileName:profile.firstName];
+        }
+        if (profile.currentLocation)
+        {
+            [self reverseGeocodeWithLatitude:profile.currentLocation.latitude andLongitude:profile.currentLocation.longitude withProfileName:[NSString stringWithFormat:@"%@'s location", profile.firstName]];
         }
     }
 }
@@ -49,7 +54,15 @@
     [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, id error)
      {
          CLPlacemark *placemark = placemarks.firstObject;
-         NSString *address = [NSString stringWithFormat:@"%@:%@", placemark.administrativeArea, placemark.country];
+         NSString *address = [NSString string];
+         if (placemark.subAdministrativeArea)
+         {
+             address = [NSString stringWithFormat:@"%@:%@", placemark.subAdministrativeArea, placemark.ISOcountryCode];
+         }
+         else
+         {
+             address = [NSString stringWithFormat:@"%@:%@", placemark.administrativeArea, placemark.ISOcountryCode];
+         }
          MKPointAnnotation *annotation = [MKPointAnnotation new];
          annotation.coordinate =  location.coordinate;
          annotation.title = address;
@@ -71,7 +84,15 @@
              if (!error)
              {
                  CLPlacemark *placemark = placemarks.firstObject;
-                 NSString *address = [NSString stringWithFormat:@"%@:%@", placemark.subAdministrativeArea, placemark.administrativeArea];
+                 NSString *address = [NSString string];
+                 if (placemark.subAdministrativeArea)
+                 {
+                     address = [NSString stringWithFormat:@"%@:%@", placemark.subAdministrativeArea, placemark.ISOcountryCode];
+                 }
+                 else
+                 {
+                     address = [NSString stringWithFormat:@"%@:%@", placemark.administrativeArea, placemark.ISOcountryCode];
+                 }
                  PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:tapPoint.latitude longitude:tapPoint.longitude];
                  self.currentProfile.locations = [self addObjectId:geoPoint inArray:self.currentProfile.locations];
                  [self.currentProfile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
@@ -164,14 +185,18 @@
     MKPinAnnotationView *pin = [[MKPinAnnotationView alloc]initWithAnnotation:annotation
                                                               reuseIdentifier:nil];
     pin.canShowCallout = YES;
-    if ([annotation.subtitle isEqual:self.currentProfileName])
+    if ([annotation.subtitle containsString:@"location"])
+    {
+        pin.pinColor = MKPinAnnotationColorGreen;
+    }
+    else if ([annotation.subtitle isEqual:self.currentProfileName])
     {
         pin.pinColor = MKPinAnnotationColorRed;
         pin.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     }
     else
     {
-        pin.pinColor = MKPinAnnotationColorGreen;
+        pin.pinColor = MKPinAnnotationColorPurple;
     }
     return pin;
 }

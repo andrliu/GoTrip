@@ -188,18 +188,51 @@
                 if (connectionError == nil && data != nil)
                 {
                     profile.avatarData = data;
-                    [profile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                    if (userData[@"locale"])
                     {
-                        if (!error)
-                        {
-                            //TODO: something after login
-                            NSLog(@"finished saving data");
-                        }
-                        else
-                        {
-                            [self error:error];
-                        }
-                    }];
+                        NSString *address = userData[@"locale"];
+                        CLGeocoder *geocoder = [[CLGeocoder alloc]init];
+                        [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error)
+                         {
+                             if (!error)
+                             {
+                                 for (CLPlacemark *placemark in placemarks)
+                                 {
+                                     CLLocationCoordinate2D center = placemark.location.coordinate;
+                                     PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:center.latitude longitude:center.longitude];
+                                     profile.currentLocation = geoPoint;
+                                     [profile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                                      {
+                                          if (!error)
+                                          {
+                                              //TODO: something after login
+                                              NSLog(@"finished saving data with location");
+                                          }
+                                          else
+                                          {
+                                              [self error:error];
+                                          }
+                                      }];
+                                 }
+                             }
+                             else
+                             {
+                                 [self error:error];
+                             }
+                         }];
+                    }
+                    [profile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                     {
+                         if (!error)
+                         {
+                             //TODO: something after login
+                             NSLog(@"finished saving data with location");
+                         }
+                         else
+                         {
+                             [self error:error];
+                         }
+                     }];
                 }
                 else
                 {
@@ -313,6 +346,7 @@
     profile.pendingFriends = @[];
     profile.isMessaging = @[];
     profile.isGroupMessaging = @[];
+    profile.locationName = @"";
     UIImage *image = [UIImage imageNamed:@"avatar"];
     profile.avatarData = UIImageJPEGRepresentation(image, 0.1);
     [profile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
