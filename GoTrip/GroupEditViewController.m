@@ -12,10 +12,12 @@
 #import "CustomTableViewCell.h"
 #import "EditTableViewCell.h"
 #import "TextTableViewCell.h"
+#import "GKImagePicker.h"
+//#import "GKImageCropViewController.h"
 
 
 
-@interface GroupEditViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface GroupEditViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, GKImagePickerDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @property BOOL showStartDate;
@@ -27,6 +29,7 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *tableViewBottomConstraint;
 @property BOOL isEditing;
 @property CGFloat kbHeight;
+@property GKImagePicker *imagePicker;
 
 @end
 
@@ -227,26 +230,60 @@
 
 }
 
+//MARK: UIImagePickerDelegate Methods
 - (void)changeImageOnImagePressed
 {
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-//    self.isImagePickerCalled = YES;
-    picker.delegate = self;
-    picker.allowsEditing = YES;
-    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    [self presentViewController:picker animated:YES completion:nil];
+    self.imagePicker = [[GKImagePicker alloc] init];
+    self.imagePicker.cropSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.width/2.5);
+    self.imagePicker.delegate = self;
+    [self presentViewController:self.imagePicker.imagePickerController animated:YES completion:nil];
 }
 
-//MARK: UIImagePicker delegate to store and SAVE profile.avatarData and display on imageview
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+- (void)imagePicker:(GKImagePicker *)imagePicker pickedImage:(UIImage *)image
 {
-    UIImage *pickerImage = info[UIImagePickerControllerEditedImage];
-    self.editGroup.imageData = UIImageJPEGRepresentation(pickerImage, 0.1);
+    UIImage *resizedImage = [self compressForUpload:image];
+    self.editGroup.imageData = UIImageJPEGRepresentation(resizedImage, 0.5);
 
     NSIndexPath *textViewIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     [self.tableView reloadRowsAtIndexPaths:@[textViewIndexPath] withRowAnimation:UITableViewRowAnimationNone];
 
+    [self hideImagePicker];
+}
+
+- (void)hideImagePicker
+{
+    [self.imagePicker.imagePickerController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo
+{
+//     self.editGroup.imageData = UIImageJPEGRepresentation(image, 0.1);
+    UIImage *resizedImage = [self compressForUpload:image];
+    self.editGroup.imageData = UIImageJPEGRepresentation(resizedImage, 0.5);
+
+    NSIndexPath *imageIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self.tableView reloadRowsAtIndexPaths:@[imageIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+
     [picker dismissViewControllerAnimated:YES completion:nil];
+
+}
+
+//MARK: image compressor
+- (UIImage *)compressForUpload:(UIImage *)original
+{
+    // Calculate new size given scale factor.
+
+    CGSize originalSize = original.size;
+    CGFloat scale = 750.0 / originalSize.width;
+    CGSize newSize = CGSizeMake(originalSize.width * scale, originalSize.height * scale);
+
+    // Scale the original image to match the new size.
+    UIGraphicsBeginImageContext(newSize);
+    [original drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage* compressedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    return compressedImage;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
