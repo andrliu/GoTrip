@@ -74,13 +74,13 @@
             theFloat = self.view.frame.size.width/2.5;
             break;
         case 1:
-            theFloat = 44.0;
+            theFloat = 60.0;
             break;
         case 2:
 
             if ((indexPath.row % 2) == 0)
             {
-                theFloat =  44.0;
+                theFloat =  60.0;
             }
             else
             {
@@ -181,12 +181,12 @@
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 30)];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 35)];
     //   [headerView setBackgroundColor:[UIColor grayColor]];
 //    [headerView setBackgroundColor:[UIColor colorWithRed:(33.0/255.0) green:(33.0/255.0) blue:(33.0/255.0) alpha:1.0f]];
-    [headerView setBackgroundColor:[UIColor colorWithRed:(243.0/255.0) green:(243.0/255.0) blue:(243.0/255.0) alpha:1.0f]];
+    [headerView setBackgroundColor:[UIColor colorWithRed:(229.0/255.0) green:(229.0/255.0) blue:(229.0/255.0) alpha:1.0f]];
 //    [headerView setBackgroundColor:[UIColor clearColor]];
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, tableView.bounds.size.width - 10, 20)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, tableView.bounds.size.width - 10, 20)];
     UIButton *button = [[UIButton alloc] initWithFrame:headerView.frame];
     [button addTarget:self action:@selector(headerButtonAction:) forControlEvents:UIControlEventAllEvents];
     button.backgroundColor = [UIColor clearColor];
@@ -294,13 +294,13 @@
             return 0;
             break;
         case 1:
-            return 30.0;
+            return 35.0;
             break;
         case 2:
             return 0;
             break;
         case 3:
-            return 30.0;
+            return 35.0;
             break;
 
         default:

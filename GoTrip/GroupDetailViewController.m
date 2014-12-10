@@ -16,10 +16,13 @@
 #import "ButtonTableViewCell.h"
 #import "GroupCollectionViewCell.h"
 #import "GroupEditViewController.h"
+#import "UserDetailViewController.h"
 
 @interface GroupDetailViewController () <UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSArray *collectionViewArray;
+@property (strong, nonatomic) NSMutableArray *friendArray;
+@property BOOL isInGroup;
 
 //@property NSString *aString;
 
@@ -31,6 +34,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.isInGroup = NO;
 
     [self checkForGroupAccess];
 
@@ -51,7 +55,19 @@
 //            }
 //        }
 //    }];
+    self.friendArray = [self.group.profiles mutableCopy];
 
+//    PFQuery *profilesQuery = [Profile query];
+//    for (int i= 0; i < self.friendArray.count; i++)
+//    {
+//        Profile *profile = self.friendArray[i];
+//        [profilesQuery getObjectInBackgroundWithId:profile.objectId block:^(PFObject *object, NSError *error)
+//            {
+//                Profile *profileWithData = (Profile *)object;
+//                [self.friendArray replaceObjectAtIndex:i withObject:profileWithData];
+//                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
+//            }];
+//    }
 
 }
 
@@ -91,6 +107,7 @@
     //TODO: CHECK FOR THE GROUP != nil !!
     if ([self.group.creator.objectId isEqualToString:self.currentProfile.objectId])
     {
+        self.isInGroup = YES;
         //add an Edit button is current profile is the owner
         self.navigationItem.rightBarButtonItem.enabled = YES;
         self.navigationItem.rightBarButtonItem.tintColor = nil;
@@ -148,7 +165,7 @@
         self.navigationItem.rightBarButtonItem.enabled = YES;
         self.navigationItem.rightBarButtonItem.tintColor = [UIColor redColor]; //nil;
 
-
+        self.isInGroup = YES;
     }
     else
     {
@@ -160,6 +177,9 @@
         self.navigationItem.rightBarButtonItem = groupJoinButton;
         self.navigationItem.rightBarButtonItem.enabled = YES;
         self.navigationItem.rightBarButtonItem.tintColor = nil;
+
+        self.isInGroup = NO;
+
     }
     
 }
@@ -204,15 +224,27 @@
     switch (indexPath.section)
     {
         case 0:
-            theFloat = self.view.frame.size.width/2.5;
+            theFloat = self.view.frame.size.width/2.5; //imageView
             break;
         case 1:
-            theFloat = height*1.03 + 20;
+            theFloat = height*1.03 + 20; //textView
             break;
         case 2:
-            theFloat =  190.0;
+        {
+            if (self.isInGroup)
+            {
+                theFloat =  192.0;  //userList
+            }
+            else
+            {
+                theFloat = 0;
+            }
             break;
+        }
         case 3:
+            theFloat =  190.0;  //imageList
+            break;
+        case 4:
             theFloat =  40.0;
             break;
 
@@ -232,7 +264,7 @@
 
     CGRect textViewSize = [theString boundingRectWithSize:CGSizeMake(self.view.frame.size.width - 16, CGFLOAT_MAX)
                                                      options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
-                                                  attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]}
+                                                  attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:16]}
                                                      context:nil];
 
     return textViewSize.size.height;
@@ -250,10 +282,12 @@
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 30)];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 35)];
 //   [headerView setBackgroundColor:[UIColor grayColor]];
-    [headerView setBackgroundColor:[UIColor colorWithRed:(33.0/255.0) green:(33.0/255.0) blue:(33.0/255.0) alpha:1.0f]];
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, tableView.bounds.size.width - 10, 20)];
+//    [headerView setBackgroundColor:[UIColor colorWithRed:(33.0/255.0) green:(33.0/255.0) blue:(33.0/255.0) alpha:1.0f]];
+//    [headerView setBackgroundColor:[UIColor lightGrayColor]];
+    [headerView setBackgroundColor:[UIColor colorWithRed:(229.0/255.0) green:(229.0/255.0) blue:(229.0/255.0) alpha:1.0f]];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, tableView.bounds.size.width - 10, 20)];
 
     switch (section)
     {
@@ -264,9 +298,21 @@
             label.text = @"Description";
             break;
         case 2:
-            label.text = @"Uploaded pictures";
+        {
+            if (self.isInGroup)
+            {
+                label.text = @"Members";
+            }
+            else
+            {
+                headerView = nil;
+            }
             break;
+        }
         case 3:
+            label.text = @"Available pictures";
+            break;
+        case 4:
             label.text = @"";
             break;
 
@@ -275,7 +321,8 @@
             break;
     }
 
-    label.textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.75];
+//    label.textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.9];
+    label.textColor = [UIColor colorWithRed:(102.0/255.0) green:(102.0/255.0) blue:(102.0/255.0) alpha:1.0f];
     label.backgroundColor = [UIColor clearColor];
     [headerView addSubview:label];
     return headerView;
@@ -289,7 +336,7 @@
     }
     else
     {
-    return 30;
+    return 35;
     }
 }
 
@@ -299,7 +346,7 @@
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 
-    return 4;
+    return 5; //added userList
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -317,6 +364,9 @@
             return 1;
             break;
         case 3:
+            return 1;
+            break;
+        case 4:
             return 0; //number of buttons at the bottom. 3 by default.
             break;
 
@@ -376,19 +426,33 @@
         }
             break;
 
-        case 2:
+        case 2: //userList
         {
             ImageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"imageCell" forIndexPath:indexPath];
 
             cell.collectionView.dataSource = self;
             cell.collectionView.delegate = self;
             cell.collectionView.pagingEnabled = NO;
+            cell.collectionView.tag = 0;
 
             return cell;
         }
             break;
 
-        case 3:
+        case 3: //imageList
+        {
+            ImageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"imageCell" forIndexPath:indexPath];
+
+            cell.collectionView.dataSource = self;
+            cell.collectionView.delegate = self;
+            cell.collectionView.pagingEnabled = NO;
+            cell.collectionView.tag = 1;
+
+            return cell;
+        }
+            break;
+
+        case 4:
         {
             ButtonTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"buttonCell" forIndexPath:indexPath];
 
@@ -433,37 +497,80 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
 
-    return self.collectionViewArray.count;
+    if (collectionView.tag == 0)
+    {
+        return self.friendArray.count;
+    }
+    else if (collectionView.tag == 1)
+    {
+        return self.collectionViewArray.count;
+    }
+
+    return 0;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     GroupCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"collectionCell" forIndexPath:indexPath];
+   if (collectionView.tag == 0)
+   {
+       NSInteger i = indexPath.item;
+       Profile *profile = self.friendArray[i];
 
-    cell.customImageView.image = [UIImage imageNamed:@"noimage"];
-    
-    Photo *photoObj = self.collectionViewArray[indexPath.item];
-    PFFile *imageFile = photoObj.imageData;
-    [imageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error)
-     {
-         if (error)
+       PFQuery *profilesQuery = [Profile query];
+       [profilesQuery getObjectInBackgroundWithId:profile.objectId block:^(PFObject *object, NSError *error)
+            {
+                Profile *profileWithData = (Profile *)object;
+                [self.friendArray replaceObjectAtIndex:i withObject:profileWithData];
+                cell.customImageView.image = [UIImage imageWithData:profileWithData.avatarData];
+//                cell.backgroundColor = [UIColor blackColor];
+                cell.backgroundColor = [UIColor colorWithRed:(221.0/255.0) green:(221.0/255.0) blue:(221.0/255.0) alpha:1.0f];
+//                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
+            }];
+//       }
+//
+//       Profile *profile = self.friendArray[indexPath.item];
+//       cell.customImageView.image = [UIImage imageWithData:profile.avatarData];
+   }
+   else
+   {
+        cell.customImageView.image = [UIImage imageNamed:@"noimage"];
+
+        Photo *photoObj = self.collectionViewArray[indexPath.item];
+        PFFile *imageFile = photoObj.imageData;
+        [imageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error)
          {
-             [self errorAlertWindow:error.localizedDescription];
-         }
-         else
-         {
-             cell.customImageView.image = [UIImage imageWithData:data];
-             cell.backgroundColor = [UIColor blackColor];
+             if (error)
+             {
+                 [self errorAlertWindow:error.localizedDescription];
+             }
+             else
+             {
+                 cell.customImageView.image = [UIImage imageWithData:data];
+//                 cell.backgroundColor = [UIColor blackColor];
+                   cell.backgroundColor = [UIColor colorWithRed:(221.0/255.0) green:(221.0/255.0) blue:(221.0/255.0) alpha:1.0f];
 
-         }
+             }
+             
+         }];
 
-     }];
+    }
 
     //    cell.customImageView.image = self.collectionViewArray[indexPath.item];
     //    cell.customImageView.image = [UIImage imageNamed:@"textImage"];
-    cell.backgroundColor = [UIColor blackColor];
+//    cell.backgroundColor = [UIColor blackColor];
+      cell.backgroundColor = [UIColor colorWithRed:(221.0/255.0) green:(221.0/255.0) blue:(221.0/255.0) alpha:1.0f];
 
     return cell;
+}
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (collectionView.tag == 0)
+    {
+        Profile *profile = self.friendArray[indexPath.item];
+        [self performSegueWithIdentifier:@"groupToUserSegue" sender:profile];
+    }
 }
 
 //MARK: action methods
@@ -580,12 +687,21 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(Group *)group
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    UINavigationController *navVC = [segue destinationViewController];
-    GroupEditViewController *editVC = (GroupEditViewController *)navVC.topViewController;
-    editVC.group = group;
-    editVC.currentProfile = self.currentProfile;
+    if ([segue.identifier isEqualToString:@"groupToUserSegue"])
+    {
+        UserDetailViewController *userVC = [segue destinationViewController];
+        userVC.currentProfile = self.currentProfile;
+        userVC.profile = (Profile *)sender;
+    }
+    else
+    {
+        UINavigationController *navVC = [segue destinationViewController];
+        GroupEditViewController *editVC = (GroupEditViewController *)navVC.topViewController;
+        editVC.group = (Group *)sender;
+        editVC.currentProfile = self.currentProfile;
+    }
 }
 
 
