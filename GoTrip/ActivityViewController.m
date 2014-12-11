@@ -31,14 +31,14 @@
     [super viewWillAppear:animated];
     for (PFGeoPoint *geoPoint in self.currentProfile.locations)
     {
-        [self reverseGeocodeWithLatitude:geoPoint.latitude andLongitude:geoPoint.longitude withProfileName:self.currentProfileName];
+        [self reverseGeocodeWithLatitude:geoPoint.latitude andLongitude:geoPoint.longitude withProfileName:[NSString stringWithFormat:@"%@'s wish list", self.currentProfileName]];
     }
     [self reverseGeocodeWithLatitude:self.currentProfile.currentLocation.latitude andLongitude:self.currentProfile.currentLocation.longitude withProfileName:[NSString stringWithFormat:@"%@'s location", self.currentProfileName]];
     for (Profile *profile in self.userProfiles)
     {
         for (PFGeoPoint *geoPoint in profile.locations)
         {
-            [self reverseGeocodeWithLatitude:geoPoint.latitude andLongitude:geoPoint.longitude withProfileName:profile.firstName];
+            [self reverseGeocodeWithLatitude:geoPoint.latitude andLongitude:geoPoint.longitude withProfileName:[NSString stringWithFormat:@"%@'s wish list", profile.firstName]];
         }
         if (profile.currentLocation)
         {
@@ -185,20 +185,93 @@
     MKPinAnnotationView *pin = [[MKPinAnnotationView alloc]initWithAnnotation:annotation
                                                               reuseIdentifier:nil];
     pin.canShowCallout = YES;
-    if ([annotation.subtitle containsString:@"location"])
+    pin.image = nil;
+    UIImageView *imageView = [UIImageView new];
+    if ([annotation.subtitle containsString:self.currentProfileName])
     {
-        pin.pinColor = MKPinAnnotationColorGreen;
-    }
-    else if ([annotation.subtitle isEqual:self.currentProfileName])
-    {
-        pin.pinColor = MKPinAnnotationColorRed;
-        pin.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+        if ([annotation.subtitle containsString:@"location"])
+        {
+            if (self.currentProfile.avatarData)
+            {
+                [self setImageView:imageView withData:self.currentProfile.avatarData withBorderWidth:1.0f withBorderColor:[UIColor blackColor].CGColor];
+                [pin addSubview:imageView];
+            }
+            else
+            {
+                [self setImageView:imageView withData:nil withBorderWidth:1.0f withBorderColor:[UIColor blackColor].CGColor];
+                [pin addSubview:imageView];
+            }
+        }
+        else if ([annotation.subtitle containsString:@"wish"])
+        {
+            if (self.currentProfile.avatarData)
+            {
+                [self setImageView:imageView withData:self.currentProfile.avatarData withBorderWidth:1.0f withBorderColor:[UIColor redColor].CGColor];
+                [pin addSubview:imageView];
+                pin.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+            }
+            else
+            {
+                [self setImageView:imageView withData:nil withBorderWidth:1.0f withBorderColor:[UIColor redColor].CGColor];
+                [pin addSubview:imageView];
+//                UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+//                [button setFrame:CGRectMake(0, 0, 10, 10)];
+//                [button setTitle:@"B" forState:UIControlStateNormal];
+//                [button setBackgroundColor:[UIColor greenColor]];
+//                [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                pin.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeCustom];
+            }
+        }
     }
     else
     {
-        pin.pinColor = MKPinAnnotationColorPurple;
+        for (Profile *profile in self.userProfiles)
+        {
+            if ([annotation.subtitle containsString:@"location"])
+            {
+                if ([annotation.subtitle containsString:profile.firstName] && profile.avatarData)
+                {
+                    [self setImageView:imageView withData:profile.avatarData withBorderWidth:1.0f withBorderColor:[UIColor blackColor].CGColor];
+                    [pin addSubview:imageView];
+                }
+                else
+                {
+                    [self setImageView:imageView withData:nil withBorderWidth:1.0f withBorderColor:[UIColor blackColor].CGColor];
+                    [pin addSubview:imageView];
+                }
+            }
+            else if ([annotation.subtitle containsString:@"wish"])
+            {
+                if ([annotation.subtitle containsString:profile.firstName] && profile.avatarData)
+                {
+                    [self setImageView:imageView withData:profile.avatarData withBorderWidth:1.0f withBorderColor:[UIColor redColor].CGColor];
+                    [pin addSubview:imageView];
+                }
+                else
+                {
+                    [self setImageView:imageView withData:nil withBorderWidth:1.0f withBorderColor:[UIColor redColor].CGColor];
+                    [pin addSubview:imageView];
+                }
+            }
+        }
     }
     return pin;
+}
+
+- (void)setImageView:(UIImageView *)imageView withData:(NSData *)data withBorderWidth:(CGFloat)width withBorderColor:(CGColorRef)color
+{
+    if (data)
+    {
+        UIImage *image = [UIImage imageWithData:data];
+        imageView.image = image;
+    }
+    imageView.backgroundColor = [UIColor whiteColor];
+    imageView.frame = CGRectMake(-12.0f, 0.0f, 40.0f, 40.0f);
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    [imageView.layer setCornerRadius:20.0f];
+    [imageView setClipsToBounds:YES];
+    [imageView.layer setBorderWidth:width];
+    [imageView.layer setBorderColor:color];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
