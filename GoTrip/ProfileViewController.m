@@ -59,8 +59,8 @@
                                                            blue:(243.0/255.0)
                                                           alpha:1.0f];
     [self.mapButton.layer setBorderColor:[UIColor blackColor].CGColor];
-    [self.mapButton.layer setBorderWidth:1.0f];
-    [self.mapButton.layer setCornerRadius:4.0f];
+    [self.mapButton.layer setBorderWidth:2.0f];
+    [self.mapButton.layer setCornerRadius:5.0f];
 }
 
 - (void)viewDidAppear:(BOOL)animated

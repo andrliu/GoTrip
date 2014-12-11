@@ -48,11 +48,11 @@
                                                            blue:(243.0/255.0)
                                                           alpha:1.0f];
     [self.commentButton.layer setBorderColor:[UIColor blackColor].CGColor];
-    [self.commentButton.layer setBorderWidth:1.0f];
-    [self.commentButton.layer setCornerRadius:4.0f];
+    [self.commentButton.layer setBorderWidth:2.0f];
+    [self.commentButton.layer setCornerRadius:5.0f];
     [self.messageButton.layer setBorderColor:[UIColor blackColor].CGColor];
-    [self.messageButton.layer setBorderWidth:1.0f];
-    [self.messageButton.layer setCornerRadius:4.0f];
+    [self.messageButton.layer setBorderWidth:2.0f];
+    [self.messageButton.layer setCornerRadius:5.0f];
 }
 
 - (void)viewWillAppear:(BOOL)animated
