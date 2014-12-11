@@ -65,11 +65,11 @@
 {
     if (self.segmentedControl.selectedSegmentIndex == 1)
     {
-        if (self.listArray.count == 0)
+        if (self.listArray.count <= 1)
         {
             [self.pageControl setHidden:YES];
         }
-        else if (0 < self.listArray.count && self.listArray.count < 3)
+        else if (1 < self.listArray.count && self.listArray.count < 3)
         {
             [self.pageControl setHidden:NO];
             self.pageControl.numberOfPages = self.listArray.count;
@@ -82,14 +82,9 @@
     }
     else
     {
-        if (self.listArray.count == 0)
+        if (self.listArray.count <= 2)
         {
             [self.pageControl setHidden:YES];
-        }
-        else if (0 < self.listArray.count && self.listArray.count <= 2)
-        {
-            [self.pageControl setHidden:NO];
-            self.pageControl.numberOfPages = 1;
         }
         else if (2 < self.listArray.count && self.listArray.count <= 4)
         {

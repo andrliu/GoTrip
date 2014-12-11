@@ -103,14 +103,9 @@
 //MARK: custom refresh method
 - (void)refreshNumberOfPageControl
 {
-    if (self.listArray.count == 0)
+    if (self.listArray.count <= 2)
     {
         [self.pageControl setHidden:YES];
-    }
-    else if (0 < self.listArray.count && self.listArray.count <= 2)
-    {
-        [self.pageControl setHidden:NO];
-        self.pageControl.numberOfPages = 1;
     }
     else if (2 < self.listArray.count && self.listArray.count <= 4)
     {
@@ -128,6 +123,8 @@
 - (void)refreshCurrentPageControl
 {
     NSArray *array = [self.collectionView indexPathsForVisibleItems];
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"NSIndexPath" ascending:YES];
+    array = [[array sortedArrayUsingDescriptors:@[sort]] mutableCopy];
     NSIndexPath *index = array.firstObject;
     if (index.item == 0)
     {
