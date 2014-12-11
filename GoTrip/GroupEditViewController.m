@@ -376,7 +376,7 @@
             }
             else
             {
-                cell.backgroundImageView.image = [UIImage imageNamed:@"750x300"];
+                cell.backgroundImageView.image = [UIImage imageNamed:@"logoEditDefault"];
             }
             [cell.backgroundImageView setClipsToBounds:YES];
 
