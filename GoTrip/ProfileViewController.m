@@ -123,9 +123,16 @@
 - (void)refreshCurrentPageControl
 {
     NSArray *array = [self.collectionView indexPathsForVisibleItems];
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"NSIndexPath" ascending:YES];
-    array = [[array sortedArrayUsingDescriptors:@[sort]] mutableCopy];
     NSIndexPath *index = array.firstObject;
+    if (array[1])
+    {
+        NSIndexPath *firstIndex = array.firstObject;
+        NSIndexPath *secondIndex = array[1];
+        if (firstIndex > secondIndex)
+        {
+            index = secondIndex;
+        }
+    }
     if (index.item == 0)
     {
         self.pageControl.currentPage = 0;
