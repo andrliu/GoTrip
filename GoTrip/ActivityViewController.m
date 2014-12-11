@@ -102,8 +102,8 @@
                          MKPointAnnotation *annotation = [MKPointAnnotation new];
                          annotation.coordinate = tapPoint;
                          annotation.title = address;
-                         annotation.subtitle = self.currentProfileName;
-                         [self.mapView addAnnotation:annotation];
+                         annotation.subtitle = [NSString stringWithFormat:@"%@'s wish list", self.currentProfileName];
+                        [self.mapView addAnnotation:annotation];
                      }
                      else
                      {
@@ -180,7 +180,7 @@
     return arrayOfLocations;
 }
 
--(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
     MKPinAnnotationView *pin = [[MKPinAnnotationView alloc]initWithAnnotation:annotation
                                                               reuseIdentifier:nil];
@@ -188,11 +188,6 @@
     pin.image = nil;
     UIImageView *imageView = [UIImageView new];
     UIImageView *subImageView = [UIImageView new];
-
-//    subImageView.image = [UIImage imageNamed:@"heart"];
-//    subImageView.backgroundColor = [UIColor clearColor];
-//    subImageView.frame = CGRectMake(17.5f, 27.5f, 12.5f, 12.5f);
-//    subImageView.contentMode = UIViewContentModeScaleAspectFill;
     if ([annotation.subtitle containsString:self.currentProfileName])
     {
         if ([annotation.subtitle containsString:@"location"])
