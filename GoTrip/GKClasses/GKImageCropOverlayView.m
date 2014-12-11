@@ -65,11 +65,25 @@
     if (heightSpan > 30 && (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)) {
         
         [[UIColor whiteColor] set];
-        [NSLocalizedString(@"GKImoveAndScale", @"") drawInRect:CGRectMake(10, (height - heightSpan) + (heightSpan / 2 - 20 / 2) , width - 20, 20) 
-                                                   withFont:[UIFont boldSystemFontOfSize:20] 
-                                              lineBreakMode:NSLineBreakByTruncatingTail
-                                                  alignment:NSTextAlignmentCenter];
-        
+//        [NSLocalizedString(@"GKImoveAndScale", @"") drawInRect:CGRectMake(10, (height - heightSpan) + (heightSpan / 2 - 20 / 2) , width - 20, 20) 
+//                                                   withFont:[UIFont boldSystemFontOfSize:20] 
+//                                              lineBreakMode:NSLineBreakByTruncatingTail
+//                                                  alignment:NSTextAlignmentCenter];
+//TODO: check the right attribute syntax
+//        NSLineBreakMode lineBrakMode = NSLineBreakByTruncatingTail;
+//        NSTextAlignment alignment = NSTextAlignmentCenter;
+//        NSDictionary *attributes = @{NSFontAttributeName:[UIFont boldSystemFontOfSize:20],
+//                                         NSLineBreakMode:lineBrakMode,
+//                                         NSTextAlignment:alignment};
+
+
+//        [NSLocalizedString(@"GKImoveAndScale", @"") drawInRect:CGRectMake(10, (height - heightSpan) + (heightSpan / 2 - 20 / 2) , width - 20, 20) withAttributes:attributes];
+
+
+        [NSLocalizedString(@"GKImoveAndScale", @"") drawInRect:CGRectMake(10, (height - heightSpan) + (heightSpan / 2 - 20 / 2) , width - 20, 20)  withAttributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:20]}];
+
+
+
     }
 }
 

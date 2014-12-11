@@ -13,11 +13,11 @@
 #import "EditTableViewCell.h"
 #import "TextTableViewCell.h"
 #import "GKImagePicker.h"
-//#import "GKImageCropViewController.h"
+#import "SINavigationMenuView.h"
 
 
 
-@interface GroupEditViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, GKImagePickerDelegate>
+@interface GroupEditViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, GKImagePickerDelegate, SINavigationMenuDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @property BOOL showStartDate;
@@ -49,6 +49,20 @@
 
     self.showStartDate = NO;
     self.showEndDate = NO;
+
+    if (self.navigationItem)
+    {
+        CGRect frame = CGRectMake(10.0, 0.0, 50, self.navigationController.navigationBar.bounds.size.height);
+        SINavigationMenuView *menu = [[SINavigationMenuView alloc] initWithFrame:frame title:@"Action    "];
+        //Set in which view we will display a menu
+        [menu displayMenuInView:self.view];
+        //Create array of items
+        menu.items = @[@"Save", @"Delete", @"Cancel"];
+        menu.delegate = self;
+        UIBarButtonItem *rightLabelBarButton = [[UIBarButtonItem alloc] initWithCustomView:menu];
+        self.navigationItem.rightBarButtonItem = rightLabelBarButton;
+    }
+
 
     self.tableView.tableFooterView = [[UIView alloc] init];
 }
@@ -572,6 +586,30 @@
 ////    [self resignFirstResponder];
 //    NSLog(@"did scroll");
 //}
+
+//MARK: navigation delegate method
+- (void)didSelectItemAtIndex:(NSUInteger)index
+{
+        switch (index)
+        {
+            case 0:
+            {
+                [self onSaveButtonPressed:nil];
+                break;
+            }
+            case 1:
+            {
+                [self deleteGroupAlertWindow];
+                break;
+            }
+            case 2:
+            {
+                break;
+            }
+            default:
+                break;
+        }
+}
 
 
 //MARK: cutom methods
