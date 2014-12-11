@@ -162,11 +162,13 @@
                 
                 
                 NSInteger totalNumberOfEntries = number;
+                
                 if (totalNumberOfEntries > [self.messageData count]) {
                     NSLog(@"Retrieving data");
                     [self loadLocalChat];
-                    [self.refreshControl endRefreshing];
                 }
+                [self.refreshControl endRefreshing];
+
             }
         }];
         
@@ -190,8 +192,9 @@
                 if (totalNumberOfEntries > [self.messageData count]) {
                     NSLog(@"Retrieving data");
                     [self loadLocalChat];
-                    [self.refreshControl endRefreshing];
                 }
+                [self.refreshControl endRefreshing];
+
             }
         }];
     }
