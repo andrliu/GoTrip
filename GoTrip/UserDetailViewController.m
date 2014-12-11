@@ -153,7 +153,14 @@
     self.firstNameLabel.text = self.profile.firstName;
     self.lastNameLabel.text = self.profile.lastName;
     self.memoLabel.text = self.profile.memo;
-    self.locationLabel.text = self.profile.locationName;
+    if ([self.profile.locationName isEqual:@""] || !self.profile.locationName)
+    {
+        self.locationLabel.text = @"";
+    }
+    else
+    {
+        self.locationLabel.text = self.profile.locationName;
+    }
     [Profile getProfileWithProfileId:self.profile.objectId withCompletion:^(Profile *profile, NSError *error) {
         if (!error)
         {
