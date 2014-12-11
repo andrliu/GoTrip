@@ -42,6 +42,7 @@
     self.editGroup = self.group;
 
     self.isEditing = NO;
+    self.title = @"Group Edit";
 
     self.dateFormat = [[NSDateFormatter alloc] init];
     //    [self.dateFormat setDateFormat:@"MM/dd/yyyy"];
@@ -590,6 +591,8 @@
 //MARK: navigation delegate method
 - (void)didSelectItemAtIndex:(NSUInteger)index
 {
+    [self.view endEditing:YES];
+    self.isEditing = NO;
         switch (index)
         {
             case 0:
@@ -703,6 +706,25 @@
         self.editGroup.destination = textField.text;
     }
 }
+
+- (IBAction)textFieldDidChange:(UITextField *)textField
+{
+    if (textField.tag == 0)
+    {
+        self.title = textField.text;
+    }
+}
+
+
+//-(void)textFieldDid
+//{
+//    if (textField.tag == 0)
+//    {
+//        [self.navigationItem setTitle:textField.text];
+//    }
+//
+//}
+
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
