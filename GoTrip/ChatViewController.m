@@ -118,11 +118,17 @@
     {
         
         //sets the recipient profile
+
+        
         self.recipientProfile =  self.passedRecipient;
         
         [Profile getCurrentProfileWithCompletion:^(Profile *profile, NSError *error) {
             self.currentUserProfile = profile;
             self.userName = self.currentUserProfile.objectId;
+            NSString *nameString = [NSString stringWithFormat:@"%@ %@",self.currentUserProfile.firstName, self.currentUserProfile.lastName];
+            //            self.userName = self.currentUserProfile.objectId;
+            self.userName = nameString;
+            self.senderId = nameString;
             [self loadLocalChat];
         }];
         
@@ -328,7 +334,8 @@
                 
                 PFPush *push = [[PFPush alloc] init];
                 [push setQuery:queryInstallation];
-                NSDictionary *dict = @{@"aps":@{@"alert":text},@"groupId":self.currentGroupProfile.objectId};
+                NSString *stringText = [NSString stringWithFormat:@"%@ > %@: %@", self.currentGroupProfile.name, self.userName, text];
+                NSDictionary *dict = @{@"aps":@{@"alert":stringText},@"groupId":self.currentGroupProfile.objectId};
                 [push setData:dict];
                 [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
                  {
@@ -361,7 +368,9 @@
         
         PFPush *push = [[PFPush alloc] init];
         [push setQuery:queryInstallation];
-        NSDictionary *dict = @{@"aps":@{@"alert":text},@"objectId":self.currentUserProfile.objectId};
+        NSString *stringText = [NSString stringWithFormat:@"%@: %@", self.userName, text];
+
+        NSDictionary *dict = @{@"aps":@{@"alert":stringText},@"objectId":self.currentUserProfile.objectId};
         [push setData:dict];
         //        [push setMessage:text];
         
