@@ -188,48 +188,36 @@
     pin.image = nil;
     UIImageView *imageView = [UIImageView new];
     UIImageView *subImageView = [UIImageView new];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    UIImage *buttonImage = [UIImage imageNamed:@"delete"];
+    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    button.contentMode = UIViewContentModeScaleAspectFill;
+    button.backgroundColor = [UIColor clearColor];
+    button.frame = CGRectMake(0.0f, 0.0f, 25.0f, 25.0f);
     if ([annotation.subtitle containsString:self.currentProfileName])
     {
         if ([annotation.subtitle containsString:@"location"])
         {
             if (self.currentProfile.avatarData)
             {
-                [self setImageView:imageView withData:self.currentProfile.avatarData withBorderWidth:1.0f withBorderColor:[UIColor blackColor].CGColor];
-                [pin addSubview:imageView];
-                [self setImageView:subImageView withName:@"location"];
-                [pin addSubview:subImageView];
+                [self addPin:pin withProfileAvatar:imageView data:self.currentProfile.avatarData andMark:subImageView name:@"location" withColor:[UIColor redColor].CGColor];
             }
             else
             {
-                [self setImageView:imageView withData:nil withBorderWidth:1.0f withBorderColor:[UIColor blackColor].CGColor];
-                [pin addSubview:imageView];
-                [self setImageView:subImageView withName:@"location"];
-                [pin addSubview:subImageView];
+                [self addPin:pin withProfileAvatar:imageView data:nil andMark:subImageView name:@"location" withColor:[UIColor redColor].CGColor];
             }
         }
         else if ([annotation.subtitle containsString:@"wish"])
         {
             if (self.currentProfile.avatarData)
             {
-                [self setImageView:imageView withData:self.currentProfile.avatarData withBorderWidth:1.0f withBorderColor:[UIColor redColor].CGColor];
-                [pin addSubview:imageView];
-                [self setImageView:subImageView withName:@"heart"];
-                [pin addSubview:subImageView];
-                pin.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+                [self addPin:pin withProfileAvatar:imageView data:self.currentProfile.avatarData andMark:subImageView name:@"heart" withColor:[UIColor redColor].CGColor];
+                pin.rightCalloutAccessoryView = button;
             }
             else
             {
-                [self setImageView:imageView withData:nil withBorderWidth:1.0f withBorderColor:[UIColor redColor].CGColor];
-                [pin addSubview:imageView];
-                [self setImageView:subImageView withName:@"heart"];
-                [pin addSubview:subImageView];
-
-//                UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-//                [button setFrame:CGRectMake(0, 0, 10, 10)];
-//                [button setTitle:@"B" forState:UIControlStateNormal];
-//                [button setBackgroundColor:[UIColor greenColor]];
-//                [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-                pin.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeCustom];
+                [self addPin:pin withProfileAvatar:imageView data:nil andMark:subImageView name:@"heart" withColor:[UIColor redColor].CGColor];
+                pin.rightCalloutAccessoryView = button;
             }
         }
     }
@@ -241,40 +229,37 @@
             {
                 if ([annotation.subtitle containsString:profile.firstName] && profile.avatarData)
                 {
-                    [self setImageView:imageView withData:profile.avatarData withBorderWidth:1.0f withBorderColor:[UIColor blackColor].CGColor];
-                    [pin addSubview:imageView];
-                    [self setImageView:subImageView withName:@"location"];
-                    [pin addSubview:subImageView];
+                    [self addPin:pin withProfileAvatar:imageView data:profile.avatarData andMark:subImageView name:@"location" withColor:[UIColor blackColor].CGColor];
                 }
                 else
                 {
-                    [self setImageView:imageView withData:nil withBorderWidth:1.0f withBorderColor:[UIColor blackColor].CGColor];
-                    [pin addSubview:imageView];
-                    [self setImageView:subImageView withName:@"location"];
-                    [pin addSubview:subImageView];
+                    [self addPin:pin withProfileAvatar:imageView data:nil andMark:subImageView name:@"location" withColor:[UIColor blackColor].CGColor];
                 }
             }
             else if ([annotation.subtitle containsString:@"wish"])
             {
                 if ([annotation.subtitle containsString:profile.firstName] && profile.avatarData)
                 {
-                    [self setImageView:imageView withData:profile.avatarData withBorderWidth:1.0f withBorderColor:[UIColor redColor].CGColor];
-                    [pin addSubview:imageView];
-                    [self setImageView:subImageView withName:@"heart"];
-                    [pin addSubview:subImageView];
+                    [self addPin:pin withProfileAvatar:imageView data:profile.avatarData andMark:subImageView name:@"heart" withColor:[UIColor redColor].CGColor];
                 }
                 else
                 {
-                    [self setImageView:imageView withData:nil withBorderWidth:1.0f withBorderColor:[UIColor redColor].CGColor];
-                    [pin addSubview:imageView];
-                    [self setImageView:subImageView withName:@"heart"];
-                    [pin addSubview:subImageView];
+                    [self addPin:pin withProfileAvatar:imageView data:nil andMark:subImageView name:@"heart" withColor:[UIColor redColor].CGColor];
                 }
             }
         }
     }
     return pin;
 }
+
+- (void) addPin:(MKPinAnnotationView *)pin withProfileAvatar:(UIImageView *)imageView data:(NSData *)data andMark:(UIImageView *)subImageView name:(NSString *)name withColor:(CGColorRef)color
+{
+    [self setImageView:imageView withData:data withBorderWidth:1.0f withBorderColor:color];
+    [pin addSubview:imageView];
+    [self setImageView:subImageView withName:name];
+    [pin addSubview:subImageView];
+}
+
 
 - (void)setImageView:(UIImageView *)imageView withData:(NSData *)data withBorderWidth:(CGFloat)width withBorderColor:(CGColorRef)color
 {
