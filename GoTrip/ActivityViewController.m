@@ -57,11 +57,11 @@
          NSString *address = [NSString string];
          if (placemark.subAdministrativeArea)
          {
-             address = [NSString stringWithFormat:@"%@:%@", placemark.subAdministrativeArea, placemark.ISOcountryCode];
+             address = [NSString stringWithFormat:@"%@,%@", placemark.subAdministrativeArea, placemark.ISOcountryCode];
          }
          else
          {
-             address = [NSString stringWithFormat:@"%@:%@", placemark.administrativeArea, placemark.ISOcountryCode];
+             address = [NSString stringWithFormat:@"%@,%@", placemark.administrativeArea, placemark.ISOcountryCode];
          }
          MKPointAnnotation *annotation = [MKPointAnnotation new];
          annotation.coordinate =  location.coordinate;
@@ -87,11 +87,11 @@
                  NSString *address = [NSString string];
                  if (placemark.subAdministrativeArea)
                  {
-                     address = [NSString stringWithFormat:@"%@:%@", placemark.subAdministrativeArea, placemark.ISOcountryCode];
+                     address = [NSString stringWithFormat:@"%@,%@", placemark.subAdministrativeArea, placemark.ISOcountryCode];
                  }
                  else
                  {
-                     address = [NSString stringWithFormat:@"%@:%@", placemark.administrativeArea, placemark.ISOcountryCode];
+                     address = [NSString stringWithFormat:@"%@,%@", placemark.administrativeArea, placemark.ISOcountryCode];
                  }
                  PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:tapPoint.latitude longitude:tapPoint.longitude];
                  self.currentProfile.locations = [self addObjectId:geoPoint inArray:self.currentProfile.locations];
@@ -187,6 +187,12 @@
     pin.canShowCallout = YES;
     pin.image = nil;
     UIImageView *imageView = [UIImageView new];
+    UIImageView *subImageView = [UIImageView new];
+
+//    subImageView.image = [UIImage imageNamed:@"heart"];
+//    subImageView.backgroundColor = [UIColor clearColor];
+//    subImageView.frame = CGRectMake(17.5f, 27.5f, 12.5f, 12.5f);
+//    subImageView.contentMode = UIViewContentModeScaleAspectFill;
     if ([annotation.subtitle containsString:self.currentProfileName])
     {
         if ([annotation.subtitle containsString:@"location"])
@@ -195,11 +201,15 @@
             {
                 [self setImageView:imageView withData:self.currentProfile.avatarData withBorderWidth:1.0f withBorderColor:[UIColor blackColor].CGColor];
                 [pin addSubview:imageView];
+                [self setImageView:subImageView withName:@"location"];
+                [pin addSubview:subImageView];
             }
             else
             {
                 [self setImageView:imageView withData:nil withBorderWidth:1.0f withBorderColor:[UIColor blackColor].CGColor];
                 [pin addSubview:imageView];
+                [self setImageView:subImageView withName:@"location"];
+                [pin addSubview:subImageView];
             }
         }
         else if ([annotation.subtitle containsString:@"wish"])
@@ -208,12 +218,17 @@
             {
                 [self setImageView:imageView withData:self.currentProfile.avatarData withBorderWidth:1.0f withBorderColor:[UIColor redColor].CGColor];
                 [pin addSubview:imageView];
+                [self setImageView:subImageView withName:@"heart"];
+                [pin addSubview:subImageView];
                 pin.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
             }
             else
             {
                 [self setImageView:imageView withData:nil withBorderWidth:1.0f withBorderColor:[UIColor redColor].CGColor];
                 [pin addSubview:imageView];
+                [self setImageView:subImageView withName:@"heart"];
+                [pin addSubview:subImageView];
+
 //                UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
 //                [button setFrame:CGRectMake(0, 0, 10, 10)];
 //                [button setTitle:@"B" forState:UIControlStateNormal];
@@ -233,11 +248,15 @@
                 {
                     [self setImageView:imageView withData:profile.avatarData withBorderWidth:1.0f withBorderColor:[UIColor blackColor].CGColor];
                     [pin addSubview:imageView];
+                    [self setImageView:subImageView withName:@"location"];
+                    [pin addSubview:subImageView];
                 }
                 else
                 {
                     [self setImageView:imageView withData:nil withBorderWidth:1.0f withBorderColor:[UIColor blackColor].CGColor];
                     [pin addSubview:imageView];
+                    [self setImageView:subImageView withName:@"location"];
+                    [pin addSubview:subImageView];
                 }
             }
             else if ([annotation.subtitle containsString:@"wish"])
@@ -246,11 +265,15 @@
                 {
                     [self setImageView:imageView withData:profile.avatarData withBorderWidth:1.0f withBorderColor:[UIColor redColor].CGColor];
                     [pin addSubview:imageView];
+                    [self setImageView:subImageView withName:@"heart"];
+                    [pin addSubview:subImageView];
                 }
                 else
                 {
                     [self setImageView:imageView withData:nil withBorderWidth:1.0f withBorderColor:[UIColor redColor].CGColor];
                     [pin addSubview:imageView];
+                    [self setImageView:subImageView withName:@"heart"];
+                    [pin addSubview:subImageView];
                 }
             }
         }
@@ -272,6 +295,14 @@
     [imageView setClipsToBounds:YES];
     [imageView.layer setBorderWidth:width];
     [imageView.layer setBorderColor:color];
+}
+
+- (void)setImageView:(UIImageView *)imageView withName:(NSString *)name
+{
+    imageView.image = [UIImage imageNamed:name];
+    imageView.backgroundColor = [UIColor clearColor];
+    imageView.frame = CGRectMake(17.5f, 27.5f, 12.5f, 12.5f);
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
