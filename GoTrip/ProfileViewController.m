@@ -124,7 +124,7 @@
 {
     NSArray *array = [self.collectionView indexPathsForVisibleItems];
     NSIndexPath *index = array.firstObject;
-    if (array[1])
+    if (array.count == 2)
     {
         NSIndexPath *firstIndex = array.firstObject;
         NSIndexPath *secondIndex = array[1];
