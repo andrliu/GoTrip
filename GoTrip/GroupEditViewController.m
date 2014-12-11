@@ -591,6 +591,8 @@
 //MARK: navigation delegate method
 - (void)didSelectItemAtIndex:(NSUInteger)index
 {
+    [self.view endEditing:YES];
+    self.isEditing = NO;
         switch (index)
         {
             case 0:
