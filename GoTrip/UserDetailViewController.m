@@ -104,6 +104,15 @@
 {
     NSArray *array = [self.collectionView indexPathsForVisibleItems];
     NSIndexPath *index = array.firstObject;
+    if (array.count == 2)
+    {
+        NSIndexPath *firstIndex = array.firstObject;
+        NSIndexPath *secondIndex = array[1];
+        if (firstIndex > secondIndex)
+        {
+            index = secondIndex;
+        }
+    }
     if (self.segmentedControl.selectedSegmentIndex == 1)
     {
         if (index.item == 0)
