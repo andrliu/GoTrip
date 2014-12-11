@@ -111,13 +111,14 @@
     {
         [self.pageControl setHidden:NO];
         self.pageControl.numberOfPages = 2;
+        [self refreshCurrentPageControl];
     }
     else
     {
         [self.pageControl setHidden:NO];
         self.pageControl.numberOfPages = 3;
+        [self refreshCurrentPageControl];
     }
-    [self refreshCurrentPageControl];
 }
 
 - (void)refreshCurrentPageControl
@@ -126,9 +127,8 @@
     NSIndexPath *index = array.firstObject;
     if (array.count == 2)
     {
-        NSIndexPath *firstIndex = array.firstObject;
         NSIndexPath *secondIndex = array[1];
-        if (firstIndex > secondIndex)
+        if (index.item > secondIndex.item)
         {
             index = secondIndex;
         }

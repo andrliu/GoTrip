@@ -71,15 +71,17 @@
         {
             [self.pageControl setHidden:YES];
         }
-        else if (1 < self.listArray.count && self.listArray.count < 3)
+        else if (self.listArray.count == 2)
         {
             [self.pageControl setHidden:NO];
             self.pageControl.numberOfPages = self.listArray.count;
+            [self refreshCurrentPageControl];
         }
         else
         {
             [self.pageControl setHidden:NO];
             self.pageControl.numberOfPages = 3;
+            [self refreshCurrentPageControl];
         }
     }
     else
@@ -92,29 +94,22 @@
         {
             [self.pageControl setHidden:NO];
             self.pageControl.numberOfPages = 2;
+            [self refreshCurrentPageControl];
         }
         else
         {
             [self.pageControl setHidden:NO];
             self.pageControl.numberOfPages = 3;
+            [self refreshCurrentPageControl];
         }
     }
-    [self refreshCurrentPageControl];
+
 }
 
 - (void)refreshCurrentPageControl
 {
     NSArray *array = [self.collectionView indexPathsForVisibleItems];
     NSIndexPath *index = array.firstObject;
-    if (array.count == 2)
-    {
-        NSIndexPath *firstIndex = array.firstObject;
-        NSIndexPath *secondIndex = array[1];
-        if (firstIndex > secondIndex)
-        {
-            index = secondIndex;
-        }
-    }
     if (self.segmentedControl.selectedSegmentIndex == 1)
     {
         if (index.item == 0)
@@ -132,6 +127,14 @@
     }
     else
     {
+        if (array.count == 2)
+        {
+            NSIndexPath *secondIndex = array[1];
+            if (index.item > secondIndex.item)
+            {
+                index = secondIndex;
+            }
+        }
         if (index.item == 0)
         {
             self.pageControl.currentPage = 0;
