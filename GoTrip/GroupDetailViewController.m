@@ -75,6 +75,8 @@
 {
     [super viewWillAppear:animated];
 
+    [self.tableView reloadData];
+
     PFQuery *query = [Group query];
     [query getObjectInBackgroundWithId:self.group.objectId block:^(PFObject *object, NSError *error)
      {
