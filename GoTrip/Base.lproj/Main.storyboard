@@ -281,6 +281,7 @@
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
                                                         <action selector="textFieldAction:" destination="vac-ZB-aAC" eventType="editingDidEnd" id="oHY-lC-3Y4"/>
+                                                        <action selector="textFieldDidChange:" destination="vac-ZB-aAC" eventType="editingChanged" id="uQx-Xh-PT0"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -424,24 +425,12 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="kGK-1U-YSB">
-                        <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="KFF-K4-Lld">
                             <connections>
                                 <action selector="onCancellButtonPressed:" destination="vac-ZB-aAC" id="GfN-tG-925"/>
                                 <segue destination="PvL-7H-a3N" kind="unwind" identifier="goHomeSegue" unwindAction="unwindToThisViewController:" id="WSI-bj-Zzb"/>
                             </connections>
                         </barButtonItem>
-                        <button key="titleView" hidden="YES" opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="7Vz-dc-8tc">
-                            <rect key="frame" x="96" y="7" width="128" height="30"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <state key="normal" title="Save">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="onSaveButtonPressed:" destination="vac-ZB-aAC" eventType="touchUpInside" id="iOr-jk-lsZ"/>
-                            </connections>
-                        </button>
                         <barButtonItem key="rightBarButtonItem" systemItem="trash" id="kPf-fo-c4U">
                             <connections>
                                 <action selector="onDeleteButtonPressed:" destination="vac-ZB-aAC" id="P0Z-hL-x3m"/>
