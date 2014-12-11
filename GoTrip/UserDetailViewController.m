@@ -16,7 +16,9 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *firstNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *lastNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *locationLabel;
 @property (weak, nonatomic) IBOutlet UILabel *memoLabel;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *relationButton;
 @property (weak, nonatomic) IBOutlet UIButton *commentButton;
@@ -148,8 +150,10 @@
 - (void)refreshView
 {
     [self setImageView:self.imageView withData:self.profile.avatarData withLayerRadius:15.0f withBorderColor:[UIColor blackColor].CGColor];
-    self.nameLabel.text = self.profile.firstName;
+    self.firstNameLabel.text = self.profile.firstName;
+    self.lastNameLabel.text = self.profile.lastName;
     self.memoLabel.text = self.profile.memo;
+    self.locationLabel.text = self.profile.locationName;
     [Profile getProfileWithProfileId:self.profile.objectId withCompletion:^(Profile *profile, NSError *error) {
         if (!error)
         {
@@ -241,6 +245,8 @@
         [self.messageButton setHidden:NO];
         if (self.isFriend)
         {
+            [self.lastNameLabel setHidden:NO];
+            [self.locationLabel setHidden:NO];
             if  (self.segmentedControl.numberOfSegments < 3)
             {
                 [self.segmentedControl insertSegmentWithTitle:@"Groups" atIndex:2 animated:YES];
@@ -249,6 +255,8 @@
         }
         else
         {
+            [self.lastNameLabel setHidden:YES];
+            [self.locationLabel setHidden:YES];
             if  (self.segmentedControl.numberOfSegments == 3)
             {
                 [self.segmentedControl removeSegmentAtIndex:2 animated:YES];

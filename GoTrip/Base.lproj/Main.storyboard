@@ -799,11 +799,11 @@
                                     </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="ck3-Ta-6Cb">
-                                    <rect key="frame" x="0.0" y="0.0" width="10" height="205"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="10" height="215"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </collectionReusableView>
                                 <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="v94-Uf-v9e">
-                                    <rect key="frame" x="160" y="0.0" width="10" height="205"/>
+                                    <rect key="frame" x="160" y="0.0" width="10" height="215"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </collectionReusableView>
                                 <connections>
@@ -1240,11 +1240,11 @@
                                     </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="FMf-ch-ioh">
-                                    <rect key="frame" x="0.0" y="0.0" width="10" height="204.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="10" height="214.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </collectionReusableView>
                                 <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="KCa-b7-zCC">
-                                    <rect key="frame" x="470" y="0.0" width="10" height="204.5"/>
+                                    <rect key="frame" x="470" y="0.0" width="10" height="214.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </collectionReusableView>
                                 <connections>
@@ -1268,7 +1268,7 @@
                                     <action selector="segueToChatOnButtonPressed:" destination="xDp-qw-o4k" eventType="touchUpInside" id="30J-K2-CWW"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yhi-Wu-duQ">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yhi-Wu-duQ">
                                 <rect key="frame" x="210" y="79" width="87" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="25" id="PsA-u1-d4N"/>
@@ -1301,6 +1301,24 @@
                                     <action selector="addCommentOnButtonPressed:" destination="xDp-qw-o4k" eventType="touchUpInside" id="aWI-0q-YVj"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5DE-cc-tOO">
+                                <rect key="frame" x="210" y="114" width="87" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="kkX-NP-oCG"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="14"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dYQ-Kp-Unt">
+                                <rect key="frame" x="210" y="184" width="87" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="rHW-oj-rLR"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="IdK-Gu-moa">
                                 <rect key="frame" x="10" y="269" width="300" height="31"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1322,25 +1340,31 @@
                             <constraint firstItem="h8Z-8L-nrn" firstAttribute="leading" secondItem="D0T-Se-lVw" secondAttribute="leadingMargin" constant="-16" id="3Mr-6t-a9D"/>
                             <constraint firstItem="B6g-VI-Rcl" firstAttribute="leading" secondItem="D0T-Se-lVw" secondAttribute="leadingMargin" constant="7" id="6GT-u6-Won"/>
                             <constraint firstItem="Ket-zx-L6z" firstAttribute="leading" secondItem="B6g-VI-Rcl" secondAttribute="trailing" constant="-30" id="8RF-Go-kX6"/>
+                            <constraint firstItem="X52-tk-TLl" firstAttribute="top" secondItem="5DE-cc-tOO" secondAttribute="bottom" constant="10" id="Bq3-0H-o7f"/>
                             <constraint firstItem="dbq-Gb-CxN" firstAttribute="top" secondItem="BdN-6r-qHz" secondAttribute="bottom" id="Eja-Ch-Dpw"/>
                             <constraint firstItem="dbq-Gb-CxN" firstAttribute="top" secondItem="h8Z-8L-nrn" secondAttribute="bottom" id="FHS-zd-K6c"/>
                             <constraint firstAttribute="centerX" secondItem="BdN-6r-qHz" secondAttribute="centerX" id="FNf-Tb-DAN"/>
                             <constraint firstItem="X52-tk-TLl" firstAttribute="leading" secondItem="B6g-VI-Rcl" secondAttribute="trailing" constant="12" id="PUx-2r-lfi"/>
+                            <constraint firstItem="dYQ-Kp-Unt" firstAttribute="top" secondItem="X52-tk-TLl" secondAttribute="bottom" constant="10" id="Qid-jt-7Ta"/>
                             <constraint firstItem="IdK-Gu-moa" firstAttribute="leading" secondItem="D0T-Se-lVw" secondAttribute="leadingMargin" constant="-6" id="R9k-QS-Yj5"/>
                             <constraint firstItem="IdK-Gu-moa" firstAttribute="top" secondItem="B6g-VI-Rcl" secondAttribute="bottom" constant="15" id="Spz-sI-JfN"/>
-                            <constraint firstItem="X52-tk-TLl" firstAttribute="top" secondItem="yhi-Wu-duQ" secondAttribute="bottom" constant="45" id="bGX-hM-bod"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="dYQ-Kp-Unt" secondAttribute="trailing" constant="7" id="Uq1-P0-XDF"/>
+                            <constraint firstItem="dYQ-Kp-Unt" firstAttribute="leading" secondItem="B6g-VI-Rcl" secondAttribute="trailing" constant="12" id="aiM-05-WcP"/>
                             <constraint firstAttribute="trailingMargin" secondItem="h8Z-8L-nrn" secondAttribute="trailing" constant="-16" id="c5I-NG-4Lr"/>
+                            <constraint firstItem="5DE-cc-tOO" firstAttribute="top" secondItem="yhi-Wu-duQ" secondAttribute="bottom" constant="10" id="d7c-Ht-OGY"/>
                             <constraint firstAttribute="trailingMargin" secondItem="IdK-Gu-moa" secondAttribute="trailing" constant="-6" id="ddG-ol-Yzo"/>
                             <constraint firstAttribute="trailingMargin" secondItem="yhi-Wu-duQ" secondAttribute="trailing" constant="7" id="dg6-DD-7hQ"/>
                             <constraint firstAttribute="centerY" secondItem="IdK-Gu-moa" secondAttribute="centerY" id="dh6-cR-TGG"/>
                             <constraint firstItem="IdK-Gu-moa" firstAttribute="top" secondItem="Ket-zx-L6z" secondAttribute="bottom" constant="15" id="enB-t2-Jcp"/>
                             <constraint firstItem="9uM-7q-pL2" firstAttribute="leading" secondItem="D0T-Se-lVw" secondAttribute="leadingMargin" constant="7" id="hCD-Ci-hA9"/>
                             <constraint firstItem="B6g-VI-Rcl" firstAttribute="top" secondItem="030-PI-ACQ" secondAttribute="bottom" constant="15" id="iI8-na-boO"/>
+                            <constraint firstItem="5DE-cc-tOO" firstAttribute="leading" secondItem="B6g-VI-Rcl" secondAttribute="trailing" constant="12" id="izE-Qs-Dqn"/>
                             <constraint firstItem="yhi-Wu-duQ" firstAttribute="leading" secondItem="B6g-VI-Rcl" secondAttribute="trailing" constant="12" id="j67-0z-YR7"/>
                             <constraint firstItem="IdK-Gu-moa" firstAttribute="top" secondItem="9uM-7q-pL2" secondAttribute="bottom" constant="15" id="kN6-zq-CSz"/>
                             <constraint firstAttribute="trailingMargin" secondItem="X52-tk-TLl" secondAttribute="trailing" constant="7" id="l5I-4M-CJg"/>
                             <constraint firstItem="yhi-Wu-duQ" firstAttribute="top" secondItem="030-PI-ACQ" secondAttribute="bottom" constant="15" id="mRR-5d-fSx"/>
                             <constraint firstItem="h8Z-8L-nrn" firstAttribute="top" secondItem="IdK-Gu-moa" secondAttribute="bottom" constant="5" id="uAR-zz-AXG"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="5DE-cc-tOO" secondAttribute="trailing" constant="7" id="xKO-qp-pm8"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="lGW-G0-ILj">
@@ -1353,10 +1377,12 @@
                     <connections>
                         <outlet property="collectionView" destination="h8Z-8L-nrn" id="urG-Hc-8vf"/>
                         <outlet property="commentButton" destination="9uM-7q-pL2" id="B7O-Xu-xsn"/>
+                        <outlet property="firstNameLabel" destination="yhi-Wu-duQ" id="BW6-2o-hUP"/>
                         <outlet property="imageView" destination="B6g-VI-Rcl" id="3VG-0l-BAD"/>
+                        <outlet property="lastNameLabel" destination="5DE-cc-tOO" id="NN6-J0-SEf"/>
+                        <outlet property="locationLabel" destination="dYQ-Kp-Unt" id="yoV-wA-qbG"/>
                         <outlet property="memoLabel" destination="X52-tk-TLl" id="u0U-6w-oqm"/>
                         <outlet property="messageButton" destination="Ket-zx-L6z" id="z3Q-qC-8Uw"/>
-                        <outlet property="nameLabel" destination="yhi-Wu-duQ" id="J2a-VV-yqm"/>
                         <outlet property="pageControl" destination="BdN-6r-qHz" id="NeS-42-Zdn"/>
                         <outlet property="relationButton" destination="hnt-qc-Z9B" id="ogE-Ro-hqF"/>
                         <outlet property="segmentedControl" destination="IdK-Gu-moa" id="Dap-Pi-KRq"/>
@@ -1498,7 +1524,7 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="PZW-Xt-7sq"/>
-        <segue reference="ohF-rU-5c0"/>
         <segue reference="nNS-jj-bNS"/>
+        <segue reference="66I-5x-UXO"/>
     </inferredMetricsTieBreakers>
 </document>
