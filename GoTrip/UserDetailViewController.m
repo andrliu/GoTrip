@@ -373,7 +373,9 @@
                                                      self.arrayOfComment = objects;
                                                      if (self.segmentedControl.selectedSegmentIndex == 1)
                                                      {
-                                                         [self changeListOnSegmentControl:self.segmentedControl];
+                                                         self.listArray = self.arrayOfComment;
+                                                         [self.collectionView reloadData];
+                                                         [self refreshNumberOfPageControl];
                                                      }
                                                      [self.segmentedControl setTitle:[NSString stringWithFormat:@"Comments (%lu)",(unsigned long)self.arrayOfComment.count] forSegmentAtIndex:1];
                                                  }
@@ -409,7 +411,7 @@
     else if (sender.selectedSegmentIndex == 1 && self.arrayOfComment)
     {
         self.listArray = self.arrayOfComment;
-        if (self.listArray.count > 0)
+        if (self.listArray.count > 1)
         {
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
             [self.collectionView scrollToItemAtIndexPath:indexPath
