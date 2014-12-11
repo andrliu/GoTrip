@@ -131,7 +131,8 @@
              else
              {
                  self.collectionViewArray = objects;
-                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationLeft];
+//                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationLeft];
+                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(2,3)] withRowAnimation:UITableViewRowAnimationLeft];
              }
          }];
 
