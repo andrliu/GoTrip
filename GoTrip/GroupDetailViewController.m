@@ -163,7 +163,7 @@
 
         self.navigationItem.rightBarButtonItem = groupLeaveButton;
         self.navigationItem.rightBarButtonItem.enabled = YES;
-        self.navigationItem.rightBarButtonItem.tintColor = [UIColor redColor]; //nil;
+        self.navigationItem.rightBarButtonItem.tintColor = nil;  //[UIColor redColor]
 
         self.isInGroup = YES;
     }
