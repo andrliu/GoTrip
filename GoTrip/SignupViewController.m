@@ -22,13 +22,15 @@
                                                        green:(243.0/255.0)
                                                         blue:(243.0/255.0)
                                                        alpha:1.0f];
+    [self.signUpView.signUpButton setTitle:@"Sign Up" forState:UIControlStateNormal];
+    [self.signUpView.signUpButton setTitle:@"Sign Up" forState:UIControlStateHighlighted];
 }
 
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
     [self.signUpView.logo setFrame:CGRectMake(self.signUpView.frame.size.width/6,
-                                              self.signUpView.frame.size.height/8,
+                                              self.signUpView.frame.size.height/8 + 20.0f,
                                               self.signUpView.frame.size.width*2/3,
                                               self.signUpView.frame.size.width*2/9)];
     [self.signUpView.usernameField setFrame:CGRectMake(-5.0f,

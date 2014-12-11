@@ -23,6 +23,8 @@
                                                      green:(243.0/255.0)
                                                       blue:(243.0/255.0)
                                                      alpha:1.0f];
+    [self.logInView.facebookButton setImage:nil forState:UIControlStateNormal];
+    [self.logInView.facebookButton setImage:nil forState:UIControlStateHighlighted];
 }
 
 - (void)viewDidLayoutSubviews
@@ -30,7 +32,7 @@
     [super viewDidLayoutSubviews];
     
     [self.logInView.logo setFrame:CGRectMake(self.logInView.frame.size.width/6,
-                                             self.logInView.frame.size.height/8,
+                                             self.logInView.frame.size.height/8 + 20.0f,
                                              self.logInView.frame.size.width*2/3,
                                              self.logInView.frame.size.width*2/9)];
     [self.logInView.usernameField setFrame:CGRectMake(-5.0f,
@@ -45,14 +47,14 @@
                                                     self.logInView.frame.size.height*13/24 + 5.0f,
                                                     self.logInView.frame.size.width + 10.0f,
                                                     self.logInView.frame.size.height/12)];
-    [self.logInView.facebookButton setFrame:CGRectMake(-5.0f,
-                                                       self.logInView.frame.size.height*33/48 + 2.5f,
-                                                       self.logInView.frame.size.width + 10.0f,
-                                                       self.logInView.frame.size.height/12)];
     [self.logInView.signUpButton setFrame:CGRectMake(-5.0f,
-                                                     self.logInView.frame.size.height*5/6,
+                                                     self.logInView.frame.size.height*15/24 + 10.0f,
                                                      self.logInView.frame.size.width + 10.0f,
                                                      self.logInView.frame.size.height/12)];
+    [self.logInView.facebookButton setFrame:CGRectMake(-5.0f,
+                                                       self.logInView.frame.size.height*5/6,
+                                                       self.logInView.frame.size.width + 10.0f,
+                                                       self.logInView.frame.size.height/12)];
 }
 
 @end
