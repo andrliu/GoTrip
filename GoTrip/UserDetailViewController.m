@@ -317,8 +317,7 @@
             {
                 if (!error)
                 {
-                    [self checkRelationStatus];
-                    [self switchButtonTitleBasedOnRelationStatus];
+                    [self refreshView];
                 }
                 else
                 {
