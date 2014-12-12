@@ -845,15 +845,14 @@
                                     <action selector="changeImageOnButtonPressed:" destination="caB-bt-Glw" eventType="touchUpInside" id="bMQ-KK-dgz"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W3H-6n-Yof">
-                                <rect key="frame" x="23" y="229" width="30" height="25"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W3H-6n-Yof">
+                                <rect key="frame" x="23" y="224" width="30" height="30"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="1UZ-4R-M9D"/>
-                                    <constraint firstAttribute="height" constant="25" id="Ydc-rY-UDd"/>
+                                    <constraint firstAttribute="height" constant="30" id="Ydc-rY-UDd"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                <state key="normal" title="MAP">
+                                <state key="normal" image="map">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -1241,15 +1240,15 @@
                                     <outlet property="delegate" destination="xDp-qw-o4k" id="Vhc-eE-hz9"/>
                                 </connections>
                             </collectionView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ket-zx-L6z">
-                                <rect key="frame" x="168" y="229" width="30" height="25"/>
+                            <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ket-zx-L6z">
+                                <rect key="frame" x="168" y="224" width="30" height="30"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="25" id="BZH-1H-1n2"/>
+                                    <constraint firstAttribute="height" constant="30" id="BZH-1H-1n2"/>
                                     <constraint firstAttribute="width" constant="30" id="Jml-ZB-eoS"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                <state key="normal" title="MSG">
+                                <state key="normal" image="chat">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -1275,14 +1274,14 @@
                                 <color key="currentPageIndicatorTintColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
                             </pageControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9uM-7q-pL2">
-                                <rect key="frame" x="23" y="229" width="30" height="25"/>
+                                <rect key="frame" x="23" y="224" width="30" height="30"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="25" id="3vq-Ut-c9K"/>
+                                    <constraint firstAttribute="height" constant="30" id="3vq-Ut-c9K"/>
                                     <constraint firstAttribute="width" constant="30" id="GAP-Jz-b1H"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                <state key="normal" title="CMT">
+                                <state key="normal" image="comment">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -1500,7 +1499,10 @@
     </scenes>
     <resources>
         <image name="camera" width="48" height="48"/>
+        <image name="chat" width="25" height="25"/>
+        <image name="comment" width="25" height="25"/>
         <image name="home" width="30" height="30"/>
+        <image name="map" width="25" height="25"/>
         <image name="message" width="30" height="30"/>
         <image name="profile" width="30" height="30"/>
         <image name="search" width="30" height="30"/>
